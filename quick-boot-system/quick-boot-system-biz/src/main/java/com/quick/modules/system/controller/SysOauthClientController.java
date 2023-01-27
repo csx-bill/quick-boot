@@ -17,9 +17,5 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @Tag(name = "客户端信息")
 public class SysOauthClientController {
-/*    @GetMapping(value = "/findByClientId")
-    @Operation(summary = "查询客户端", description = "根据应用ID查询客户端")
-    public Result<SysOauthClientVo> findByClientId(@RequestParam(value = "clientId") String clientId) {
-        return Result.success(sysUserService.findByUsername(username));
-    }*/
+
 }

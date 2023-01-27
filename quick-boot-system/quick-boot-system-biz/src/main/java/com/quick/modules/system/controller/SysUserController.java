@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
-@RequestMapping("/sysUser")
+@RequestMapping("/SysUser")
 @RequiredArgsConstructor
 @Tag(name = "用户信息")
 public class SysUserController {
@@ -26,16 +26,4 @@ public class SysUserController {
     public Result<IPage<SysUser>> page(@RequestBody Page<SysUser> page) {
         return Result.success(sysUserService.page(page));
     }
-
-
-/*    @GetMapping(value = "/add")
-    @Operation(summary = "add用户", description = "add用户")
-    public Result add() {
-        for (int i = 0; i < 100; i++) {
-            sysUserService.save(SysUser.builder().username("test"+i).password("123456").build());
-
-        }
-        return Result.success();
-    }*/
-
 }
