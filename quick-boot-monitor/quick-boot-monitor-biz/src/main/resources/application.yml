@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: @artifactId@
+  profiles:
+    active: @profiles.active@
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+        namespace: @profiles.active@
+      config:
+        server-addr: ${spring.cloud.nacos.discovery.server-addr}
+        namespace: @profiles.active@
+  config:
+    import:
+      - optional:nacos:${spring.application.name}.yml
+      - optional:nacos:logging.yml
+      - optional:nacos:monitor.yml
+
+
