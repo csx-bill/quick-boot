@@ -47,7 +47,7 @@ public class DictAspect {
     /**
      * 切点，切入 controller 包下面的所有方法
      */
-    @Pointcut("execution( * com.quick.modules.*.controller.*.*(..))")
+    @Pointcut("execution( * com.quick.modules.*.controller.*.*(..)) && !execution( * com.quick.modules.universal.controller.*.*(..))")
     public void dict() {
 
     }
