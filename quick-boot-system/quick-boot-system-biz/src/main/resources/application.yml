@@ -13,7 +13,8 @@ spring:
         namespace: @profiles.active@
   config:
     import:
-      - optional:nacos:redis.yml
       - optional:nacos:${spring.application.name}.yml
       - optional:nacos:logging.yml
       - optional:nacos:monitor.yml
+      - optional:nacos:redis.yml
+      - optional:nacos:sa-token.yml

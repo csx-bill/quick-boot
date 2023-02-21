@@ -20,12 +20,11 @@
         <dependency>
             <groupId>com.quick</groupId>
             <artifactId>quick-boot-base-core</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.alibaba.fastjson2</groupId>
-                    <artifactId>fastjson2</artifactId>
-                </exclusion>
-            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.dev33</groupId>
+            <artifactId>sa-token-dao-redis-fastjson2</artifactId>
         </dependency>
 
         <dependency>

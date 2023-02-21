@@ -3,6 +3,8 @@ package com.quick.modules.oauth2.service.impl;
 import cn.dev33.satoken.oauth2.logic.SaOAuth2Template;
 import cn.dev33.satoken.oauth2.model.SaClientModel;
 import cn.dev33.satoken.stp.StpUtil;
+import com.quick.common.exception.OAuth2Exception;
+import com.quick.common.exception.code.ExceptionCode;
 import com.quick.common.vo.Result;
 import com.quick.system.api.ISysOauthClientApi;
 import com.quick.system.api.dto.SysOauthClientApiDTO;
@@ -22,6 +24,9 @@ public class OAuth2TemplateImpl extends SaOAuth2Template {
     public SaClientModel getClientModel(String clientId) {
         Result<SysOauthClientApiDTO> result = sysOauthClientApi.findByClientId(clientId);
         SysOauthClientApiDTO sysOauthClientApiDTO = result.getData();
+        if (sysOauthClientApiDTO == null) {
+            throw new OAuth2Exception(ExceptionCode.OAUTH2_CLIENT.getCode(),ExceptionCode.OAUTH2_CLIENT.getMsg());
+        }
         SaClientModel saClientModel = new SaClientModel();
         BeanUtils.copyProperties(sysOauthClientApiDTO,saClientModel);
         return saClientModel;

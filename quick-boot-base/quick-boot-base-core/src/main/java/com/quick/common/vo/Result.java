@@ -23,12 +23,12 @@ public class Result<T> implements Serializable {
 	/**
 	 * 返回处理消息
 	 */
-	private String msg = "ok";
+	private String msg = CommonConstant.SUCCESS_MSG;
 
 	/**
 	 * 返回代码
 	 */
-	private Integer code = CommonConstant.SC_OK_200;
+	private Integer code = CommonConstant.SUCCESS_CODE;
 
 	/**
 	 * 返回数据对象 data
@@ -52,11 +52,11 @@ public class Result<T> implements Serializable {
 	 * @return RPC调用结果
 	 */
 	public static <E> Result<E> success(E data) {
-		return new Result<>(CommonConstant.SC_OK_200, data, "ok");
+		return new Result<>(CommonConstant.SUCCESS_CODE, data, CommonConstant.SUCCESS_MSG);
 	}
 
 	public static Result<Boolean> success() {
-		return new Result<>(CommonConstant.SC_OK_200, true, "ok");
+		return new Result<>(CommonConstant.SUCCESS_CODE, true, CommonConstant.SUCCESS_MSG);
 	}
 
 	/**

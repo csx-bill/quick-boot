@@ -30,11 +30,11 @@ public class OAuth2Config {
                         setDoLoginHandle((name, pwd) -> {
                     Result<SysUserApiDTO> result = sysUserApi.findByUsername(name);
                     SysUserApiDTO sysUserApiDTO = result.getData();
-                    //将明文密码进行加密
-                    String hashpw = BCrypt.hashpw(pwd);
-                    if(sysUserApiDTO.getUsername().equals(name) && BCrypt.checkpw(sysUserApiDTO.getPassword(), hashpw)) {
-                        StpUtil.login(name);
-                        return Result.success();
+                    if(sysUserApiDTO!=null){
+                        if(sysUserApiDTO.getUsername().equals(name) && BCrypt.checkpw(pwd,sysUserApiDTO.getPassword())) {
+                            StpUtil.login(sysUserApiDTO.getId());
+                            return Result.success();
+                        }
                     }
                     return Result.fail("账号名或密码错误");
                 }).
