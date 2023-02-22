@@ -25,6 +25,12 @@ public class SysUser extends BaseEntity implements Serializable {
     @Schema(description = "密码")
     private String password;
 
+    @Schema(description = "真实姓名")
+    private String realName;
+
+    @Schema(description = "头像")
+    private String avatar;
+
     @Dict(dictCode = "sys_user_status")
     @Schema(description = "状态")
     private Integer status;

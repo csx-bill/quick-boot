@@ -40,4 +40,10 @@ public class SysUserApiDTO implements Serializable {
 
     @Schema(description = "删除状态")
     private Integer delFlag;
+
+    @Schema(description = "真实姓名")
+    private String realName;
+
+    @Schema(description = "头像")
+    private String avatar;
 }
