@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class ISysOauthClientApiServiceImpl implements ISysOauthClientApiService {
+public class SysOauthClientApiServiceImpl implements ISysOauthClientApiService {
     private final SysOauthClientMapper sysOauthClientMapper;
     @Override
     public SysOauthClient findByClientId(String clientId) {
