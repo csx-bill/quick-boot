@@ -1,6 +1,5 @@
 package com.quick.modules.system.vo;
 
-import com.quick.common.aspect.annotation.Dict;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
