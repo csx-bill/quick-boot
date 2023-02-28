@@ -19,6 +19,7 @@ public enum ExceptionCode {
     CAPTCHA_ERROR(CommonConstant.SC_INTERNAL_SERVER_ERROR_500, "验证码校验失败"),
     JSON_PARSE_ERROR(CommonConstant.SC_INTERNAL_SERVER_ERROR_500, "JSON解析异常"),
     OAUTH2_CLIENT(CommonConstant.SC_INTERNAL_SERVER_ERROR_500, "无效client_id"),
+    USERNAME_NOT_FOUND(CommonConstant.SC_INTERNAL_SERVER_ERROR_500, "用户名或密码错误"),
     ;
 
     private int code;

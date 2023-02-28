@@ -3,6 +3,8 @@ package com.quick.modules.config;
 import cn.dev33.satoken.oauth2.config.SaOAuth2Config;
 import cn.dev33.satoken.secure.BCrypt;
 import cn.dev33.satoken.stp.StpUtil;
+import com.quick.common.exception.UsernameNotFoundException;
+import com.quick.common.exception.code.ExceptionCode;
 import com.quick.common.vo.Result;
 import com.quick.system.api.ISysUserApi;
 import com.quick.system.api.dto.SysUserApiDTO;
@@ -36,7 +38,7 @@ public class OAuth2Config {
                             return Result.success();
                         }
                     }
-                    return Result.fail("账号名或密码错误");
+                    throw new UsernameNotFoundException(ExceptionCode.USERNAME_NOT_FOUND.getCode(),ExceptionCode.USERNAME_NOT_FOUND.getMsg());
                 }).
                 // 配置：确认授权时返回的View
                         setConfirmView((clientId, scope) -> {
