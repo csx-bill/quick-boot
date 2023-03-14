@@ -27,8 +27,11 @@ public class SaTokenConfigure {
                 .addExclude("/favicon.ico", "/doc.html", "/**/v3/api-docs", "/webjars/**", "/swagger-resources/**", "/actuator/**", "/instances/**")
                 // 鉴权方法：每次访问进入
                 .setAuth(obj -> {
-                    // 登录校验 -- 拦截所有路由，并排除/user/doLogin 用于开放登录
-                    SaRouter.match("/**", "/**/oauth2/*", r -> StpUtil.checkLogin());
+                    // 登录校验
+                    SaRouter
+                            .match("/**/doLogin")
+                            .match("/**/oauth2/*")
+                            .check( r -> StpUtil.checkLogin() );
                 })
                 // 前置函数：在每次认证函数之前执行
                 .setBeforeAuth(obj -> {
