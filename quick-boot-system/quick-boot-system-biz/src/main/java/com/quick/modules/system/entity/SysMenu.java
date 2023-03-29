@@ -32,20 +32,14 @@ public class SysMenu extends BaseEntity implements Serializable {
     @Schema(description = "菜单图标")
     private String icon;
 
-    @Schema(description = "组件")
-    private String component;
-
     @Schema(description = "路径")
     private String path;
-
-    @Schema(description = "一级菜单跳转地址")
-    private String redirect;
 
     @Schema(description = "菜单排序")
     private Double orderNo;
 
     /**
-     * 类型（0：一级菜单；1：子菜单 ；2：按钮权限）
+     * 菜单类型（0：目录；1：菜单 ；2：按钮）
      */
     @Dict(dictCode = "sys_menu_type")
     @Schema(description = "类型")
@@ -55,10 +49,10 @@ public class SysMenu extends BaseEntity implements Serializable {
     private String description;
 
     /**
-     * 是否隐藏路由菜单: 0否,1是（默认值0）
+     * 是否隐藏菜单: 0否,1是（默认值0）
      */
-    @Schema(description = "是否隐藏路由菜单")
-    private boolean hideMenu;
+    @Schema(description = "是否隐藏菜单")
+    private boolean hideInMenu;
 
     @Dict(dictCode = "sys_menu_status")
     @Schema(description = "状态")

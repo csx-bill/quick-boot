@@ -16,9 +16,6 @@ public class SysMenuTreeVO extends SysMenu {
 
     private static final long serialVersionUID = 1L;
 
-    @Schema(description = "meta")
-    private SysMenuTreeMetaVO meta;
-
     @Schema(description = "子菜单")
     private List<SysMenuTreeVO> children;
 }

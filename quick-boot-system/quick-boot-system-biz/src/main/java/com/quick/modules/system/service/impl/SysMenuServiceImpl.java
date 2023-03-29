@@ -1,12 +1,10 @@
 package com.quick.modules.system.service.impl;
 
 import com.alibaba.fastjson2.JSON;
-import com.alibaba.fastjson2.JSONArray;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.quick.modules.system.entity.SysMenu;
 import com.quick.modules.system.mapper.SysMenuMapper;
 import com.quick.modules.system.service.ISysMenuService;
-import com.quick.modules.system.vo.SysMenuTreeMetaVO;
 import com.quick.modules.system.vo.SysMenuTreeVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +38,6 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
         //获取父节点
         List<SysMenuTreeVO> treeVOList = list.stream().filter(m -> "0".equals(m.getParentId())).map(
                 (m) -> {
-                    m.setMeta(SysMenuTreeMetaVO.builder().title(m.getName()).icon(m.getIcon()).orderNo(m.getOrderNo()).hideMenu(m.isHideMenu()).build());
                     m.setChildren(getChildren(m, list));
                     return m;
                 }

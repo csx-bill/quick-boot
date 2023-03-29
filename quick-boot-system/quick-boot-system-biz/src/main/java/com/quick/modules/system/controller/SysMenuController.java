@@ -1,6 +1,8 @@
 package com.quick.modules.system.controller;
 
 import cn.dev33.satoken.stp.StpUtil;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.quick.common.vo.Result;
 import com.quick.modules.system.entity.SysMenu;
 import com.quick.modules.system.service.ISysMenuService;
@@ -10,9 +12,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -46,4 +46,9 @@ public class SysMenuController {
         return Result.success(UserMenuPermsVO.builder().menu(sysMenuTree).permsCode(permsCode).build());
     }
 
+    @GetMapping(value = "/page")
+    @Operation(summary = "分页查询菜单", description = "分页查询菜单")
+    public Result<IPage<SysMenu>> page(Page<SysMenu> page) {
+        return Result.success(sysMenuService.page(page));
+    }
 }

@@ -30,7 +30,6 @@ public class SysRole  extends BaseEntity implements Serializable {
     @Schema(description = "状态")
     private Integer status;
 
-    @Dict(dictCode = "del_flag")
     @Schema(description = "删除状态")
     private Integer delFlag;
 }

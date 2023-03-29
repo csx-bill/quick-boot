@@ -23,12 +23,6 @@ public class SysUserController {
     private final ISysUserService sysUserService;
 
 
-    @PostMapping(value = "/page")
-    @Operation(summary = "分页查询用户信息", description = "分页查询用户信息")
-    public Result<IPage<SysUser>> page(@RequestBody Page<SysUser> page) {
-        return Result.success(sysUserService.page(page));
-    }
-
     @GetMapping(value = "/getUserInfo")
     @Operation(summary = "获取当前用户信息", description = "获取当前用户信息")
     public Result<UserInfoVO> getUserInfo() {
@@ -38,5 +32,11 @@ public class SysUserController {
         BeanUtils.copyProperties(sysUser,userInfoVO);
         userInfoVO.setUserId(userId);
         return Result.success(userInfoVO);
+    }
+
+    @GetMapping(value = "/page")
+    @Operation(summary = "分页查询用户", description = "分页查询用户")
+    public Result<IPage<SysUser>> page(Page<SysUser> page) {
+        return Result.success(sysUserService.page(page));
     }
 }

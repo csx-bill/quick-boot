@@ -28,7 +28,7 @@ public class Result<T> implements Serializable {
 	/**
 	 * 返回代码
 	 */
-	private Integer code = CommonConstant.SUCCESS_CODE;
+	private Integer status = CommonConstant.SUCCESS_CODE;
 
 	/**
 	 * 返回数据对象 data
@@ -39,8 +39,8 @@ public class Result<T> implements Serializable {
 
 	}
 
-	public Result(Integer code, T data, String msg) {
-		this.code = code;
+	public Result(Integer status, T data, String msg) {
+		this.status = status;
 		this.data = data;
 		this.msg = msg;
 	}
@@ -65,8 +65,8 @@ public class Result<T> implements Serializable {
 	 * @param msg
 	 * @return
 	 */
-	public static <E> Result<E> fail(int code, String msg) {
-		return new Result<>(code, null, msg);
+	public static <E> Result<E> fail(int status, String msg) {
+		return new Result<>(status, null, msg);
 	}
 
 	public static <E> Result<E> fail(String msg) {
