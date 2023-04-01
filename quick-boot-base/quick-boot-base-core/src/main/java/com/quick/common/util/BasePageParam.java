@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -43,7 +44,7 @@ public class BasePageParam implements Serializable {
         page.setCurrent(this.getPageNo());
         page.setSize(this.getPageSize());
         List<OrderItem> orders = new ArrayList<>();
-        if(!this.orderBy.isBlank()){
+        if(!StringUtils.isEmpty(this.orderBy)){
             OrderItem orderItem = new OrderItem();
             // 驼峰转下划线
             orderItem.setColumn(StrUtil.toUnderlineCase(this.orderBy));
