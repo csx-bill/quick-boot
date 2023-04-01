@@ -41,8 +41,8 @@ public class BasePageParam implements Serializable {
 
     public Page buildPage(){
         Page page = new Page<>();
-        page.setCurrent(this.getPageNo());
-        page.setSize(this.getPageSize());
+        page.setCurrent(this.getPageNo()==0?1:this.getPageNo());
+        page.setSize(this.getPageSize()==0?10:this.getPageSize());
         List<OrderItem> orders = new ArrayList<>();
         if(!StringUtils.isEmpty(this.orderBy)){
             OrderItem orderItem = new OrderItem();
