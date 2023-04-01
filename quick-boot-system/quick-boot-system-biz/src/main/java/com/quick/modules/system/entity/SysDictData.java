@@ -1,5 +1,7 @@
 package com.quick.modules.system.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.quick.common.aspect.annotation.Dict;
 import com.quick.common.entity.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
@@ -31,9 +33,11 @@ public class SysDictData extends BaseEntity implements Serializable {
     @Schema(description = "排序")
     private Integer sortOrder;
 
+    @Dict(dictCode = "sys_dict_data_status")
     @Schema(description = "状态")
     private Integer status;
 
+    @JsonIgnore
     @Schema(description = "删除状态")
     private Integer delFlag;
 

@@ -1,5 +1,6 @@
 package com.quick.modules.system.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.quick.common.aspect.annotation.Dict;
 import com.quick.common.entity.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -29,6 +30,7 @@ public class SysDict extends BaseEntity implements Serializable {
     @Schema(description = "状态")
     private Integer status;
 
+    @JsonIgnore
     @Schema(description = "删除状态")
     private Integer delFlag;
 
