@@ -59,8 +59,8 @@
         </dependency>
 
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
         </dependency>
         <!--监控-->
         <dependency>
@@ -115,15 +115,7 @@
         <dependency>
             <groupId>apijson.framework</groupId>
             <artifactId>apijson-framework</artifactId>
-            <version>6.0.0</version>
-            <scope>system</scope>
-            <systemPath>${pom.basedir}/src/main/resources/lib/apijson-framework-6.0.0.jar</systemPath>
-            <exclusions>
-                <exclusion>
-                    <groupId>mysql</groupId>
-                    <artifactId>mysql-connector-java</artifactId>
-                </exclusion>
-            </exclusions>
+            <version>6.0.0-private</version>
         </dependency>
 
         <dependency>
@@ -151,9 +143,13 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <includeSystemScope>true</includeSystemScope>
-                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

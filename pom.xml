@@ -10,8 +10,12 @@
 
     <properties>
         <java.version>17</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
+        <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
         <quick.version>1.0.0</quick.version>
         <spring-boot.version>3.0.5</spring-boot.version>
         <spring-cloud.version>2022.0.0</spring-cloud.version>
@@ -32,6 +36,7 @@
     </properties>
     <!-- 模块 -->
     <modules>
+        <module>apijson-framework</module>
         <module>quick-boot-base</module>
         <module>quick-boot-system</module>
         <module>quick-boot-oauth2</module>
@@ -48,6 +53,11 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>apijson.framework</groupId>
+                <artifactId>apijson-framework</artifactId>
+                <version>6.0.0-private</version>
+            </dependency>
 
             <!-- spring boot 依赖 -->
             <dependency>
@@ -156,8 +166,8 @@
             </dependency>
 
             <dependency>
-                <groupId>mysql</groupId>
-                <artifactId>mysql-connector-java</artifactId>
+                <groupId>com.mysql</groupId>
+                <artifactId>mysql-connector-j</artifactId>
                 <version>${mysql.version}</version>
             </dependency>
 
@@ -219,6 +229,12 @@
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
             </resource>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.xml</include>
+                </includes>
+            </resource>
         </resources>
         <pluginManagement>
             <plugins>
@@ -232,16 +248,17 @@
                             <enabled>true</enabled>
                         </layers>
                     </configuration>
-                    <executions>
-                        <execution>
-                            <goals>
-                                <goal>repackage</goal>
-                            </goals>
-                        </execution>
-                    </executions>
                 </plugin>
             </plugins>
         </pluginManagement>
+
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+
     </build>
 
     <profiles>
