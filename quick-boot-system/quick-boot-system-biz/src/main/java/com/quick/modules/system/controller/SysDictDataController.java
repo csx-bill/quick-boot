@@ -17,6 +17,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
+import java.util.List;
 
 
 @Slf4j
@@ -66,5 +67,11 @@ public class SysDictDataController {
     @Operation(summary = "根据ID批量删除字典数据", description = "根据ID批量删除字典数据")
     public Result<Boolean> removeBatchByIds(String ids) {
         return Result.success(sysDictDataService.removeBatchByIds(Arrays.asList(ids.split(","))));
+    }
+
+    @GetMapping(value = "/queryDictDataByDictCode")
+    @Operation(summary = "通过字典code获取字典数据", description = "通过字典code获取字典数据")
+    public Result<List<SysDictData>> queryDictDataByDictCode(@RequestParam("dictCode") String dictCode) {
+        return Result.success(sysDictDataService.queryDictDataByDictCode(dictCode));
     }
 }
