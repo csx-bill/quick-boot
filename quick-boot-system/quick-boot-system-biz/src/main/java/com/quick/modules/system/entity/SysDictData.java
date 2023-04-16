@@ -35,7 +35,7 @@ public class SysDictData extends BaseEntity implements Serializable {
 
     @Dict(dictCode = "sys_dict_data_status")
     @Schema(description = "状态")
-    private Integer status;
+    private String status;
 
     @JsonIgnore
     @Schema(description = "删除状态")

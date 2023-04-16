@@ -29,7 +29,7 @@ public class SysRole  extends BaseEntity implements Serializable {
 
     @Dict(dictCode = "sys_role_status")
     @Schema(description = "状态")
-    private Integer status;
+    private String status;
 
     @JsonIgnore
     @Schema(description = "删除状态")

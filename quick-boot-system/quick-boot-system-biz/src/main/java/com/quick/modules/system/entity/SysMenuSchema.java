@@ -33,7 +33,7 @@ public class SysMenuSchema extends BaseEntity implements Serializable {
 
     @Dict(dictCode = "sys_menu_schema_status")
     @Schema(description = "状态")
-    private Integer status;
+    private String status;
 
     @JsonIgnore
     @Schema(description = "删除状态")
