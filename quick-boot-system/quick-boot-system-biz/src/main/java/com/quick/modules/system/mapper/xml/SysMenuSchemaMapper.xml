@@ -10,9 +10,9 @@
                 JOIN sys_menu b ON a.menu_id = b.id
         WHERE
             b.path = #{path}
-          AND b.`status` = 0
+          AND b.`status` = 'A'
           AND b.del_flag = 0
-          AND a.`status` = 0
+          AND a.`status` = 'A'
           AND a.del_flag = 0
     </select>
 
