@@ -37,11 +37,11 @@ public class SysMenuController {
         //菜单权限和按钮权限
         List<SysMenu> sysMenus = sysMenuService.queryByUser(userId);
         //过滤掉按钮权限
-        List<SysMenu> menus = sysMenus.stream().filter(sysMenu -> !sysMenu.getMenuType().equals(2)).collect(Collectors.toList());
+        List<SysMenu> menus = sysMenus.stream().filter(sysMenu -> !sysMenu.getMenuType().equals("button")).collect(Collectors.toList());
         // 组装菜单树
         List<SysMenuTreeVO> sysMenuTree = sysMenuService.getSysMenuTree(menus);
         //按钮权限
-        List<String> permsCode = sysMenus.stream().filter(m -> m.getMenuType().equals(2)).map(
+        List<String> permsCode = sysMenus.stream().filter(m -> m.getMenuType().equals("button")).map(
                 (m) -> {
                     return m.getPerms();
                 }

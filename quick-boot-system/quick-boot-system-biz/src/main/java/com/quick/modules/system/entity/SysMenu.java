@@ -40,11 +40,11 @@ public class SysMenu extends BaseEntity implements Serializable {
     private Double orderNo;
 
     /**
-     * 菜单类型（0：目录；1：菜单 ；2：按钮）
+     * 菜单类型（dir：目录；menu：菜单 ；button：按钮）
      */
     @Dict(dictCode = "sys_menu_type")
     @Schema(description = "类型")
-    private Integer menuType;
+    private String menuType;
 
     @Schema(description = "描述")
     private String description;
