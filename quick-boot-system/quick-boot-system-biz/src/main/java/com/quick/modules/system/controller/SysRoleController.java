@@ -7,14 +7,15 @@ import com.quick.common.vo.Result;
 import com.quick.modules.system.entity.SysRole;
 import com.quick.modules.system.req.SysRolePageParam;
 import com.quick.modules.system.service.ISysRoleService;
+import com.quick.modules.system.vo.RolePermissionsVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.Arrays;
+
 
 @Slf4j
 @RestController
@@ -62,6 +63,19 @@ public class SysRoleController {
     @Operation(summary = "根据ID批量删除角色", description = "根据ID批量删除角色")
     public Result<Boolean> removeBatchByIds(String ids) {
         return Result.success(sysRoleService.removeBatchByIds(Arrays.asList(ids.split(","))));
+    }
+
+    @GetMapping(value = "/getRolePermissions")
+    @Operation(summary = "查询角色权限", description = "查询角色权限")
+    public Result<RolePermissionsVO> getRolePermissions(String id) {
+        return Result.success(sysRoleService.getRolePermissions(id));
+    }
+
+    @PostMapping(value = "/saveRolePermissions")
+    @Operation(summary = "保存角色权限", description = "保存角色权限")
+    public Result<Boolean> saveRolePermissions(@RequestBody RolePermissionsVO vo) {
+        sysRoleService.saveRolePermissions(vo);
+        return Result.success();
     }
 
 }

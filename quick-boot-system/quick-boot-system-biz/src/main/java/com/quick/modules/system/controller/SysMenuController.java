@@ -61,6 +61,16 @@ public class SysMenuController {
         return Result.success(sysMenuTree);
     }
 
+    @GetMapping(value = "/getMenuTree")
+    @Operation(summary = "查询菜单树", description = "查询菜单树")
+    public Result<List<SysMenuTreeVO>> getMenuTree() {
+        //菜单权限和按钮权限
+        List<SysMenu> menus = sysMenuService.list();
+        // 组装菜单树
+        List<SysMenuTreeVO> sysMenuTree = sysMenuService.getSysMenuTree(menus);
+        return Result.success(sysMenuTree);
+    }
+
     @PostMapping(value = "/page")
     @Operation(summary = "分页查询菜单", description = "分页查询菜单")
     public Result<IPage<SysMenu>> page(@RequestBody SysMenuPageParam sysMenuPageParam) {
