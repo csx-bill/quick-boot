@@ -5,8 +5,13 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.quick.common.vo.Result;
 import com.quick.modules.system.entity.SysRole;
+import com.quick.modules.system.entity.SysUser;
+import com.quick.modules.system.entity.SysUserRole;
+import com.quick.modules.system.req.AuthorizedUserPageParam;
 import com.quick.modules.system.req.SysRolePageParam;
 import com.quick.modules.system.service.ISysRoleService;
+import com.quick.modules.system.service.ISysUserRoleService;
+import com.quick.modules.system.service.ISysUserService;
 import com.quick.modules.system.vo.RolePermissionsVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -25,6 +30,9 @@ import java.util.Arrays;
 public class SysRoleController {
 
     private final ISysRoleService sysRoleService;
+    private final ISysUserService sysUserService;
+    private final ISysUserRoleService sysUserRoleService;
+
     @PostMapping(value = "/page")
     @Operation(summary = "分页查询角色", description = "分页查询角色")
     public Result<IPage<SysRole>> page(@RequestBody SysRolePageParam sysRolePageParam) {
@@ -74,8 +82,40 @@ public class SysRoleController {
     @PostMapping(value = "/saveRolePermissions")
     @Operation(summary = "保存角色权限", description = "保存角色权限")
     public Result<Boolean> saveRolePermissions(@RequestBody RolePermissionsVO vo) {
-        sysRoleService.saveRolePermissions(vo);
-        return Result.success();
+        return Result.success(sysRoleService.saveRolePermissions(vo));
     }
 
+    @PostMapping(value = "/authorizedUserPage")
+    @Operation(summary = "分页查询已授权用户", description = "分页查询已授权用户")
+    public Result<IPage<SysUser>> authorizedUserPage(@RequestBody AuthorizedUserPageParam pageParam) {
+        Page page = pageParam.buildPage();
+        return Result.success(sysUserService.authorizedUserPage(page,pageParam));
+    }
+
+    @PostMapping(value = "/unauthorizedUserPage")
+    @Operation(summary = "分页查询未授权用户", description = "分页查询未授权用户")
+    public Result<IPage<SysRole>> unauthorizedUserPage(@RequestBody AuthorizedUserPageParam pageParam) {
+        Page page = pageParam.buildPage();
+        return Result.success(sysUserService.unauthorizedUserPage(page,pageParam));
+    }
+
+    @DeleteMapping(value = "/cancelAuthorizedUser")
+    @Operation(summary = "取消已授权用户", description = "取消已授权用户")
+    public Result<Boolean> cancelAuthorizedUser(String roleId,String userId) {
+        return Result.success(sysUserRoleService.remove(new LambdaQueryWrapper<SysUserRole>()
+                .eq(SysUserRole::getRoleId,roleId)
+                .eq(SysUserRole::getUserId,userId)
+                )
+        );
+    }
+
+    @DeleteMapping(value = "/batchCancelAuthorizedUser")
+    @Operation(summary = "批量取消已授权用户", description = "批量取消已授权用户")
+    public Result<Boolean> batchCancelAuthorizedUser(String roleId,String userIds) {
+        return Result.success(sysUserRoleService.remove(new LambdaQueryWrapper<SysUserRole>()
+                .eq(SysUserRole::getRoleId,roleId)
+                .in(SysUserRole::getUserId,Arrays.asList(userIds.split(",")))
+                )
+        );
+    }
 }

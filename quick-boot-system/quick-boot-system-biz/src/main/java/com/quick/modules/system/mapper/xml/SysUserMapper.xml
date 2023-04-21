@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quick.modules.system.mapper.SysUserMapper">
+    <select id="authorizedUserPage" resultType="com.quick.modules.system.entity.SysUser">
+        SELECT
+        b.id,
+        b.create_time,
+        b.username,
+        b.real_name,
+        b.avatar,
+        b.`status`
+        FROM
+        `sys_user_role` a
+        LEFT JOIN sys_user b ON a.user_id = b.id
+        WHERE
+        b.del_flag = 0
+        <if test="param.roleId != null and param.roleId != ''">
+            AND a.role_id = #{param.roleId}
+        </if>
+        <if test="param.username != null and param.username != ''">
+            AND b.username = #{param.username}
+        </if>
+        <if test="param.realName != null and param.realName != ''">
+            AND b.real_name like concat('%', #{param.realName}, '%')
+        </if>
+    </select>
+
+
+    <select id="unauthorizedUserPage" resultType="com.quick.modules.system.entity.SysUser">
+        SELECT
+        b.id,
+        b.create_time,
+        b.username,
+        b.real_name,
+        b.avatar,
+        b.`status`
+        FROM
+        sys_user b
+        WHERE
+        b.id NOT IN (
+        SELECT
+        a.user_id
+        FROM
+        sys_user_role a
+        <where>
+            <if test="param.roleId != null and param.roleId != ''">
+                a.role_id = #{param.roleId}
+            </if>
+        </where>
+        )
+        AND b.del_flag = 0
+        <if test="param.username != null and param.username != ''">
+            AND b.username = #{param.username}
+        </if>
+        <if test="param.realName != null and param.realName != ''">
+            AND b.real_name like concat('%', #{param.realName}, '%')
+        </if>
+    </select>
+</mapper>
