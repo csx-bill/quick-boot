@@ -48,7 +48,7 @@ public abstract class AbstractGlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.OK)
     public Result<?> exception(Exception ex){
-        log.error("Exception:{}", ex.getMessage());
+        log.error("Exception:{}", ex);
         return Result.fail(ExceptionCode.SYSTEM_BUSY.getCode(),ExceptionCode.SYSTEM_BUSY.getMsg());
     }
 }
