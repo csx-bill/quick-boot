@@ -36,7 +36,7 @@ public class SysUserApiDTO implements Serializable {
     private String password;
 
     @Schema(description = "状态")
-    private Integer status;
+    private String status;
 
     @Schema(description = "删除状态")
     private Integer delFlag;
