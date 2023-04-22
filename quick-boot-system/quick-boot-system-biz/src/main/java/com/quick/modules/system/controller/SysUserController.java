@@ -57,7 +57,9 @@ public class SysUserController {
     @GetMapping(value = "/getById")
     @Operation(summary = "根据ID获取用户", description = "根据ID获取用户")
     public Result<SysUser> getById(String id) {
-        return Result.success(sysUserService.getById(id));
+        SysUser sysUser = sysUserService.getById(id);
+        sysUser.setPassword(null);
+        return Result.success(sysUser);
     }
 
     @PutMapping(value = "/updateById")
