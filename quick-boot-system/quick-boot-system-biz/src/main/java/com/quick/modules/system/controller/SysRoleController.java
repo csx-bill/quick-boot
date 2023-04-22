@@ -118,4 +118,10 @@ public class SysRoleController {
                 )
         );
     }
+
+    @PostMapping(value = "/batchAuthorizedUser")
+    @Operation(summary = "批量授权用户", description = "批量授权用户")
+    public Result<Boolean> batchAuthorizedUser(String roleId,String userIds) {
+        return Result.success(sysUserRoleService.batchAuthorizedUser(roleId,userIds));
+    }
 }
