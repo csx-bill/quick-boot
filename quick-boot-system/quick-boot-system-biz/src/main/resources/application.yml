@@ -14,6 +14,8 @@ spring:
   config:
     import:
       - optional:nacos:${spring.application.name}.yml
+      - optional:nacos:knife4j.yml
+      - optional:nacos:mybatis-plus.yml
       - optional:nacos:logging.yml
       - optional:nacos:monitor.yml
       - optional:nacos:redis.yml
