@@ -12,6 +12,7 @@ import com.quick.modules.system.service.ISysUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 
 @Slf4j
@@ -45,7 +46,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
     @Override
     public boolean updateById(SysUser entity) {
-        if(!entity.getPassword().isEmpty()){
+        if(StringUtils.hasText(entity.getPassword())){
             String password = BCrypt.hashpw(entity.getPassword());
             entity.setPassword(password);
         }
