@@ -1,7 +1,9 @@
 package com.quick.modules.system.api.controller;
 
+import cn.dev33.satoken.annotation.SaIgnore;
 import com.quick.common.vo.Result;
 import com.quick.modules.system.entity.SysUser;
+import com.quick.modules.system.entity.SysUserRole;
 import com.quick.modules.system.service.ISysUserApiService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -12,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping("/SysUser/Api")
@@ -19,9 +23,24 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "用户信息API")
 public class SysUserApiController {
     private final ISysUserApiService sysUserApiService;
+    @SaIgnore
     @GetMapping(value = "/findByUsername")
     @Operation(summary = "查询用户", description = "根据用户账号查询用户")
     public Result<SysUser> findByUsername(@RequestParam(value = "username") String username) {
         return Result.success(sysUserApiService.findByUsername(username));
+    }
+
+    @SaIgnore
+    @GetMapping(value = "/getUserRole")
+    @Operation(summary = "查询当前用户的角色", description = "查询当前用户的角色")
+    public Result<List<SysUserRole>> getUserRole(@RequestParam(value = "userId") String userId) {
+        return Result.success(sysUserApiService.getUserRole(userId));
+    }
+
+    @SaIgnore
+    @GetMapping(value = "/getRolePermission")
+    @Operation(summary = "查询角色权限", description = "查询角色权限")
+    public Result<List<String>> getRolePermission(@RequestParam(value = "roleId",required = false) String roleId) {
+        return Result.success(sysUserApiService.getRolePermission(roleId));
     }
 }

@@ -21,4 +21,19 @@
         ORDER BY h.order_no ASC
     </select>
 
+    <select id="getRolePermission" resultType="com.quick.modules.system.entity.SysMenu">
+        SELECT
+        b.*
+        FROM
+        sys_role_menu a
+        JOIN sys_menu b ON a.menu_id = b.id
+        WHERE
+        b.menu_type = "button"
+        AND b.del_flag = 0
+        AND b.`status` = 'A'
+        <if test="roleId != null and roleId != ''">
+            AND a.role_id = #{roleId}
+        </if>
+    </select>
+
 </mapper>

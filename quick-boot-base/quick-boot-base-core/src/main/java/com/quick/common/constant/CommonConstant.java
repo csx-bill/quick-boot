@@ -6,5 +6,9 @@ public interface CommonConstant {
     /** {@code 200 OK} (HTTP/1.0 - RFC 1945) */
     public static final Integer SUCCESS_CODE = 0;
     public static final String SUCCESS_MSG = "success";
+    /**
+     * 系统服务名
+     */
+    public static final String SERVICE_SYSTEM = "quick-boot-system-biz";
 
 }

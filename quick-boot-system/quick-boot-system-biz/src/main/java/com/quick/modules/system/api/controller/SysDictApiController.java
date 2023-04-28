@@ -1,5 +1,6 @@
 package com.quick.modules.system.api.controller;
 
+import cn.dev33.satoken.annotation.SaIgnore;
 import com.quick.common.vo.Result;
 import com.quick.modules.system.service.ISysDictApiService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class SysDictApiController {
     private final ISysDictApiService sysDictApiService;
 
+    @SaIgnore
     @GetMapping(value = "/translateDict")
     @Operation(summary = "通过字典code获取字典数据 Text", description = "通过字典code获取字典数据 Text")
     public Result<String> translateDict(@RequestParam("dictCode") String dictCode, @RequestParam("dictValue") String dictValue) {

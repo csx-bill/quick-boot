@@ -1,5 +1,6 @@
 package com.quick.modules.system.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -62,6 +63,7 @@ public class SysUserController {
         return Result.success(sysUser);
     }
 
+    @SaCheckPermission("SysUser:update")
     @PutMapping(value = "/updateById")
     @Operation(summary = "根据ID更新用户", description = "根据ID更新用户")
     public Result<Boolean> updateById(@RequestBody SysUser sysUser) {

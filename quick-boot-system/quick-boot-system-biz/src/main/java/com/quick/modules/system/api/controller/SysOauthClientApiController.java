@@ -1,5 +1,6 @@
 package com.quick.modules.system.api.controller;
 
+import cn.dev33.satoken.annotation.SaIgnore;
 import com.quick.common.vo.Result;
 import com.quick.modules.system.entity.SysOauthClient;
 import com.quick.modules.system.service.ISysOauthClientApiService;
@@ -21,6 +22,7 @@ public class SysOauthClientApiController {
 
     private final ISysOauthClientApiService sysOauthClientApiService;
 
+    @SaIgnore
     @GetMapping(value = "/findByClientId")
     @Operation(summary = "查询客户端", description = "根据应用ID查询客户端")
     public Result<SysOauthClient> findByClientId(@RequestParam(value = "clientId") String clientId) {
