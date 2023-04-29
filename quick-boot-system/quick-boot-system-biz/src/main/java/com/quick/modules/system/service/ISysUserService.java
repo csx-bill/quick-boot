@@ -9,4 +9,5 @@ import com.quick.modules.system.req.AuthorizedUserPageParam;
 public interface ISysUserService extends IService<SysUser> {
     IPage<SysUser> authorizedUserPage(Page<SysUser> page, AuthorizedUserPageParam param);
     IPage<SysUser> unauthorizedUserPage(Page<SysUser> page, AuthorizedUserPageParam param);
+    void checkUserAllowed(String userId);
 }

@@ -5,6 +5,9 @@ import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.quick.common.constant.CommonConstant;
+import com.quick.common.exception.BizException;
+import com.quick.common.util.SuperAdminUtils;
 import com.quick.modules.system.entity.SysUser;
 import com.quick.modules.system.mapper.SysUserMapper;
 import com.quick.modules.system.req.AuthorizedUserPageParam;
@@ -13,6 +16,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+
+import java.io.Serializable;
+import java.util.Collection;
 
 
 @Slf4j
@@ -50,6 +56,34 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             String password = BCrypt.hashpw(entity.getPassword());
             entity.setPassword(password);
         }
+        if(entity.getStatus().equals("I")){
+            checkUserAllowed(entity.getId());
+        }
         return super.updateById(entity);
+    }
+
+    @Override
+    public boolean removeById(Serializable id) {
+        checkUserAllowed(id.toString());
+        return super.removeById(id);
+    }
+
+    @Override
+    public boolean removeByIds(Collection<?> list) {
+        for (Object id : list) {
+            checkUserAllowed(id.toString());
+        }
+        return super.removeByIds(list);
+    }
+
+    /**
+     * 校验用户是否允许操作
+     *
+     */
+    @Override
+    public void checkUserAllowed(String userId) {
+        if (SuperAdminUtils.isSuperAdmin(userId)) {
+            throw new BizException(CommonConstant.SC_INTERNAL_SERVER_ERROR_500,"不允许操作超级管理员用户");
+        }
     }
 }
