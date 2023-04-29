@@ -21,7 +21,7 @@
         ORDER BY h.order_no ASC
     </select>
 
-    <select id="getRolePermission" resultType="com.quick.modules.system.entity.SysMenu">
+    <select id="getUserRolePermission" resultType="com.quick.modules.system.entity.SysMenu">
         SELECT
         b.*
         FROM

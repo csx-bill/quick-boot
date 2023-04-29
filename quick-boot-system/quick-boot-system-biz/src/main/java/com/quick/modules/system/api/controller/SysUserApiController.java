@@ -33,14 +33,14 @@ public class SysUserApiController {
     @SaIgnore
     @GetMapping(value = "/getUserRole")
     @Operation(summary = "查询当前用户的角色", description = "查询当前用户的角色")
-    public Result<List<SysUserRole>> getUserRole(@RequestParam(value = "userId") String userId) {
+    public Result<List<String>> getUserRole(@RequestParam(value = "userId") String userId) {
         return Result.success(sysUserApiService.getUserRole(userId));
     }
 
     @SaIgnore
-    @GetMapping(value = "/getRolePermission")
-    @Operation(summary = "查询角色权限", description = "查询角色权限")
-    public Result<List<String>> getRolePermission(@RequestParam(value = "roleId",required = false) String roleId) {
-        return Result.success(sysUserApiService.getRolePermission(roleId));
+    @GetMapping(value = "/getUserRolePermission")
+    @Operation(summary = "查询用户角色权限", description = "查询用户角色权限")
+    public Result<List<String>> getUserRolePermission(@RequestParam(value = "roleId",required = false) String roleId) {
+        return Result.success(sysUserApiService.getUserRolePermission(roleId));
     }
 }

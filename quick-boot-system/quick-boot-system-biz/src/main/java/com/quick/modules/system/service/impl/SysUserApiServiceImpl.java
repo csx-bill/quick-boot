@@ -1,13 +1,10 @@
 package com.quick.modules.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.quick.modules.system.entity.SysMenu;
-import com.quick.modules.system.entity.SysRoleMenu;
 import com.quick.modules.system.entity.SysUser;
 import com.quick.modules.system.entity.SysUserRole;
 import com.quick.modules.system.mapper.SysMenuMapper;
-import com.quick.modules.system.mapper.SysRoleMenuMapper;
 import com.quick.modules.system.mapper.SysUserMapper;
 import com.quick.modules.system.mapper.SysUserRoleMapper;
 import com.quick.modules.system.service.ISysUserApiService;
@@ -31,13 +28,14 @@ public class SysUserApiServiceImpl implements ISysUserApiService {
     }
 
     @Override
-    public List<SysUserRole> getUserRole(String userId) {
-        return sysUserRoleMapper.selectList(new LambdaQueryWrapper<SysUserRole>().eq(SysUserRole::getUserId,userId));
+    public List<String> getUserRole(String userId) {
+        List<SysUserRole> sysUserRoles = sysUserRoleMapper.selectList(new LambdaQueryWrapper<SysUserRole>().eq(SysUserRole::getUserId, userId));
+        return sysUserRoles.stream().map(SysUserRole::getRoleId).collect(Collectors.toList());
     }
 
     @Override
-    public List<String> getRolePermission(String roleId) {
-        List<SysMenu> sysRoleMenus = sysMenuMapper.getRolePermission(roleId);
+    public List<String> getUserRolePermission(String roleId) {
+        List<SysMenu> sysRoleMenus = sysMenuMapper.getUserRolePermission(roleId);
         return sysRoleMenus.stream().map(SysMenu::getPerms).collect(Collectors.toList());
     }
 }

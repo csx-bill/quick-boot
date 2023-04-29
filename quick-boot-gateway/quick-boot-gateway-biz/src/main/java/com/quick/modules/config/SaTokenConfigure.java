@@ -7,16 +7,10 @@ import cn.dev33.satoken.router.SaRouter;
 import cn.dev33.satoken.stp.StpUtil;
 import com.alibaba.fastjson2.JSON;
 import com.quick.common.vo.Result;
-import com.quick.system.api.ISysUserApi;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
-import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Schedulers;
 
-import java.util.List;
 
 /**
  * [Sa-Token 权限认证] 配置类
@@ -24,10 +18,6 @@ import java.util.List;
 @Slf4j
 @Configuration
 public class SaTokenConfigure {
-
-    @Lazy
-    @Autowired
-    private ISysUserApi sysUserApi;
 
     // 注册 Sa-Token全局过滤器
     @Bean
@@ -42,12 +32,6 @@ public class SaTokenConfigure {
                     // 登录校验 -- 拦截所有路由，并排除/user/doLogin 用于开放登录
                     SaRouter.match("/**", "/**/doLogin", r -> StpUtil.checkLogin());
                     SaRouter.match("/**/oauth2/*", "/**/doLogin", r -> StpUtil.checkLogin());
-                    // 权限认证
-                    getPermissions().subscribe(permissions -> {
-                        for (String permission : permissions) {
-                            SaRouter.match("/**", () -> StpUtil.checkPermission(permission));
-                        }
-                    });
 
                 })
                 // 前置函数：在每次认证函数之前执行
@@ -76,12 +60,4 @@ public class SaTokenConfigure {
                 })
                 ;
     }
-
-    // 获取系统所有权限
-    public Mono<List<String>> getPermissions() {
-        return Mono.fromCallable(() -> sysUserApi.getRolePermission(null))
-                .subscribeOn(Schedulers.boundedElastic())
-                .map(Result::getData);
-    }
-
 }

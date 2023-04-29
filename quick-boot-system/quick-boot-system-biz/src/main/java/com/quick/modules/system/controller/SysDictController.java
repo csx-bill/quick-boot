@@ -1,6 +1,7 @@
 package com.quick.modules.system.controller;
 
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -36,6 +37,7 @@ public class SysDictController {
         return Result.success(sysDictService.page(page,queryWrapper));
     }
 
+    @SaCheckPermission("SysDict:add")
     @PostMapping(value = "/save")
     @Operation(summary = "保存字典", description = "保存字典")
     public Result<Boolean> save(@RequestBody SysDict sysDict) {
@@ -48,18 +50,21 @@ public class SysDictController {
         return Result.success(sysDictService.getById(id));
     }
 
+    @SaCheckPermission("SysDict:update")
     @PutMapping(value = "/updateById")
     @Operation(summary = "根据ID更新字典", description = "根据ID更新字典")
     public Result<Boolean> updateById(@RequestBody SysDict sysDict) {
         return Result.success(sysDictService.updateById(sysDict));
     }
 
+    @SaCheckPermission("SysDict:delete")
     @DeleteMapping(value = "/removeById")
     @Operation(summary = "根据ID删除字典", description = "根据ID删除字典")
     public Result<Boolean> removeById(String id) {
         return Result.success(sysDictService.removeById(id));
     }
 
+    @SaCheckPermission("SysDict:delete")
     @DeleteMapping(value = "/removeBatchByIds")
     @Operation(summary = "根据ID批量删除字典", description = "根据ID批量删除字典")
     public Result<Boolean> removeBatchByIds(String ids) {

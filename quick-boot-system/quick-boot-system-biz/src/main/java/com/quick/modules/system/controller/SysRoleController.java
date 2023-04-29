@@ -1,5 +1,6 @@
 package com.quick.modules.system.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -43,6 +44,7 @@ public class SysRoleController {
         return Result.success(sysRoleService.page(page,queryWrapper));
     }
 
+    @SaCheckPermission("SysRole:add")
     @PostMapping(value = "/save")
     @Operation(summary = "保存角色", description = "保存角色")
     public Result<Boolean> save(@RequestBody SysRole sysRole) {
@@ -55,18 +57,21 @@ public class SysRoleController {
         return Result.success(sysRoleService.getById(id));
     }
 
+    @SaCheckPermission("SysRole:update")
     @PutMapping(value = "/updateById")
     @Operation(summary = "根据ID更新角色", description = "根据ID更新角色")
     public Result<Boolean> updateById(@RequestBody SysRole sysRole) {
         return Result.success(sysRoleService.updateById(sysRole));
     }
 
+    @SaCheckPermission("SysRole:delete")
     @DeleteMapping(value = "/removeById")
     @Operation(summary = "根据ID删除角色", description = "根据ID删除角色")
     public Result<Boolean> removeById(String id) {
         return Result.success(sysRoleService.removeById(id));
     }
 
+    @SaCheckPermission("SysRole:delete")
     @DeleteMapping(value = "/removeBatchByIds")
     @Operation(summary = "根据ID批量删除角色", description = "根据ID批量删除角色")
     public Result<Boolean> removeBatchByIds(String ids) {

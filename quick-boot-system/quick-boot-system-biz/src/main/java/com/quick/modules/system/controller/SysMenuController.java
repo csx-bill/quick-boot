@@ -1,5 +1,6 @@
 package com.quick.modules.system.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -81,6 +82,7 @@ public class SysMenuController {
         return Result.success(sysMenuService.page(page,queryWrapper));
     }
 
+    @SaCheckPermission("SysMenu:add")
     @PostMapping(value = "/save")
     @Operation(summary = "保存菜单", description = "保存菜单")
     public Result<Boolean> save(@RequestBody SysMenu sysMenu) {
@@ -93,18 +95,21 @@ public class SysMenuController {
         return Result.success(sysMenuService.getById(id));
     }
 
+    @SaCheckPermission("SysMenu:update")
     @PutMapping(value = "/updateById")
     @Operation(summary = "根据ID更新菜单", description = "根据ID更新菜单")
     public Result<Boolean> updateById(@RequestBody SysMenu sysMenu) {
         return Result.success(sysMenuService.updateById(sysMenu));
     }
 
+    @SaCheckPermission("SysMenu:delete")
     @DeleteMapping(value = "/removeById")
     @Operation(summary = "根据ID删除菜单", description = "根据ID删除菜单")
     public Result<Boolean> removeById(String id) {
         return Result.success(sysMenuService.removeById(id));
     }
 
+    @SaCheckPermission("SysMenu:delete")
     @DeleteMapping(value = "/removeBatchByIds")
     @Operation(summary = "根据ID批量删除菜单", description = "根据ID批量删除菜单")
     public Result<Boolean> removeBatchByIds(String ids) {

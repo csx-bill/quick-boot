@@ -1,5 +1,7 @@
 package com.quick.common.handler;
 
+import cn.dev33.satoken.exception.NotPermissionException;
+import com.quick.common.constant.CommonConstant;
 import com.quick.common.exception.OAuth2Exception;
 import com.quick.common.exception.UsernameNotFoundException;
 import com.quick.common.exception.code.ExceptionCode;
@@ -43,6 +45,13 @@ public abstract class AbstractGlobalExceptionHandler {
     public Result<?> usernameNotFoundException(UsernameNotFoundException ex){
         log.error("UsernameNotFoundException:{}", ex.getMsg());
         return Result.fail(ex.getCode(),ex.getMsg());
+    }
+
+    @ExceptionHandler(NotPermissionException.class)
+    @ResponseStatus(HttpStatus.OK)
+    public Result<?> usernameNotFoundException(NotPermissionException ex){
+        log.error("NotPermissionException:{}", ex.getMessage());
+        return Result.fail(CommonConstant.FORBIDDEN,ex.getMessage());
     }
 
     @ExceptionHandler(Exception.class)

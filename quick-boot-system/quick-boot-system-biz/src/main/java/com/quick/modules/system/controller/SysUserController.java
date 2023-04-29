@@ -49,6 +49,7 @@ public class SysUserController {
         return Result.success(sysUserService.page(page,queryWrapper));
     }
 
+    @SaCheckPermission("SysUser:add")
     @PostMapping(value = "/save")
     @Operation(summary = "保存用户", description = "保存用户")
     public Result<Boolean> save(@RequestBody SysUser sysUser) {
@@ -70,12 +71,14 @@ public class SysUserController {
         return Result.success(sysUserService.updateById(sysUser));
     }
 
+    @SaCheckPermission("SysUser:delete")
     @DeleteMapping(value = "/removeById")
     @Operation(summary = "根据ID删除用户", description = "根据ID删除用户")
     public Result<Boolean> removeById(String id) {
         return Result.success(sysUserService.removeById(id));
     }
 
+    @SaCheckPermission("SysUser:delete")
     @DeleteMapping(value = "/removeBatchByIds")
     @Operation(summary = "根据ID批量删除用户", description = "根据ID批量删除用户")
     public Result<Boolean> removeBatchByIds(String ids) {
