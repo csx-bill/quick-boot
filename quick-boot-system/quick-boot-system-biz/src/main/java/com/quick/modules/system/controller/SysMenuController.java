@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -35,41 +34,14 @@ public class SysMenuController {
     @Operation(summary = "查询当前登录用户拥有的菜单权限和按钮权限", description = "查询当前登录用户拥有的菜单权限和按钮权限")
     public Result<UserMenuPermsVO> getUserMenu() {
         String userId = StpUtil.getLoginId().toString();
-        //菜单权限和按钮权限
-        List<SysMenu> sysMenus = sysMenuService.queryByUser(userId);
-        //过滤掉按钮权限
-        List<SysMenu> menus = sysMenus.stream().filter(sysMenu -> !sysMenu.getMenuType().equals("button")).collect(Collectors.toList());
-        // 组装菜单树
-        List<SysMenuTreeVO> sysMenuTree = sysMenuService.getSysMenuTree(menus);
-        //按钮权限
-        List<String> permsCode = sysMenus.stream().filter(m -> m.getMenuType().equals("button")).map(
-                (m) -> {
-                    return m.getPerms();
-                }
-        ).collect(Collectors.toList());
-
-        return Result.success(UserMenuPermsVO.builder().menu(sysMenuTree).permsCode(permsCode).build());
+        return Result.success(sysMenuService.getUserMenu(userId));
     }
 
     @GetMapping(value = "/getUserMenuTree")
     @Operation(summary = "查询当前登录用户拥有的菜单树", description = "查询当前登录用户拥有的菜单树")
     public Result<List<SysMenuTreeVO>> getUserMenuTree() {
         String userId = StpUtil.getLoginId().toString();
-        //菜单权限和按钮权限
-        List<SysMenu> menus = sysMenuService.queryByUser(userId);
-        // 组装菜单树
-        List<SysMenuTreeVO> sysMenuTree = sysMenuService.getSysMenuTree(menus);
-        return Result.success(sysMenuTree);
-    }
-
-    @GetMapping(value = "/getMenuTree")
-    @Operation(summary = "查询菜单树", description = "查询菜单树")
-    public Result<List<SysMenuTreeVO>> getMenuTree() {
-        //菜单权限和按钮权限
-        List<SysMenu> menus = sysMenuService.list();
-        // 组装菜单树
-        List<SysMenuTreeVO> sysMenuTree = sysMenuService.getSysMenuTree(menus);
-        return Result.success(sysMenuTree);
+        return Result.success(sysMenuService.getUserMenuTree(userId));
     }
 
     @PostMapping(value = "/page")
