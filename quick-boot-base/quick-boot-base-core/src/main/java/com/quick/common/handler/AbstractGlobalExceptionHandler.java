@@ -1,5 +1,6 @@
 package com.quick.common.handler;
 
+import cn.dev33.satoken.exception.NotLoginException;
 import cn.dev33.satoken.exception.NotPermissionException;
 import com.quick.common.constant.CommonConstant;
 import com.quick.common.exception.BizException;
@@ -53,6 +54,13 @@ public abstract class AbstractGlobalExceptionHandler {
     public Result<?> usernameNotFoundException(NotPermissionException ex){
         log.error("NotPermissionException:{}", ex.getMessage());
         return Result.fail(CommonConstant.FORBIDDEN,ex.getMessage());
+    }
+
+    @ExceptionHandler(NotLoginException.class)
+    @ResponseStatus(HttpStatus.OK)
+    public Result<?> notLoginException(NotLoginException ex){
+        log.error("NotLoginException:{}", ex.getMessage());
+        return Result.fail(CommonConstant.SC_INTERNAL_SERVER_ERROR_500,ex.getMessage());
     }
 
     @ExceptionHandler(BizException.class)
