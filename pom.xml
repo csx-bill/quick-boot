@@ -33,10 +33,10 @@
         <sa-token.version>1.34.0</sa-token.version>
         <redisson.version>3.19.1</redisson.version>
         <hutool-all.version>5.8.16</hutool-all.version>
+        <APIJSON.version>6.1.0</APIJSON.version>
     </properties>
     <!-- 模块 -->
     <modules>
-        <module>apijson-framework</module>
         <module>quick-boot-base</module>
         <module>quick-boot-system</module>
         <module>quick-boot-oauth2</module>
@@ -53,12 +53,6 @@
 
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>apijson.framework</groupId>
-                <artifactId>apijson-framework</artifactId>
-                <version>6.0.0-private</version>
-            </dependency>
-
             <!-- spring boot 依赖 -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
@@ -223,6 +217,18 @@
                 <groupId>org.redisson</groupId>
                 <artifactId>redisson-spring-boot-starter</artifactId>
                 <version>${redisson.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.Tencent</groupId>
+                <artifactId>APIJSON</artifactId>
+                <version>${APIJSON.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>apijson.framework</groupId>
+                <artifactId>apijson-framework</artifactId>
+                <version>${APIJSON.version}</version>
             </dependency>
 
         </dependencies>
