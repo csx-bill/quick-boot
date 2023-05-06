@@ -95,11 +95,9 @@
             <version>42.5.3</version>
         </dependency>
 
-        <!--此包非官方包 本人对此升级了 servlet 支持 sb3-->
-        <!-- mvn install https://github.com/csx-bill/apijson-framework -->
         <dependency>
             <groupId>apijson.framework</groupId>
-            <artifactId>apijson-framework</artifactId>
+            <artifactId>apijson-framework-spring-boot3</artifactId>
         </dependency>
 
         <dependency>

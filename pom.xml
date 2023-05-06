@@ -227,7 +227,7 @@
 
             <dependency>
                 <groupId>apijson.framework</groupId>
-                <artifactId>apijson-framework</artifactId>
+                <artifactId>apijson-framework-spring-boot3</artifactId>
                 <version>${APIJSON.version}</version>
             </dependency>
 
