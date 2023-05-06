@@ -4,6 +4,7 @@ package com.quick.modules.system.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.quick.common.constant.CacheConstant;
 import com.quick.common.vo.Result;
 import com.quick.modules.system.entity.SysDictData;
 import com.quick.modules.system.req.SysDictDataPageParam;
@@ -14,6 +15,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
@@ -53,18 +55,21 @@ public class SysDictDataController {
 
     @PutMapping(value = "/updateById")
     @Operation(summary = "根据ID更新字典数据", description = "根据ID更新字典数据")
+    @CacheEvict(value={CacheConstant.SYS_DICT_CACHE}, allEntries=true)
     public Result<Boolean> updateById(@RequestBody SysDictData sysDictData) {
         return Result.success(sysDictDataService.updateById(sysDictData));
     }
 
     @DeleteMapping(value = "/removeById")
     @Operation(summary = "根据ID删除字典数据", description = "根据ID删除字典数据")
+    @CacheEvict(value={CacheConstant.SYS_DICT_CACHE}, allEntries=true)
     public Result<Boolean> removeById(String id) {
         return Result.success(sysDictDataService.removeById(id));
     }
 
     @DeleteMapping(value = "/removeBatchByIds")
     @Operation(summary = "根据ID批量删除字典数据", description = "根据ID批量删除字典数据")
+    @CacheEvict(value={CacheConstant.SYS_DICT_CACHE}, allEntries=true)
     public Result<Boolean> removeBatchByIds(String ids) {
         return Result.success(sysDictDataService.removeBatchByIds(Arrays.asList(ids.split(","))));
     }
