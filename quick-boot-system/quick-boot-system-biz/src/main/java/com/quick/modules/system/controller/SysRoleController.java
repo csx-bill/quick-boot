@@ -4,6 +4,7 @@ import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.quick.common.constant.CacheConstant;
 import com.quick.common.vo.Result;
 import com.quick.modules.system.entity.SysRole;
 import com.quick.modules.system.entity.SysUser;
@@ -19,6 +20,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.web.bind.annotation.*;
 import java.util.Arrays;
 
@@ -67,6 +69,7 @@ public class SysRoleController {
     @SaCheckPermission("SysRole:delete")
     @DeleteMapping(value = "/removeById")
     @Operation(summary = "根据ID删除角色", description = "根据ID删除角色")
+    @CacheEvict(value={CacheConstant.SYS_ROLE_PERMISSION_CACHE}, allEntries=true)
     public Result<Boolean> removeById(String id) {
         return Result.success(sysRoleService.removeById(id));
     }
@@ -74,6 +77,7 @@ public class SysRoleController {
     @SaCheckPermission("SysRole:delete")
     @DeleteMapping(value = "/removeBatchByIds")
     @Operation(summary = "根据ID批量删除角色", description = "根据ID批量删除角色")
+    @CacheEvict(value={CacheConstant.SYS_ROLE_PERMISSION_CACHE}, allEntries=true)
     public Result<Boolean> removeBatchByIds(String ids) {
         return Result.success(sysRoleService.removeBatchByIds(Arrays.asList(ids.split(","))));
     }
@@ -86,6 +90,7 @@ public class SysRoleController {
 
     @PostMapping(value = "/saveRolePermissions")
     @Operation(summary = "保存角色权限", description = "保存角色权限")
+    @CacheEvict(value={CacheConstant.SYS_ROLE_PERMISSION_CACHE}, allEntries=true)
     public Result<Boolean> saveRolePermissions(@RequestBody RolePermissionsVO vo) {
         return Result.success(sysRoleService.saveRolePermissions(vo));
     }
@@ -106,6 +111,7 @@ public class SysRoleController {
 
     @DeleteMapping(value = "/cancelAuthorizedUser")
     @Operation(summary = "取消已授权用户", description = "取消已授权用户")
+    @CacheEvict(value={CacheConstant.SYS_USER_ROLE_CACHE}, allEntries=true)
     public Result<Boolean> cancelAuthorizedUser(String roleId,String userId) {
         return Result.success(sysUserRoleService.remove(new LambdaQueryWrapper<SysUserRole>()
                 .eq(SysUserRole::getRoleId,roleId)
@@ -116,6 +122,7 @@ public class SysRoleController {
 
     @DeleteMapping(value = "/batchCancelAuthorizedUser")
     @Operation(summary = "批量取消已授权用户", description = "批量取消已授权用户")
+    @CacheEvict(value={CacheConstant.SYS_USER_ROLE_CACHE}, allEntries=true)
     public Result<Boolean> batchCancelAuthorizedUser(String roleId,String userIds) {
         return Result.success(sysUserRoleService.remove(new LambdaQueryWrapper<SysUserRole>()
                 .eq(SysUserRole::getRoleId,roleId)

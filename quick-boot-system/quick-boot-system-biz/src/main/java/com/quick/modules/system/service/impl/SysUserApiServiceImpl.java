@@ -1,6 +1,7 @@
 package com.quick.modules.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.quick.common.constant.CacheConstant;
 import com.quick.common.util.SuperAdminUtils;
 import com.quick.modules.system.entity.SysMenu;
 import com.quick.modules.system.entity.SysUser;
@@ -11,6 +12,7 @@ import com.quick.modules.system.mapper.SysUserRoleMapper;
 import com.quick.modules.system.service.ISysUserApiService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -30,12 +32,14 @@ public class SysUserApiServiceImpl implements ISysUserApiService {
         return sysUserMapper.selectOne(new LambdaQueryWrapper<SysUser>().eq(SysUser::getUsername, username));
     }
 
+    @Cacheable(value = CacheConstant.SYS_USER_ROLE_CACHE,key = "#userId", unless = "#result == null ")
     @Override
     public List<String> getUserRole(String userId) {
         List<SysUserRole> sysUserRoles = sysUserRoleMapper.selectList(new LambdaQueryWrapper<SysUserRole>().eq(SysUserRole::getUserId, userId));
         return sysUserRoles.stream().map(SysUserRole::getRoleId).collect(Collectors.toList());
     }
 
+    @Cacheable(value = CacheConstant.SYS_ROLE_PERMISSION_CACHE,key = "#roleId", unless = "#result == null ")
     @Override
     public List<String> getUserRolePermission(String roleId) {
         List<SysMenu> sysRoleMenus = new ArrayList<>();
