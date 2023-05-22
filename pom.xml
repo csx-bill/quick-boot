@@ -17,7 +17,7 @@
         <maven.compiler.target>17</maven.compiler.target>
         <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
         <quick.version>1.0.0</quick.version>
-        <spring-boot.version>3.0.6</spring-boot.version>
+        <spring-boot.version>3.1.0</spring-boot.version>
         <spring-cloud.version>2022.0.0</spring-cloud.version>
         <spring-cloud-alibaba.version>2022.0.0.0-RC2</spring-cloud-alibaba.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
