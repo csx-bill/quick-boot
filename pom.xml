@@ -35,6 +35,7 @@
         <redisson.version>3.19.1</redisson.version>
         <hutool-all.version>5.8.16</hutool-all.version>
         <APIJSON.version>6.1.0</APIJSON.version>
+        <apijson-framework.version>6.1.0_springboot3</apijson-framework.version>
     </properties>
     <!-- 模块 -->
     <modules>
@@ -227,9 +228,9 @@
             </dependency>
 
             <dependency>
-                <groupId>apijson.framework</groupId>
-                <artifactId>apijson-framework-spring-boot3</artifactId>
-                <version>${APIJSON.version}</version>
+                <groupId>com.github.APIJSON</groupId>
+                <artifactId>apijson-framework</artifactId>
+                <version>${apijson-framework.version}</version>
             </dependency>
 
             <dependency>

@@ -96,8 +96,8 @@
         </dependency>
 
         <dependency>
-            <groupId>apijson.framework</groupId>
-            <artifactId>apijson-framework-spring-boot3</artifactId>
+            <groupId>com.github.APIJSON</groupId>
+            <artifactId>apijson-framework</artifactId>
         </dependency>
 
         <dependency>
