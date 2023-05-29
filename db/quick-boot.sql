@@ -440,4 +440,26 @@ CREATE TABLE `sys_user_role`  (
 -- ----------------------------
 INSERT INTO `sys_user_role` VALUES ('1', '1', '1');
 
+-- ----------------------------
+-- Table structure for sys_dept
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_dept`;
+CREATE TABLE `sys_dept`  (
+                             `id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '部门ID',
+                             `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '部门名称',
+                             `sort_order` int NOT NULL DEFAULT 0 COMMENT '排序值',
+                             `del_flag` int NULL DEFAULT 0 COMMENT '删除状态',
+                             `parent_id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '父部门ID',
+                             `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
+                             `create_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '创建人',
+                             `update_time` datetime NULL DEFAULT NULL COMMENT '修改时间',
+                             `update_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '更新人',
+                             PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = '部门信息' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of sys_dept
+-- ----------------------------
+INSERT INTO `sys_dept` VALUES ('1', 'xxx科技公司', 0, 0, NULL, NULL, NULL, NULL, NULL);
+
 SET FOREIGN_KEY_CHECKS = 1;

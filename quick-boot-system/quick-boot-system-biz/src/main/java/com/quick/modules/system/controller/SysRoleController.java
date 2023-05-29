@@ -1,16 +1,16 @@
 package com.quick.modules.system.controller;
 
-import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.quick.common.aspect.annotation.PreAuth;
 import com.quick.common.constant.CacheConstant;
+import com.quick.common.controller.SuperController;
 import com.quick.common.vo.Result;
 import com.quick.modules.system.entity.SysRole;
 import com.quick.modules.system.entity.SysUser;
 import com.quick.modules.system.entity.SysUserRole;
 import com.quick.modules.system.req.AuthorizedUserPageParam;
-import com.quick.modules.system.req.SysRolePageParam;
 import com.quick.modules.system.service.ISysRoleService;
 import com.quick.modules.system.service.ISysUserRoleService;
 import com.quick.modules.system.service.ISysUserService;
@@ -19,7 +19,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.web.bind.annotation.*;
 import java.util.Arrays;
@@ -30,69 +29,24 @@ import java.util.Arrays;
 @RequestMapping("/SysRole")
 @RequiredArgsConstructor
 @Tag(name = "角色信息")
-public class SysRoleController {
+@PreAuth(replace = "SysRole:")
+public class SysRoleController extends SuperController<ISysRoleService, SysRole,String> {
 
-    private final ISysRoleService sysRoleService;
     private final ISysUserService sysUserService;
     private final ISysUserRoleService sysUserRoleService;
 
-    @PostMapping(value = "/page")
-    @Operation(summary = "分页查询角色", description = "分页查询角色")
-    public Result<IPage<SysRole>> page(@RequestBody SysRolePageParam sysRolePageParam) {
-        Page page = sysRolePageParam.buildPage();
-        SysRole sysRole = new SysRole();
-        BeanUtils.copyProperties(sysRolePageParam,sysRole);
-        LambdaQueryWrapper<SysRole> queryWrapper = new LambdaQueryWrapper<>(sysRole);
-        return Result.success(sysRoleService.page(page,queryWrapper));
-    }
-
-    @SaCheckPermission("SysRole:add")
-    @PostMapping(value = "/save")
-    @Operation(summary = "保存角色", description = "保存角色")
-    public Result<Boolean> save(@RequestBody SysRole sysRole) {
-        return Result.success(sysRoleService.save(sysRole));
-    }
-
-    @GetMapping(value = "/getById")
-    @Operation(summary = "根据ID获取角色", description = "根据ID获取角色")
-    public Result<SysRole> getById(String id) {
-        return Result.success(sysRoleService.getById(id));
-    }
-
-    @SaCheckPermission("SysRole:update")
-    @PutMapping(value = "/updateById")
-    @Operation(summary = "根据ID更新角色", description = "根据ID更新角色")
-    public Result<Boolean> updateById(@RequestBody SysRole sysRole) {
-        return Result.success(sysRoleService.updateById(sysRole));
-    }
-
-    @SaCheckPermission("SysRole:delete")
-    @DeleteMapping(value = "/removeById")
-    @Operation(summary = "根据ID删除角色", description = "根据ID删除角色")
-    @CacheEvict(value={CacheConstant.SYS_ROLE_PERMISSION_CACHE}, allEntries=true)
-    public Result<Boolean> removeById(String id) {
-        return Result.success(sysRoleService.removeById(id));
-    }
-
-    @SaCheckPermission("SysRole:delete")
-    @DeleteMapping(value = "/removeBatchByIds")
-    @Operation(summary = "根据ID批量删除角色", description = "根据ID批量删除角色")
-    @CacheEvict(value={CacheConstant.SYS_ROLE_PERMISSION_CACHE}, allEntries=true)
-    public Result<Boolean> removeBatchByIds(String ids) {
-        return Result.success(sysRoleService.removeBatchByIds(Arrays.asList(ids.split(","))));
-    }
 
     @GetMapping(value = "/getRolePermissions")
     @Operation(summary = "查询角色权限", description = "查询角色权限")
     public Result<RolePermissionsVO> getRolePermissions(String id) {
-        return Result.success(sysRoleService.getRolePermissions(id));
+        return Result.success(baseService.getRolePermissions(id));
     }
 
     @PostMapping(value = "/saveRolePermissions")
     @Operation(summary = "保存角色权限", description = "保存角色权限")
     @CacheEvict(value={CacheConstant.SYS_ROLE_PERMISSION_CACHE}, allEntries=true)
     public Result<Boolean> saveRolePermissions(@RequestBody RolePermissionsVO vo) {
-        return Result.success(sysRoleService.saveRolePermissions(vo));
+        return Result.success(baseService.saveRolePermissions(vo));
     }
 
     @PostMapping(value = "/authorizedUserPage")

@@ -35,7 +35,4 @@ public class SysMenuSchema extends BaseEntity implements Serializable {
     @Schema(description = "状态")
     private String status;
 
-    @JsonIgnore
-    @Schema(description = "删除状态")
-    private Integer delFlag;
 }

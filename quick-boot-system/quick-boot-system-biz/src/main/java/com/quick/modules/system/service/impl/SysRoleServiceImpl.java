@@ -2,6 +2,7 @@ package com.quick.modules.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.quick.common.constant.CacheConstant;
 import com.quick.common.constant.CommonConstant;
 import com.quick.common.exception.BizException;
 import com.quick.common.util.SuperAdminUtils;
@@ -15,6 +16,7 @@ import com.quick.modules.system.service.ISysRoleService;
 import com.quick.modules.system.vo.RolePermissionsVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
@@ -30,12 +32,14 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
     private final ISysRoleMenuService sysRoleMenuService;
     private final ISysMenuService sysMenuService;
 
+    @CacheEvict(value={CacheConstant.SYS_ROLE_PERMISSION_CACHE}, allEntries=true)
     @Override
     public boolean removeById(Serializable id) {
         checkRoleAllowed(id.toString());
         return super.removeById(id);
     }
 
+    @CacheEvict(value={CacheConstant.SYS_ROLE_PERMISSION_CACHE}, allEntries=true)
     @Override
     public boolean removeByIds(Collection<?> list) {
         for (Object id : list) {

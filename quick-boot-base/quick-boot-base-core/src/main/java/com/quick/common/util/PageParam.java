@@ -20,8 +20,11 @@ import java.util.List;
 @Setter
 @SuppressWarnings("ALL")
 @Accessors(chain = true)
-public class BasePageParam implements Serializable {
+public class PageParam<T> implements Serializable {
     private static final long serialVersionUID = 1L;
+
+    @Schema(description = "查询参数")
+    private T model;
 
     @Schema(description = "当前页码")
     private long pageNo;
@@ -39,8 +42,8 @@ public class BasePageParam implements Serializable {
     @Schema(description = "排序的字段")
     private List<OrderItem> orders;
 
-    public Page buildPage(){
-        Page page = new Page<>();
+    public Page<T> buildPage(){
+        Page<T> page = new Page<>();
         page.setCurrent(this.getPageNo()==0?1:this.getPageNo());
         page.setSize(this.getPageSize()==0?10:this.getPageSize());
         List<OrderItem> orders = new ArrayList<>();

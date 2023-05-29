@@ -1,6 +1,6 @@
 package com.quick.modules.online.req;
 
-import com.quick.common.util.BasePageParam;
+import com.quick.common.util.PageParam;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Schema(name = "远程函数分页查询参数")
-public class FunctionPageParam extends BasePageParam {
+public class FunctionPageParam extends PageParam {
 
     @Schema(description = "标签")
     private String tag;

@@ -1,10 +1,8 @@
 package com.quick.modules.system.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.quick.common.aspect.annotation.Dict;
 import com.quick.common.entity.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -37,8 +35,5 @@ public class SysDictData extends BaseEntity implements Serializable {
     @Schema(description = "状态")
     private String status;
 
-    @JsonIgnore
-    @Schema(description = "删除状态")
-    private Integer delFlag;
 
 }

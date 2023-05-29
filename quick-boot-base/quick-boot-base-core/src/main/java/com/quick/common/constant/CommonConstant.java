@@ -2,17 +2,17 @@ package com.quick.common.constant;
 
 public interface CommonConstant {
 	/** {@code 500 Server Error} (HTTP/1.0 - RFC 1945) */
-    public static final Integer SC_INTERNAL_SERVER_ERROR_500 = 500;
+    Integer SC_INTERNAL_SERVER_ERROR_500 = 500;
     /** {@code 200 OK} (HTTP/1.0 - RFC 1945) */
-    public static final Integer SUCCESS_CODE = 0;
+    Integer SUCCESS_CODE = 0;
 
-    public static final Integer FORBIDDEN = 403;
-    public static final String SUCCESS_MSG = "success";
+    Integer FORBIDDEN = 403;
+    String SUCCESS_MSG = "success";
     /**
      * 系统服务名
      */
-    public static final String SERVICE_SYSTEM = "quick-boot-system-biz";
-    public static final String SERVICE_OAUTH2 = "quick-boot-oauth2-biz";
-    public static final String SERVICE_GATEWAY = "quick-boot-gateway-biz";
+    String SERVICE_SYSTEM = "quick-boot-system-biz";
+    String SERVICE_OAUTH2 = "quick-boot-oauth2-biz";
+    String SERVICE_GATEWAY = "quick-boot-gateway-biz";
 
 }

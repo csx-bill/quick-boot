@@ -4,6 +4,7 @@ import cn.dev33.satoken.exception.NotLoginException;
 import cn.dev33.satoken.exception.NotPermissionException;
 import com.quick.common.constant.CommonConstant;
 import com.quick.common.exception.BizException;
+import com.quick.common.exception.ForbiddenException;
 import com.quick.common.exception.OAuth2Exception;
 import com.quick.common.exception.UsernameNotFoundException;
 import com.quick.common.exception.code.ExceptionCode;
@@ -67,6 +68,13 @@ public abstract class AbstractGlobalExceptionHandler {
     @ResponseStatus(HttpStatus.OK)
     public Result<?> BizException(BizException ex){
         log.error("BizException:{}", ex.getMsg());
+        return Result.fail(ex.getCode(),ex.getMsg());
+    }
+
+    @ExceptionHandler(ForbiddenException.class)
+    @ResponseStatus(HttpStatus.OK)
+    public Result<?> forbiddenException(ForbiddenException ex){
+        log.error("ForbiddenException:{}", ex.getMsg());
         return Result.fail(ex.getCode(),ex.getMsg());
     }
 

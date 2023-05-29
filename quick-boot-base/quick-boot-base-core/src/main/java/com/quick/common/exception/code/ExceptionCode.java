@@ -20,6 +20,7 @@ public enum ExceptionCode {
     JSON_PARSE_ERROR(CommonConstant.SC_INTERNAL_SERVER_ERROR_500, "JSON解析异常"),
     OAUTH2_CLIENT(CommonConstant.SC_INTERNAL_SERVER_ERROR_500, "无效client_id"),
     USERNAME_NOT_FOUND(CommonConstant.SC_INTERNAL_SERVER_ERROR_500, "用户名或密码错误"),
+    FORBIDDEN_EXCEPTION(CommonConstant.FORBIDDEN, "权限不足"),
     ;
 
     private int code;

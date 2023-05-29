@@ -1,6 +1,6 @@
 package com.quick.modules.system.req;
 
-import com.quick.common.util.BasePageParam;
+import com.quick.common.util.PageParam;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Schema(name = "已授权用户分页查询参数")
-public class AuthorizedUserPageParam extends BasePageParam {
+public class AuthorizedUserPageParam extends PageParam {
     @Schema(description = "账号")
     private String username;
 

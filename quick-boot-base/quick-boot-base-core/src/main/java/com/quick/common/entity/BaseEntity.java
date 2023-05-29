@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Data;
@@ -17,7 +18,6 @@ import java.time.LocalDateTime;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@Schema(name = "Entity基类")
 @MappedSuperclass
 public class BaseEntity implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -45,4 +45,8 @@ public class BaseEntity implements Serializable {
     @Schema(description = "更新人")
     @TableField(fill = FieldFill.UPDATE)
     private String updateBy;
+
+    @JsonIgnore
+    @Schema(description = "删除状态")
+    private Integer delFlag;
 }
