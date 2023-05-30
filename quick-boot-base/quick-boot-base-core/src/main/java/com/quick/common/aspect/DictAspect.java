@@ -21,9 +21,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 数据字典切面
@@ -47,7 +45,9 @@ public class DictAspect {
     /**
      * 切点，切入 controller 包下面的所有方法
      */
-    @Pointcut("execution( * com.quick.modules.*.controller.*.*(..)) && !execution( * com.quick.modules.universal.controller.*.*(..))")
+    @Pointcut("execution(public * com.quick.modules.*.controller.*.*(..)) " +
+            "|| execution(public * com.quick.*.controller.*.*(..))" +
+            "&& !execution( * com.quick.modules.universal.controller.*.*(..))")
     public void dict() {
 
     }

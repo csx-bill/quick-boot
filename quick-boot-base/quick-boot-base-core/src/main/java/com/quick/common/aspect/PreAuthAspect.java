@@ -40,7 +40,7 @@ public class PreAuthAspect {
      * @return Object
      * @throws Throwable 没有权限的异常
      */
-    @Around("execution(public * com.quick.common.controller.SuperController.*.*(..)) || " +
+    @Around("execution(public * com.quick.common.controller.*.*(..)) || " +
             "@annotation(com.quick.common.aspect.annotation.PreAuth) || " +
             "@within(com.quick.common.aspect.annotation.PreAuth)"
     )
