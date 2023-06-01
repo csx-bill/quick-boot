@@ -1,5 +1,6 @@
 package com.quick.modules.system.entity;
 
+import com.quick.common.aspect.annotation.Dict;
 import com.quick.common.entity.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -24,5 +25,9 @@ public class SysDept extends BaseEntity implements Serializable {
 
     @Schema(description = "排序")
     private Integer sortOrder;
+
+    @Dict(dictCode = "sys_dept_status")
+    @Schema(description = "状态")
+    private String status;
 
 }
