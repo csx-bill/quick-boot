@@ -1,0 +1,56 @@
+version: "3.8"
+services:
+  quick-boot-gateway-biz:
+    container_name: quick-boot-gateway-biz
+    image: openjdk:17-jdk
+    environment:
+      - TZ=Asia/Hong_Kong
+      - JAR_NAME=quick-boot-gateway-biz.jar
+      - JAVA_OPTIONS=-Dfile.encoding=UTF-8
+    volumes:
+      # ./quick-boot/quick-boot-gateway-biz.jar 挂载到容器 /app/ 目录下
+      - ./quick-boot-gateway-biz.jar:/app/quick-boot-gateway-biz.jar
+      # ./quick-boot/logs/quick-boot-gateway-biz/ 挂载到容器 /logs/quick-boot-gateway-biz 目录下
+      - ./logs/quick-boot-gateway-biz/:/logs/quick-boot-gateway-biz
+    entrypoint: java -Xmx1024m -jar ./app/quick-boot-gateway-biz.jar
+    network_mode: host
+    restart: always
+  quick-boot-oauth2-biz:
+    container_name: quick-boot-oauth2-biz
+    image: openjdk:17-jdk
+    environment:
+      - TZ=Asia/Hong_Kong
+      - JAR_NAME=quick-boot-oauth2-biz.jar
+      - JAVA_OPTIONS=-Dfile.encoding=UTF-8
+    volumes:
+      - ./quick-boot-oauth2-biz.jar:/app/quick-boot-oauth2-biz.jar
+      - ./logs/quick-boot-oauth2-biz/:/logs/quick-boot-oauth2-biz
+    entrypoint: java -Xmx1024m -jar ./app/quick-boot-oauth2-biz.jar
+    network_mode: host
+    restart: always
+  quick-boot-system-biz:
+    container_name: quick-boot-system-biz
+    image: openjdk:17-jdk
+    environment:
+      - TZ=Asia/Hong_Kong
+      - JAR_NAME=quick-boot-system-biz.jar
+      - JAVA_OPTIONS=-Dfile.encoding=UTF-8
+    volumes:
+      - ./quick-boot-system-biz.jar:/app/quick-boot-system-biz.jar
+      - ./logs/quick-boot-system-biz/:/logs/quick-boot-system-biz
+    entrypoint: java -Xmx1024m -jar ./app/quick-boot-system-biz.jar
+    network_mode: host
+    restart: always
+  quick-boot-monitor-biz:
+    container_name: quick-boot-monitor-biz
+    image: openjdk:17-jdk
+    environment:
+      - TZ=Asia/Hong_Kong
+      - JAR_NAME=quick-boot-monitor-biz.jar
+      - JAVA_OPTIONS=-Dfile.encoding=UTF-8
+    volumes:
+      - ./quick-boot-monitor-biz.jar:/app/quick-boot-monitor-biz.jar
+      - ./logs/quick-boot-monitor-biz/:/logs/quick-boot-monitor-biz
+    entrypoint: java -Xmx512m -jar ./app/quick-boot-monitor-biz.jar
+    network_mode: host
+    restart: always

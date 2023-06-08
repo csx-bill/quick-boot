@@ -1,0 +1,17 @@
+version: "3.8"
+services:
+  nginx:
+    container_name: nginx
+    #用最新版本的官方Nginx
+    image: nginx:latest
+    network_mode: host
+    environment:
+      - NGINX_HOST=localhost
+    volumes:
+      # 网站目录
+      - ./quick-admin:/usr/share/nginx/html
+      # nginx 配置
+      - ./conf.d:/etc/nginx/conf.d
+      # 添加日志目录
+      - ./logs:/var/log/nginx
+    restart: always
