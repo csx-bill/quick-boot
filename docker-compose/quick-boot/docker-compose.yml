@@ -4,7 +4,7 @@ services:
     container_name: quick-boot-gateway-biz
     image: openjdk:17-jdk
     environment:
-      - TZ=Asia/Hong_Kong
+      - TZ=Asia/Shanghai
       - JAR_NAME=quick-boot-gateway-biz.jar
       - JAVA_OPTIONS=-Dfile.encoding=UTF-8
     volumes:
@@ -19,7 +19,7 @@ services:
     container_name: quick-boot-oauth2-biz
     image: openjdk:17-jdk
     environment:
-      - TZ=Asia/Hong_Kong
+      - TZ=Asia/Shanghai
       - JAR_NAME=quick-boot-oauth2-biz.jar
       - JAVA_OPTIONS=-Dfile.encoding=UTF-8
     volumes:
@@ -32,7 +32,7 @@ services:
     container_name: quick-boot-system-biz
     image: openjdk:17-jdk
     environment:
-      - TZ=Asia/Hong_Kong
+      - TZ=Asia/Shanghai
       - JAR_NAME=quick-boot-system-biz.jar
       - JAVA_OPTIONS=-Dfile.encoding=UTF-8
     volumes:
@@ -45,7 +45,7 @@ services:
     container_name: quick-boot-monitor-biz
     image: openjdk:17-jdk
     environment:
-      - TZ=Asia/Hong_Kong
+      - TZ=Asia/Shanghai
       - JAR_NAME=quick-boot-monitor-biz.jar
       - JAVA_OPTIONS=-Dfile.encoding=UTF-8
     volumes:

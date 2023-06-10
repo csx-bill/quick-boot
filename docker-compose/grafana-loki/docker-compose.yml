@@ -1,0 +1,48 @@
+version: "3.8"  # Docker Compose 文件版本
+
+services:
+  grafana:  # Grafana 服务配置
+    container_name: grafana
+    network_mode: host
+    image: grafana/grafana:latest  # 使用的 Docker 镜像
+    restart: always  # 服务启动后自动重启
+    volumes:
+      - ./grafana-data:/var/lib/grafana  # 挂载数据卷
+      - ./grafana-plugins:/var/lib/grafana/plugins
+    environment:
+      - TZ=Asia/Shanghai
+    user: "0:0"  # 使用 root 用户启动镜像
+    depends_on:
+      - loki
+      - promtail
+
+
+  loki:  # Loki 服务配置
+    container_name: loki
+    network_mode: host
+    image: grafana/loki:latest  # 使用的 Docker 镜像
+    restart: always  # 服务启动后自动重启
+    command: -config.file=/etc/loki/config.yaml
+    volumes:
+      - ./config:/etc/loki/  # 挂载 Loki 配置文件
+    environment:
+      - TZ=Asia/Shanghai
+    user: "0:0"  # 使用 root 用户启动 Loki 镜像
+
+  promtail:  # Promtail 服务配置
+    container_name: promtail
+    network_mode: host
+    image: grafana/promtail:latest  # 使用的 Docker 镜像
+    restart: always  # 服务启动后自动重启
+    volumes:
+      # promtail 采集日志的目录（宿主机的目录）  /home/bill/data/www/quick-boot/logs 也可以直接采集容器目录
+      - /home/bill/data/www/quick-boot/logs:/var/logs
+      - ./config:/etc/promtail  # 挂载 Promtail 配置文件目录
+    command: -config.file=/etc/promtail/promtail-config.yaml
+    environment:
+      - TZ=Asia/Shanghai
+    user: "0:0"  # 使用 root 用户启动镜像
+
+volumes:
+  config:
+  grafana-data:
