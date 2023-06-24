@@ -1,5 +1,6 @@
 package com.quick.modules.system.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.quick.common.aspect.annotation.Dict;
 import com.quick.common.entity.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -57,5 +58,9 @@ public class SysMenu extends BaseEntity implements Serializable {
     @Dict(dictCode = "sys_menu_status")
     @Schema(description = "状态")
     private String status;
+
+    @TableField(value = "`schema`")
+    @Schema(description = "schema")
+    private String schema;
 
 }
