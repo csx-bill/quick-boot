@@ -5,8 +5,8 @@ import apijson.framework.APIJSONApplication;
 import apijson.framework.APIJSONCreator;
 import apijson.orm.SQLConfig;
 import apijson.orm.SQLExecutor;
-import com.quick.modules.config.UniversalSQLConfig;
-import com.quick.modules.config.UniversalSQLExecutor;
+import com.quick.modules.config.OnlineSQLConfig;
+import com.quick.modules.config.OnlineSQLExecutor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -44,12 +44,12 @@ public class QuickSystemApplication {
         APIJSONApplication.DEFAULT_APIJSON_CREATOR = new APIJSONCreator<Long>() {
             @Override
             public SQLConfig createSQLConfig() {
-                return new UniversalSQLConfig();
+                return new OnlineSQLConfig();
             }
 
             @Override
             public SQLExecutor createSQLExecutor() {
-                return new UniversalSQLExecutor();
+                return new OnlineSQLExecutor();
             }
         };
     }

@@ -1,6 +1,8 @@
 package com.quick.modules.online.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.SqlCondition;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -24,7 +26,10 @@ public class Request implements Serializable {
     private Long id;
 
     @Schema(description = "是否为 DEBUG: 0-否，1-是。")
-    private int debug;
+    private Integer debug;
+
+    @Schema(description = "方法")
+    private String method;
 
     /**
      * GET,HEAD可用任意结构访问任意开放内容，不需要这个字段。
@@ -36,7 +41,7 @@ public class Request implements Serializable {
      * 2.已传且 > 0，用version以上的可用版本的最低版本。 “@order”:”version+”, “version{}”:”>={version}”
      */
     @Schema(description = "版本")
-    private int version;
+    private Integer version;
 
     @Schema(description = "标签")
     private String tag;
@@ -44,7 +49,8 @@ public class Request implements Serializable {
     @Schema(description = "结构")
     private String structure;
 
-    @Schema(description = "详细说明")
+    @TableField(condition = SqlCondition.LIKE)
+    @Schema(description = "描述")
     private String detail;
 
     @Schema(description = "创建时间")

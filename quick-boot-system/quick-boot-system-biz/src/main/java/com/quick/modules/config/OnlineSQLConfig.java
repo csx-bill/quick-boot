@@ -2,7 +2,7 @@ package com.quick.modules.config;
 
 import apijson.framework.APIJSONSQLConfig;
 
-public class UniversalSQLConfig extends APIJSONSQLConfig {
+public class OnlineSQLConfig extends APIJSONSQLConfig {
 
     static {
         DEFAULT_DATABASE = DATABASE_MYSQL;  // TODO 默认数据库类型

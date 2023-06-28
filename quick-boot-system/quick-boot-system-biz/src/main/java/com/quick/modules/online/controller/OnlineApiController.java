@@ -1,4 +1,4 @@
-package com.quick.modules.universal.controller;
+package com.quick.modules.online.controller;
 
 import apijson.RequestMethod;
 import apijson.framework.APIJSONController;
@@ -15,10 +15,10 @@ import java.util.Map;
 
 @Slf4j
 @RestController
-@RequestMapping("/Universal/Api")
+@RequestMapping("/Online/Api")
 @RequiredArgsConstructor
-@Tag(name = "万能接口")
-public class UniversalApiController extends APIJSONController<Long> {
+@Tag(name = "在线接口")
+public class OnlineApiController extends APIJSONController<Long> {
 
     @Override
     public Parser<Long> newParser(HttpSession session, RequestMethod method) {

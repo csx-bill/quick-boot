@@ -8,7 +8,7 @@ import com.quick.QuickSystemApplication;
 import javax.sql.DataSource;
 import java.sql.Connection;
 
-public class UniversalSQLExecutor extends APIJSONSQLExecutor {
+public class OnlineSQLExecutor extends APIJSONSQLExecutor {
     public static final String TAG = "UniversalSQLExecutor";
 
     // 适配连接池
