@@ -28,6 +28,19 @@ public class OnlineApiController extends APIJSONController<Long> {
                 .setNeedVerifyContent(true);
     }
 
+    /**增删改查统一接口，这个一个接口可替代 7 个万能通用接口，牺牲一些路由解析性能来提升一点开发效率
+     * @param method
+     * @param request
+     * @param session
+     * @return
+     */
+    @Operation(summary = "万能通用接口", description = "增删改查统一接口，这个一个接口可替代 7 个万能通用接口")
+    @PostMapping(value = "{method}")
+    @Override
+    public String crud(@PathVariable String method, @RequestBody String request, HttpSession session) {
+        return super.crud(method, request, session);
+    }
+
     /**
      * 增删改查统一接口，这个一个接口可替代 7 个万能通用接口，牺牲一些路由解析性能来提升一点开发效率
      *
