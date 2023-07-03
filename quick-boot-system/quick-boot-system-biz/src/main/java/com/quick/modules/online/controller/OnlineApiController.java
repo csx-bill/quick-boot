@@ -3,6 +3,7 @@ package com.quick.modules.online.controller;
 import apijson.RequestMethod;
 import apijson.framework.APIJSONController;
 import apijson.orm.Parser;
+import com.quick.modules.config.OnlineParser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -61,4 +62,8 @@ public class OnlineApiController extends APIJSONController<Long> {
         return super.crudByTag(method, tag, params, request, session);
     }
 
+    @Override
+    public String parse(RequestMethod method, String request, HttpSession session) {
+        return new OnlineParser(method).setSession(session).setNeedVerify(false).parse(request);
+    }
 }

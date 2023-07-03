@@ -9,7 +9,7 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 
 public class OnlineSQLExecutor extends APIJSONSQLExecutor {
-    public static final String TAG = "UniversalSQLExecutor";
+    public static final String TAG = "OnlineSQLExecutor";
 
     // 适配连接池
     @Override
