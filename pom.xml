@@ -19,7 +19,7 @@
         <quick.version>1.0.0</quick.version>
         <spring-boot.version>3.1.2</spring-boot.version>
         <spring-cloud.version>2022.0.2</spring-cloud.version>
-        <micrometer.version>1.11.0</micrometer.version>
+        <micrometer.version>1.11.2</micrometer.version>
         <spring-cloud-alibaba.version>2022.0.0.0-RC2</spring-cloud-alibaba.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <mysql.version>8.0.31</mysql.version>
