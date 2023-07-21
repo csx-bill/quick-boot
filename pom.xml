@@ -27,7 +27,7 @@
         <mybatis-plus.version>3.5.3.1</mybatis-plus.version>
         <dynamic-datasource.version>4.1.2</dynamic-datasource.version>
         <p6spy.version>3.9.1</p6spy.version>
-        <spring-boot-admin.version>3.0.4</spring-boot-admin.version>
+        <spring-boot-admin.version>3.1.2</spring-boot-admin.version>
         <swagger-annotations-jakarta.version>2.2.7</swagger-annotations-jakarta.version>
         <knife4j.version>4.1.0</knife4j.version>
         <fastjson2.version>2.0.23</fastjson2.version>
