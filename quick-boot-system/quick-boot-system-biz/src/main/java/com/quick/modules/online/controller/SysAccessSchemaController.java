@@ -27,7 +27,7 @@ public class SysAccessSchemaController extends SuperController<ISysAccessSchemaS
 
     @GetMapping(value = "/getSchema")
     @Operation(summary = "获取Schema", description = "获取Schema")
-    public Result<SysAccessSchema> getSchema(Long accessId) {
+    public Result<SysAccessSchema> getSchema(String accessId) {
         return Result.success(baseService.getSchema(accessId));
     }
 

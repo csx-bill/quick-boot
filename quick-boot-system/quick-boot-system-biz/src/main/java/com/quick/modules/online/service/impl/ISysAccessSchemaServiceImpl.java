@@ -28,7 +28,7 @@ public class ISysAccessSchemaServiceImpl extends ServiceImpl<SysAccessSchemaMapp
     private final RequestMapper requestMapper;
 
     @Override
-    public SysAccessSchema getSchema(Long accessId) {
+    public SysAccessSchema getSchema(String accessId) {
         SysAccessSchema sysAccessSchema = this.getOne(new LambdaQueryWrapper<SysAccessSchema>().eq(SysAccessSchema::getAccessId, accessId));
         if(sysAccessSchema==null){
             // 初始化进去

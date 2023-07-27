@@ -59,8 +59,11 @@ public class SysMenu extends BaseEntity implements Serializable {
     @Schema(description = "状态")
     private String status;
 
-    @TableField(value = "`schema`")
+    @TableField(exist = false)
     @Schema(description = "schema")
     private String schema;
+
+    @Schema(description = "accessId")
+    private String accessId;
 
 }

@@ -17,7 +17,7 @@ public class SysAccessSchema extends BaseEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Schema(description = "表权限ID")
-    private Long accessId;
+    private String accessId;
 
     @Schema(description = "页面配置")
     private String schema;

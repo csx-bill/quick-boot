@@ -34,7 +34,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
         List<SysMenu> sysMenus = new ArrayList<>();
         // 超级管理员拥有所有权限
         if(SuperAdminUtils.isSuperAdmin(userId)){
-            sysMenus = super.list();
+            sysMenus = baseMapper.getSuperAdminMenus();
         }else {
            sysMenus = this.queryByUser(userId);
         }
@@ -57,7 +57,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
         List<SysMenu> sysMenus = new ArrayList<>();
         // 超级管理员拥有所有权限
         if(SuperAdminUtils.isSuperAdmin(userId)){
-            sysMenus = super.list();
+            sysMenus = baseMapper.getSuperAdminMenus();
         }else {
             sysMenus = this.queryByUser(userId);
         }

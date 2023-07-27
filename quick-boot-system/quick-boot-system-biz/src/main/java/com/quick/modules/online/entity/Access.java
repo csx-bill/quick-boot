@@ -24,7 +24,7 @@ public class Access implements Serializable {
 
     @TableId(type = IdType.AUTO)
     @Schema(description = "ID")
-    private Long id;
+    private String id;
 
     @Schema(description = "是否为 DEBUG: 0-否，1-是。")
     private int debug;

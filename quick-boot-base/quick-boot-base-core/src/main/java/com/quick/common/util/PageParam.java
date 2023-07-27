@@ -27,10 +27,10 @@ public class PageParam<T> implements Serializable {
     private T model;
 
     @Schema(description = "当前页码")
-    private long pageNo;
+    private long page;
 
     @Schema(description = "每页显示数量")
-    private long pageSize;
+    private long count;
 
     @Schema(description = "排序的字段")
     private String orderBy;
@@ -44,8 +44,8 @@ public class PageParam<T> implements Serializable {
 
     public Page<T> buildPage(){
         Page<T> page = new Page<>();
-        page.setCurrent(this.getPageNo()==0?1:this.getPageNo());
-        page.setSize(this.getPageSize()==0?10:this.getPageSize());
+        page.setCurrent(this.getPage()==0?1:this.getPage());
+        page.setSize(this.getCount()==0?10:this.getCount());
         List<OrderItem> orders = new ArrayList<>();
         if(!StringUtils.isEmpty(this.orderBy)){
             OrderItem orderItem = new OrderItem();
