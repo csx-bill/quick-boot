@@ -1,10 +1,8 @@
 package com.quick.modules.system.service.impl;
 
-import cn.dev33.satoken.stp.StpUtil;
 import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.quick.common.util.SuperAdminUtils;
-import com.quick.common.vo.Result;
 import com.quick.modules.system.entity.SysMenu;
 import com.quick.modules.system.mapper.SysMenuMapper;
 import com.quick.modules.system.service.ISysMenuService;
