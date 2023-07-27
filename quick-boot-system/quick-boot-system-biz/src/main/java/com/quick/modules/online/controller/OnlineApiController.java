@@ -6,7 +6,7 @@ import apijson.RequestMethod;
 import apijson.framework.APIJSONController;
 import apijson.orm.Parser;
 import com.alibaba.fastjson.JSONObject;
-import com.quick.common.constant.CommonConstant;
+import com.quick.common.vo.Result;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -32,7 +32,9 @@ public class OnlineApiController extends APIJSONController<Long> {
                 .setNeedVerifyContent(true);
     }
 
-    /**增删改查统一接口，这个一个接口可替代 7 个万能通用接口，牺牲一些路由解析性能来提升一点开发效率
+    /**
+     * 增删改查统一接口，这个一个接口可替代 7 个万能通用接口，牺牲一些路由解析性能来提升一点开发效率
+     *
      * @param method
      * @param request
      * @param session
@@ -42,8 +44,7 @@ public class OnlineApiController extends APIJSONController<Long> {
     @PostMapping(value = "{method}")
     @Override
     public String crud(@PathVariable String method, @RequestBody String request, HttpSession session) {
-        JSONObject res = JSON.parseObject(super.crud(method, request, session));
-        return processResponse(res);
+        return processResponse(super.crud(method, request, session));
     }
 
     /**
@@ -63,22 +64,21 @@ public class OnlineApiController extends APIJSONController<Long> {
     @Parameter(name = "params", description = "参数")
     @Override
     public String crudByTag(@PathVariable String method, @PathVariable String tag, @RequestParam Map<String, String> params, @RequestBody String request, HttpSession session) {
-        JSONObject res = JSON.parseObject(super.crudByTag(method, tag, params, request, session));
-        return processResponse(res);
+        return processResponse(super.crudByTag(method, tag, params, request, session));
     }
 
     /**
-     * 统一响应状态码字段
+     * 统一响应 格式
+     *
      * @param res
      * @return
      */
-    private String processResponse(JSONObject res) {
-        if (res.getIntValue(JSONResponse.KEY_CODE) == JSONResponse.CODE_SUCCESS) {
-            res.put(JSONResponse.KEY_CODE, 0);
-            res.put("status", CommonConstant.SUCCESS_CODE);
+    private String processResponse(String res) {
+        JSONObject result = JSON.parseObject(res);
+        if (result.getIntValue(JSONResponse.KEY_CODE) == JSONResponse.CODE_SUCCESS) {
+            return JSON.toJSONString(Result.success(result));
         } else {
-            res.put("status", res.getIntValue(JSONResponse.KEY_CODE));
+            return JSON.toJSONString(Result.fail(result.getIntValue(JSONResponse.KEY_CODE), result.getString(JSONResponse.KEY_MSG)));
         }
-        return JSON.toJSONString(res);
     }
 }
