@@ -4,9 +4,11 @@ import apijson.JSON;
 import apijson.JSONResponse;
 import apijson.RequestMethod;
 import apijson.framework.APIJSONController;
+import apijson.framework.APIJSONParser;
 import apijson.orm.Parser;
 import com.alibaba.fastjson.JSONObject;
 import com.quick.common.vo.Result;
+import com.quick.modules.parser.OnliineJSONParse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,10 +28,15 @@ public class OnlineApiController extends APIJSONController<Long> {
 
     @Override
     public Parser<Long> newParser(HttpSession session, RequestMethod method) {
-        return super.newParser(session, method)
-                .setNeedVerify(false)
-                // 校验 Request 表的 structure
-                .setNeedVerifyContent(true);
+        Parser parser = new OnliineJSONParse();
+        if (parser instanceof APIJSONParser) {
+            ((APIJSONParser)parser).setSession(session);
+        }
+        parser.setMethod(method);
+        parser.setNeedVerify(false);
+        // 校验 Request 表的 structure
+        parser.setNeedVerifyContent(true);
+        return parser;
     }
 
     /**
