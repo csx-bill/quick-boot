@@ -1,0 +1,13 @@
+logging:
+  level:
+    root: info
+  pattern:
+    file: '%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [${spring.application.name:},%X{traceId:-},%X{spanId:-}] ==> [%thread] %F.%M - %msg%n'
+    console: '%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [${spring.application.name:},%X{traceId:-},%X{spanId:-}] ==> [%thread] %F.%M - %msg%n'
+  file:
+    path: ./logs
+    name: ${logging.file.path}/${spring.application.name}/root.log
+  logback:
+    rollingpolicy:
+      max-file-size: 50MB
+      max-history: 7

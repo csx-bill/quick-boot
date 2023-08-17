@@ -1,0 +1,9 @@
+mybatis-plus:
+  global-config:
+    db-config:
+      logic-delete-field: delFlag
+      logic-delete-value: 1 # 逻辑已删除值(默认为 1)
+      logic-not-delete-value: 0 # 逻辑未删除值(默认为 0)
+      select-strategy: not_empty # 空字符查询
+      column-format: "`%s`" # 关键词格式化
+  mapper-locations: classpath*:com/quick/modules/**/xml/*Mapper.xml
