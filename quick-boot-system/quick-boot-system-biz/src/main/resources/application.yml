@@ -6,13 +6,14 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: 127.0.0.1:8848
-        namespace: @profiles.active@
+        server-addr: ${nacos.ip}:${nacos.port}
+        namespace: ${nacos.namespace}
       config:
         server-addr: ${spring.cloud.nacos.discovery.server-addr}
-        namespace: @profiles.active@
+        namespace: ${spring.cloud.nacos.discovery.namespace}
   config:
     import:
+      - optional:classpath:${profiles.active}.properties
       - optional:nacos:${spring.application.name}.yml
       - optional:nacos:knife4j.yml
       - optional:nacos:mybatis-plus.yml
