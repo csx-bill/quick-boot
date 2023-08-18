@@ -77,16 +77,9 @@
 
     <build>
         <filters>
-            <filter>../../profiles/${profiles.active}.properties</filter>
+            <filter>../../src/main/filters/${profiles.active}.properties</filter>
         </filters>
         <resources>
-            <!-- 统一注册中心配置 -->
-            <resource>
-                <directory>../../profiles</directory>
-                <includes>
-                    <include>${profiles.active}.properties</include>
-                </includes>
-            </resource>
             <resource>
                 <directory>src/main/java</directory>
                 <includes>
