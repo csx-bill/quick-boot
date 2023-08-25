@@ -47,7 +47,7 @@ public class DictAspect {
      */
     @Pointcut("execution(public * com.quick.modules.*.controller.*.*(..)) " +
             "|| execution(public * com.quick.*.controller.*.*(..))" +
-            "&& !execution( * com.quick.modules.universal.controller.*.*(..))")
+            "&& !execution( * com.quick.modules.online.controller.*.*(..))")
     public void dict() {
 
     }
