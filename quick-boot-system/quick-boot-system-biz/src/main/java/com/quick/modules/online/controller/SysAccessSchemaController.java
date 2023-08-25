@@ -1,19 +1,15 @@
 package com.quick.modules.online.controller;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.quick.common.aspect.annotation.PreAuth;
 import com.quick.common.controller.SuperController;
 import com.quick.common.vo.Result;
 import com.quick.modules.online.entity.SysAccessSchema;
 import com.quick.modules.online.service.ISysAccessSchemaService;
-import com.quick.modules.system.entity.SysMenu;
-import com.quick.modules.system.vo.MenuSchemaVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 
