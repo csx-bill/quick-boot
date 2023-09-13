@@ -18,4 +18,8 @@ public interface AccessMapper extends BaseMapper<Access> {
      */
     @Select(value = "SHOW full fields FROM ${tableName}")
     List<Map<String, Object>> getFieldDetails(@Param("tableName") String tableName);
+
+    @MapKey("tableName")
+    List<Map<String,String>> listByTableName(@Param("tableNames") List<String> tableNames,@Param("tableName")String tableName);
+
 }
