@@ -21,7 +21,7 @@ import java.util.Map;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class ISysAccessSchemaServiceImpl extends ServiceImpl<SysAccessSchemaMapper, SysAccessSchema> implements ISysAccessSchemaService {
+public class SysAccessSchemaServiceImpl extends ServiceImpl<SysAccessSchemaMapper, SysAccessSchema> implements ISysAccessSchemaService {
 
     private  final AccessMapper accessMapper;
 
