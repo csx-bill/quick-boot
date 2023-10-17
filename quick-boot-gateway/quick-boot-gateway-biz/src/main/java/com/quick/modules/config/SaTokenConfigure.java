@@ -26,7 +26,7 @@ public class SaTokenConfigure {
                 // 拦截地址
                 .addInclude("/**")    /* 拦截全部path */
                 // 开放地址
-                .addExclude("/favicon.ico", "/doc.html", "/**/v3/api-docs", "/webjars/**", "/swagger-resources/**", "/actuator/**", "/instances/**")
+                .addExclude("/favicon.ico", "/doc.html", "/**/v3/api-docs", "/webjars/**", "/swagger-resources/**", "/actuator/**", "/instances/**","/api/system/SysMenu/getRoutes")
                 // 鉴权方法：每次访问进入
                 .setAuth(obj -> {
                     // 登录校验 -- 拦截所有路由，并排除/user/doLogin 用于开放登录
