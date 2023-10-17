@@ -4,6 +4,7 @@ import com.quick.common.aspect.annotation.PreAuth;
 import com.quick.common.controller.SuperController;
 import com.quick.common.vo.Result;
 import com.quick.modules.online.entity.Access;
+import com.quick.modules.online.req.SyncReq;
 import com.quick.modules.online.service.IAccessService;
 import com.quick.modules.online.vo.AccessVO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,8 +33,8 @@ public class AccessController extends SuperController<IAccessService, Access, St
 
     @Operation(summary = "同步数据库表信息", description = "同步数据库表信息")
     @PostMapping(value = "/sync")
-    public Result<Boolean> sync(@RequestBody String tableNames) {
-        return Result.success(baseService.sync(Arrays.asList(tableNames.split(","))));
+    public Result<Boolean> sync(@RequestBody SyncReq req) {
+        return Result.success(baseService.sync(Arrays.asList(req.getTableNames().split(","))));
     }
 
     @GetMapping(value = "/tables")

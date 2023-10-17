@@ -66,4 +66,7 @@ public class SysMenu extends BaseEntity implements Serializable {
     @Schema(description = "accessId")
     private String accessId;
 
+    @Schema(description = "组件")
+    private String component;
+
 }

@@ -3,12 +3,18 @@ package com.quick.modules.online.service.impl;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.quick.common.constant.CommonConstant;
 import com.quick.modules.online.entity.Access;
 import com.quick.modules.online.entity.SysTableColumn;
 import com.quick.modules.online.mapper.AccessMapper;
 import com.quick.modules.online.service.IAccessService;
 import com.quick.modules.online.service.ISysTableColumnService;
 import com.quick.modules.online.vo.AccessVO;
+import com.quick.modules.online.vo.SelectOptionsVO;
+import com.quick.modules.online.vo.SysTableColumnVO;
+import com.quick.modules.system.entity.SysDictData;
+import com.quick.modules.system.service.ISysDictDataService;
+import com.quick.modules.util.DictDataToAMISJSONUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -26,14 +32,11 @@ import java.util.Map;
 public class AccessServiceImpl extends ServiceImpl<AccessMapper, Access> implements IAccessService {
 
     private final ISysTableColumnService sysTableColumnService;
+
+    private final ISysDictDataService sysDictDataService;
     @Override
     public List<Map<String, String>> listByTableName(List<String> tableNames,String tableName) {
         return baseMapper.listByTableName(tableNames,tableName);
-    }
-
-    @Override
-    public List<Map<String, Object>> getFieldDetails(String tableName) {
-        return baseMapper.getFieldDetails(tableName);
     }
 
     @Transactional
@@ -58,42 +61,19 @@ public class AccessServiceImpl extends ServiceImpl<AccessMapper, Access> impleme
                     .debug(0).date(LocalDateTime.now()).build();
             save(access);
             // 获取表字段
-            List<Map<String, Object>> fieldDetails = getFieldDetails(tableName);
+            List<SysTableColumn> fieldList = sysTableColumnService.selectByTableName(tableName);
 
             List<SysTableColumn> list = new ArrayList<>();
-            for (int i = 0; i < fieldDetails.size(); i++) {
-                Map<String, Object> fieldDetail = fieldDetails.get(i);
-                // 忽略删除标记字段
-                if ("del_flag".equals(fieldDetail.get("Field").toString())) {
-                    continue;
-                }
-
-                SysTableColumn sysTableColumn = new SysTableColumn();
+            for (int i = 0; i < fieldList.size(); i++) {
+                SysTableColumn sysTableColumn = fieldList.get(i);
                 sysTableColumn.setAccessId(access.getId());
-                sysTableColumn.setDbFieldName(fieldDetail.get("Field").toString());
-                sysTableColumn.setDbFieldTxt(fieldDetail.get("Comment").toString());
-                // id 主键
-                if(fieldDetail.get("Key").equals("PRI")){
-                    sysTableColumn.setDbIsKey("Y");
-                }else {
-                    sysTableColumn.setDbIsKey("N");
-                }
                 sysTableColumn.setSort(i);
-                sysTableColumn.setIsQuery("N");
-                sysTableColumn.setIsShowForm("Y");
-                sysTableColumn.setIsShowList("Y");
-                sysTableColumn.setIsReadOnly("N");
-                sysTableColumn.setIsRequired("N");
-                sysTableColumn.setQueryType("LIKE");
-
                 // 时间控件
-                if ("create_time".equals(fieldDetail.get("Field").toString())
-                        || "update_time".equals(fieldDetail.get("Field").toString())
+                if ("create_time".equals(sysTableColumn.getDbFieldName())
+                        || "update_time".equals(sysTableColumn.getDbFieldName())
                 ) {
                     sysTableColumn.setShowType("DATE");
-                }else {
-                    // 默认文本框
-                    sysTableColumn.setShowType("TEXT");
+                    sysTableColumn.setQueryType("BETWEEN");
                 }
                 list.add(sysTableColumn);
             }
@@ -109,7 +89,38 @@ public class AccessServiceImpl extends ServiceImpl<AccessMapper, Access> impleme
         BeanUtils.copyProperties(access,accessVO);
         // 获取字段信息
         List<SysTableColumn> columns = sysTableColumnService.list(new LambdaQueryWrapper<SysTableColumn>().eq(SysTableColumn::getAccessId, id));
-        accessVO.setColumns(columns);
+
+        // 字典信息
+        List<SysDictData> queryTypeSysDictData = sysDictDataService.queryDictDataByDictCode(CommonConstant.COLUMN_QUERY_TYPE);
+        List<SysDictData> showTypeSysDictData = sysDictDataService.queryDictDataByDictCode(CommonConstant.COLUMN_SHOW_TYPE);
+        List<SysDictData> dictTableJoinSysDictData = sysDictDataService.queryDictDataByDictCode(CommonConstant.COLUMN_TABLE_JOIN);
+
+        SelectOptionsVO queryTypeOptionsVO = DictDataToAMISJSONUtils.selectOptions(queryTypeSysDictData);
+        SelectOptionsVO showTypeOptionsVO = DictDataToAMISJSONUtils.selectOptions(showTypeSysDictData);
+        SelectOptionsVO dictTableJoiOptionsVO = DictDataToAMISJSONUtils.selectOptions(dictTableJoinSysDictData);
+
+        List<SysTableColumnVO> columnsVO = new ArrayList<>();
+        for (SysTableColumn sysTableColumn : columns) {
+            SysTableColumnVO sysTableColumnVO = new SysTableColumnVO();
+            BeanUtils.copyProperties(sysTableColumn, sysTableColumnVO);
+            SelectOptionsVO queryType = new SelectOptionsVO();
+            queryType.setValue(sysTableColumn.getQueryType());
+            queryType.setOptions(queryTypeOptionsVO.getOptions());
+            sysTableColumnVO.setQueryType(queryType);
+
+            SelectOptionsVO showType = new SelectOptionsVO();
+            showType.setValue(sysTableColumn.getShowType());
+            showType.setOptions(showTypeOptionsVO.getOptions());
+            sysTableColumnVO.setShowType(showType);
+
+            SelectOptionsVO dictTableJoin = new SelectOptionsVO();
+            dictTableJoin.setValue(sysTableColumn.getDictTableJoin());
+            dictTableJoin.setOptions(dictTableJoiOptionsVO.getOptions());
+            sysTableColumnVO.setDictTableJoin(dictTableJoin);
+
+            columnsVO.add(sysTableColumnVO);
+        }
+        accessVO.setColumns(columnsVO);
         return accessVO;
     }
 
@@ -120,8 +131,10 @@ public class AccessServiceImpl extends ServiceImpl<AccessMapper, Access> impleme
         BeanUtils.copyProperties(entity,access);
         updateById(access);
         //更新字段信息
-        List<SysTableColumn> columns = entity.getColumns();
-        sysTableColumnService.updateBatchById(columns);
+        //List<SysTableColumn> columns = entity.getColumns();
+        //sysTableColumnService.updateBatchById(columns);
+        // 更新 Schema
+
         return true;
     }
 }

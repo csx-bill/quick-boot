@@ -3,6 +3,8 @@ package com.quick.modules.util;
 import cn.hutool.core.util.IdUtil;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
+import com.quick.common.constant.CommonConstant;
+import com.quick.modules.online.entity.SysTableColumn;
 
 import java.util.List;
 import java.util.Map;
@@ -17,10 +19,10 @@ public class AMISGeneratorUtils {
      *
      * @return
      */
-    public static String generateAMISCrudSchema(String aliasTableName, List<Map<String, Object>> fieldDetails) {
+    public static String generateAMISCrudSchema(String aliasTableName, List<SysTableColumn> fieldList) {
         JSONObject schema = new JSONObject();
         schema.put("id", "u:" + IdUtil.simpleUUID());
-        schema.put("body", body(aliasTableName, fieldDetails));
+        schema.put("body", body(aliasTableName, fieldList));
         schema.put("type", "page");
         schema.put("regions", new JSONArray("body"));
         schema.put("toolbar", new JSONArray());
@@ -34,16 +36,16 @@ public class AMISGeneratorUtils {
         return schema.toJSONString();
     }
 
-    public static JSONArray body(String aliasTableName, List<Map<String, Object>> fieldDetails) {
+    public static JSONArray body(String aliasTableName, List<SysTableColumn> fieldList) {
         JSONArray body = new JSONArray();
-        body.add(crud(aliasTableName, fieldDetails));
+        body.add(crud(aliasTableName, fieldList));
         return body;
     }
 
     /**
      * body->crud
      */
-    public static JSONObject crud(String aliasTableName, List<Map<String, Object>> fieldDetails) {
+    public static JSONObject crud(String aliasTableName, List<SysTableColumn> fieldList) {
         JSONObject crud = new JSONObject();
         crud.put("id", "u:" + IdUtil.simpleUUID());
         crud.put("api", api(aliasTableName));
@@ -51,13 +53,14 @@ public class AMISGeneratorUtils {
         crud.put("pageField", pageField());
         crud.put("perPageField", perPageField());
         crud.put("perPageAvailable", perPageAvailable());
-        crud.put("columns", columns(aliasTableName,fieldDetails));
+        // 列表 展示字段
+        crud.put("columns", columns(aliasTableName,fieldList));
         crud.put("features", features());
-        crud.put("filter", filter(fieldDetails));
-        crud.put("filterEnabledList", filterEnabledList(fieldDetails));
-        crud.put("filterSettingSource", filterSettingSource(fieldDetails));
+        crud.put("filter", filter(fieldList));
+        crud.put("filterEnabledList", filterEnabledList(fieldList));
+        crud.put("filterSettingSource", filterSettingSource(fieldList));
         crud.put("bulkActions", bulkActions(aliasTableName));
-        crud.put("headerToolbar", headerToolbar(aliasTableName,fieldDetails));
+        crud.put("headerToolbar", headerToolbar(aliasTableName,fieldList));
         crud.put("footerToolbar", footerToolbar());
         crud.put("itemActions", itemActions());
         return crud;
@@ -150,32 +153,31 @@ public class AMISGeneratorUtils {
      * }
      * 通过读取表结构来构建
      */
-    public static JSONArray columns(String aliasTableName,List<Map<String, Object>> fieldDetails) {
+    public static JSONArray columns(String aliasTableName,List<SysTableColumn> fieldList) {
         JSONArray columns = new JSONArray();
 
-        for (Map<String, Object> fieldDetail : fieldDetails) {
+        for (SysTableColumn fieldDetail : fieldList) {
 
             // 忽略删除标记字段
-            if ("del_flag".equals(fieldDetail.get("Field").toString())) {
+            if ("del_flag".equals(fieldDetail.getDbFieldName())) {
+                continue;
+            }
+
+            // 跳过不需要显示列表字段
+            if (!fieldDetail.getIsShowList().equals(CommonConstant.Y)) {
                 continue;
             }
 
             JSONObject column = new JSONObject();
             column.put("id", "u:" + IdUtil.simpleUUID());
             column.put("type", "text");
-            // 取数据库字段名
-            column.put("name", fieldDetail.get("Field"));
-            // 取数据库字段备注
-            if (fieldDetail.get("Comment") != null) {
-                column.put("label", fieldDetail.get("Comment"));
-            } else {
-                column.put("label", fieldDetail.get("Field"));
-            }
+            column.put("name", fieldDetail.getDbFieldName());
+            column.put("label", fieldDetail.getDbFieldTxt());
             columns.add(column);
         }
 
         // 操作栏
-        columns.add(operation(aliasTableName,fieldDetails));
+        columns.add(operation(aliasTableName,fieldList));
 
         return columns;
     }
@@ -183,14 +185,14 @@ public class AMISGeneratorUtils {
     /**
      * columns->operation
      */
-    public static JSONObject operation(String aliasTableName,List<Map<String, Object>> fieldDetails) {
+    public static JSONObject operation(String aliasTableName,List<SysTableColumn> fieldList) {
         // 操作栏
         JSONObject operation = new JSONObject();
         operation.put("id", "u:" + IdUtil.simpleUUID());
         operation.put("type", "operation");
 
         JSONArray buttons = new JSONArray();
-        buttons.add(operationEdit(aliasTableName,fieldDetails));
+        buttons.add(operationEdit(aliasTableName,fieldList));
         buttons.add(operationDelete(aliasTableName));
 
         operation.put("buttons", buttons);
@@ -201,7 +203,7 @@ public class AMISGeneratorUtils {
     /**
      * operation->edit
      */
-    public static JSONObject operationEdit(String aliasTableName,List<Map<String, Object>> fieldDetails) {
+    public static JSONObject operationEdit(String aliasTableName,List<SysTableColumn> fieldList) {
 
         JSONObject edit = new JSONObject();
         edit.put("id", "u:" + IdUtil.simpleUUID());
@@ -261,13 +263,14 @@ public class AMISGeneratorUtils {
         body.put("initApi", initApi);
 
         JSONArray form = new JSONArray();
-        for (Map<String, Object> fieldDetail : fieldDetails) {
+        for (SysTableColumn fieldDetail : fieldList) {
             // 忽略字段
-            if ("del_flag".equals(fieldDetail.get("Field").toString())
-                    || "create_time".equals(fieldDetail.get("Field").toString())
-                    || "create_by".equals(fieldDetail.get("Field").toString())
-                    || "update_time".equals(fieldDetail.get("Field").toString())
-                    || "update_by".equals(fieldDetail.get("Field").toString())
+            String dbFieldName = fieldDetail.getDbFieldName();
+            if ("del_flag".equals(dbFieldName)
+                    || "create_time".equals(dbFieldName)
+                    || "create_by".equals(dbFieldName)
+                    || "update_time".equals(dbFieldName)
+                    || "update_by".equals(dbFieldName)
             ) {
                 continue;
             }
@@ -277,9 +280,9 @@ public class AMISGeneratorUtils {
             column.put("editorPath", "input.base.default");
             column.put("editorPath", "input.base.default");
             column.put("editorState", "default");
-            column.put("name", fieldDetail.get("Field"));
-            column.put("label", fieldDetail.get("Comment"));
-            if("id".equals(fieldDetail.get("Field").toString())){
+            column.put("name", dbFieldName);
+            column.put("label", fieldDetail.getDbFieldTxt());
+            if("id".equals(fieldDetail)){
                 column.put("hidden", true);
             }
             form.add(column);
@@ -391,9 +394,9 @@ public class AMISGeneratorUtils {
     /**
      * crud->headerToolbar
      */
-    public static JSONArray headerToolbar(String aliasTableName,List<Map<String, Object>> fieldDetails) {
+    public static JSONArray headerToolbar(String aliasTableName,List<SysTableColumn> fieldList) {
         JSONArray headerToolbar = new JSONArray();
-        headerToolbar.add(operationAdd(aliasTableName,fieldDetails));
+        headerToolbar.add(operationAdd(aliasTableName,fieldList));
         JSONObject type = new JSONObject();
         type.put("type","bulk-actions");
         headerToolbar.add(type);
@@ -436,7 +439,7 @@ public class AMISGeneratorUtils {
      * @param aliasTableName
      * @return
      */
-    public static JSONObject operationAdd(String aliasTableName,List<Map<String, Object>> fieldDetails) {
+    public static JSONObject operationAdd(String aliasTableName,List<SysTableColumn> fieldList) {
 
         JSONObject add = new JSONObject();
         add.put("id", "u:" + IdUtil.simpleUUID());
@@ -472,14 +475,15 @@ public class AMISGeneratorUtils {
         body.put("type", "form");
 
         JSONArray form = new JSONArray();
-        for (Map<String, Object> fieldDetail : fieldDetails) {
+        for (SysTableColumn fieldDetail : fieldList) {
+            String dbFieldName = fieldDetail.getDbFieldName();
             // 忽略字段
-            if ("del_flag".equals(fieldDetail.get("Field").toString())
-                    || "id".equals(fieldDetail.get("Field").toString())
-                    || "create_time".equals(fieldDetail.get("Field").toString())
-                    || "create_by".equals(fieldDetail.get("Field").toString())
-                    || "update_time".equals(fieldDetail.get("Field").toString())
-                    || "update_by".equals(fieldDetail.get("Field").toString())
+            if ("del_flag".equals(dbFieldName)
+                    || "id".equals(dbFieldName)
+                    || "create_time".equals(dbFieldName)
+                    || "create_by".equals(dbFieldName)
+                    || "update_time".equals(dbFieldName)
+                    || "update_by".equals(dbFieldName)
             ) {
                 continue;
             }
@@ -489,8 +493,8 @@ public class AMISGeneratorUtils {
             column.put("editorPath", "input.base.default");
             column.put("editorPath", "input.base.default");
             column.put("editorState", "default");
-            column.put("name", fieldDetail.get("Field"));
-            column.put("label", fieldDetail.get("Comment"));
+            column.put("name", dbFieldName);
+            column.put("label", fieldDetail.getDbFieldTxt());
             form.add(column);
         }
 
@@ -519,25 +523,26 @@ public class AMISGeneratorUtils {
     /**
      * crud->filter
      */
-    public static JSONObject filter(List<Map<String, Object>> fieldDetails) {
+    public static JSONObject filter(List<SysTableColumn> fieldList) {
         JSONArray body = new JSONArray();
-        for (Map<String, Object> fieldDetail : fieldDetails) {
+        for (SysTableColumn fieldDetail : fieldList) {
+            String dbFieldName = fieldDetail.getDbFieldName();
             // 忽略字段
-            if ("del_flag".equals(fieldDetail.get("Field").toString()) || "id".equals(fieldDetail.get("Field").toString())) {
+            if ("del_flag".equals(dbFieldName) || "id".equals(dbFieldName)) {
                 continue;
             }
+            // 跳过非查询字段
+            if(!fieldDetail.getIsQuery().equals(CommonConstant.Y)){
+                continue;
+            }
+
             JSONObject column = new JSONObject();
             column.put("id", "u:" + IdUtil.simpleUUID());
             column.put("type", "input-text");
             column.put("editorPath", "input.base.default");
             column.put("editorPath", "input.base.default");
             column.put("editorState", "default");
-            // 取数据库字段备注
-            if (fieldDetail.get("Comment") != null) {
-                column.put("label", fieldDetail.get("Comment"));
-            } else {
-                column.put("label", fieldDetail.get("Field"));
-            }
+            column.put("label", fieldDetail.getDbFieldTxt());
             body.add(column);
         }
         JSONObject filter = new JSONObject();
@@ -557,17 +562,18 @@ public class AMISGeneratorUtils {
      * "value":"realName"
      * }]
      */
-    public static JSONArray filterEnabledList(List<Map<String, Object>> fieldDetails) {
+    public static JSONArray filterEnabledList(List<SysTableColumn> fieldList) {
         JSONArray filterEnabledList = new JSONArray();
 
-        for (Map<String, Object> fieldDetail : fieldDetails) {
+        for (SysTableColumn fieldDetail : fieldList) {
+            String dbFieldName = fieldDetail.getDbFieldName();
             // 忽略字段
-            if ("del_flag".equals(fieldDetail.get("Field").toString()) || "id".equals(fieldDetail.get("Field").toString())) {
+            if ("del_flag".equals(dbFieldName) || "id".equals(dbFieldName)) {
                 continue;
             }
             JSONObject column = new JSONObject();
-            column.put("label", fieldDetail.get("Field"));
-            column.put("value", fieldDetail.get("Field"));
+            column.put("label", dbFieldName);
+            column.put("value", dbFieldName);
             filterEnabledList.add(column);
         }
         return filterEnabledList;
@@ -576,14 +582,15 @@ public class AMISGeneratorUtils {
     /**
      * crud->filterSettingSource
      */
-    public static JSONArray filterSettingSource(List<Map<String, Object>> fieldDetails) {
+    public static JSONArray filterSettingSource(List<SysTableColumn> fieldList) {
         JSONArray filterSettingSource = new JSONArray();
-        for (Map<String, Object> fieldDetail : fieldDetails) {
+        for (SysTableColumn fieldDetail : fieldList) {
+            String dbFieldName = fieldDetail.getDbFieldName();
             // 忽略删除标记字段
-            if ("del_flag".equals(fieldDetail.get("Field").toString())) {
+            if ("del_flag".equals(dbFieldName)) {
                 continue;
             }
-            filterSettingSource.add(fieldDetail.get("Field"));
+            filterSettingSource.add(dbFieldName);
         }
         return filterSettingSource;
     }

@@ -11,7 +11,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -27,10 +26,6 @@ public class SysUserController extends SuperController<ISysUserService, SysUser,
     @Operation(summary = "获取当前用户信息", description = "获取当前用户信息")
     public Result<UserInfoVO> getUserInfo() {
         String userId = StpUtil.getLoginId().toString();
-        SysUser sysUser = baseService.getById(userId);
-        UserInfoVO userInfoVO = new UserInfoVO();
-        BeanUtils.copyProperties(sysUser, userInfoVO);
-        userInfoVO.setUserId(userId);
-        return Result.success(userInfoVO);
+        return Result.success(baseService.getUserInfo(userId));
     }
 }

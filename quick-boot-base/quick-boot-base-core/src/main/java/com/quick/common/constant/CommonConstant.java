@@ -8,6 +8,29 @@ public interface CommonConstant {
 
     Integer FORBIDDEN = 403;
     String SUCCESS_MSG = "success";
+
+    String Y = "Y";
+
+    String N = "N";
+
+    /**
+     * 菜单类型
+     */
+    // 菜单
+    String MENU = "MENU";
+    // 目录
+    String DIR = "DIR";
+    // 按钮
+    String BUTTON = "BUTTON";
+
+    String PARENTID = "0";
+
+
+
+    String COLUMN_QUERY_TYPE = "COLUMN_QUERY_TYPE";
+    String COLUMN_SHOW_TYPE = "COLUMN_SHOW_TYPE";
+    String COLUMN_TABLE_JOIN = "COLUMN_TABLE_JOIN";
+
     /**
      * 系统服务名
      */

@@ -1,13 +1,14 @@
 package com.quick.modules.system.service.impl;
 
 import com.alibaba.fastjson2.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.quick.common.constant.CommonConstant;
 import com.quick.common.util.SuperAdminUtils;
 import com.quick.modules.system.entity.SysMenu;
 import com.quick.modules.system.mapper.SysMenuMapper;
 import com.quick.modules.system.service.ISysMenuService;
 import com.quick.modules.system.vo.SysMenuTreeVO;
-import com.quick.modules.system.vo.UserMenuPermsVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,48 +24,33 @@ import java.util.stream.Collectors;
 public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> implements ISysMenuService {
 
     @Override
+    public List<SysMenuTreeVO> getRoutes() {
+        List<SysMenu> sysMenus = baseMapper.selectList(new LambdaQueryWrapper<SysMenu>()
+                .ne(SysMenu::getMenuType, CommonConstant.BUTTON));
+        // 组装菜单树
+        return this.getSysMenuTree(sysMenus);
+    }
+
+    @Override
     public List<SysMenu> queryByUser(String userId) {
         return baseMapper.queryByUser(userId);
     }
 
-    @Override
-    public UserMenuPermsVO getUserMenu(String userId) {
-        List<SysMenu> sysMenus = new ArrayList<>();
-        // 超级管理员拥有所有权限
-        if(SuperAdminUtils.isSuperAdmin(userId)){
-            sysMenus = baseMapper.getSuperAdminMenus();
-        }else {
-           sysMenus = this.queryByUser(userId);
-        }
-        //过滤掉按钮权限
-        List<SysMenu> menus = sysMenus.stream().filter(sysMenu -> !sysMenu.getMenuType().equals("button")).collect(Collectors.toList());
-        // 组装菜单树
-        List<SysMenuTreeVO> sysMenuTree = this.getSysMenuTree(menus);
-        //按钮权限
-        List<String> permsCode = sysMenus.stream().filter(m -> m.getMenuType().equals("button")).map(
-                (m) -> {
-                    return m.getPerms();
-                }
-        ).collect(Collectors.toList());
 
-        return UserMenuPermsVO.builder().menu(sysMenuTree).permsCode(permsCode).build();
-    }
-
+    /**
+     * 查询用户拥有的菜单树和按钮权限
+     * @param userId
+     * @return
+     */
     @Override
     public List<SysMenuTreeVO> getUserMenuTree(String userId) {
-        List<SysMenu> sysMenus = new ArrayList<>();
-        // 超级管理员拥有所有权限
-        if(SuperAdminUtils.isSuperAdmin(userId)){
-            sysMenus = baseMapper.getSuperAdminMenus();
-        }else {
-            sysMenus = this.queryByUser(userId);
-        }
+        List<SysMenu> sysMenus = getUserMenu(userId);
         // 组装菜单树
         return this.getSysMenuTree(sysMenus);
     }
 
     /**
-     * 组合当前登录拥有的菜单权限
+     * 组合菜单树
      *
      * @param sysMenuList
      * @return
@@ -75,7 +61,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
         List<SysMenuTreeVO> list = JSON.parseArray(JSON.toJSONString(sysMenuList), SysMenuTreeVO.class);
 
         //获取父节点
-        List<SysMenuTreeVO> treeVOList = list.stream().filter(m -> "0".equals(m.getParentId())).map(
+        List<SysMenuTreeVO> treeVOList = list.stream().filter(m -> CommonConstant.PARENTID.equals(m.getParentId())).map(
                 (m) -> {
                     m.setChildren(getChildren(m, list));
                     return m;
@@ -103,6 +89,40 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
                 }
         ).collect(Collectors.toList());
         return children;
+    }
+
+    /**
+     * 查询用户拥有的菜单&按钮
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<SysMenu> getUserMenu(String userId) {
+        List<SysMenu> sysMenus = new ArrayList<>();
+        // 超级管理员拥有所有权限
+        if (SuperAdminUtils.isSuperAdmin(userId)) {
+            sysMenus = baseMapper.getSuperAdminMenus();
+        } else {
+            sysMenus = this.queryByUser(userId);
+        }
+        return sysMenus;
+    }
+
+    /**
+     * 获取用户的按钮权限
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<String> getUserButton(String userId) {
+        List<SysMenu> sysMenus = getUserMenu(userId);
+        //按钮权限
+        List<String> permsCode = sysMenus.stream().filter(m -> m.getMenuType().equals(CommonConstant.BUTTON)).map(
+                (m) -> {
+                    return m.getPerms();
+                }
+        ).collect(Collectors.toList());
+        return permsCode;
     }
 
 }

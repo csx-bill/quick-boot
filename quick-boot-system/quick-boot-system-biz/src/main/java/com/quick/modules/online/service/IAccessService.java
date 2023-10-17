@@ -9,7 +9,6 @@ import java.util.Map;
 
 public interface IAccessService extends IService<Access> {
     List<Map<String,String>> listByTableName(List<String> tableNames,String tableName);
-    List<Map<String, Object>> getFieldDetails(String tableName);
 
     boolean sync(List<String> tableNames);
 

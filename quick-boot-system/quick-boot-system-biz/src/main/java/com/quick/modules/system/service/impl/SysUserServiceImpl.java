@@ -11,20 +11,27 @@ import com.quick.common.util.SuperAdminUtils;
 import com.quick.modules.system.entity.SysUser;
 import com.quick.modules.system.mapper.SysUserMapper;
 import com.quick.modules.system.req.AuthorizedUserPageParam;
+import com.quick.modules.system.service.ISysMenuService;
 import com.quick.modules.system.service.ISysUserService;
+import com.quick.modules.system.vo.SysMenuTreeVO;
+import com.quick.modules.system.vo.UserInfoVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
 
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> implements ISysUserService {
+
+    final ISysMenuService sysMenuService;
 
     @Override
     public IPage<SysUser> authorizedUserPage(Page<SysUser> page, AuthorizedUserPageParam param) {
@@ -85,5 +92,19 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         if (SuperAdminUtils.isSuperAdmin(userId)) {
             throw new BizException(CommonConstant.SC_INTERNAL_SERVER_ERROR_500,"不允许操作超级管理员用户");
         }
+    }
+
+    @Override
+    public UserInfoVO getUserInfo(String userId) {
+        SysUser sysUser = getById(userId);
+        UserInfoVO userInfoVO = new UserInfoVO();
+        BeanUtils.copyProperties(sysUser, userInfoVO);
+        userInfoVO.setUserId(userId);
+        // 按钮权限
+        List<String> permsCode = sysMenuService.getUserButton(userId);
+        userInfoVO.setPermsCode(permsCode);
+        List<SysMenuTreeVO> userMenuTree = sysMenuService.getUserMenuTree(userId);
+        userInfoVO.setUserMenuTree(userMenuTree);
+        return userInfoVO;
     }
 }

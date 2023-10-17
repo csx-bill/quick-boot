@@ -7,7 +7,6 @@
 |--------------|-----------------------------------------|
 | 后台源码 JAVA    | https://github.com/csx-bill/quick-boot  |
 | 前端源码 `React` | https://github.com/csx-bill/quick-admin |
-| 演示站点         | https://347948e2k8.goho.co              |
 | 演示站点账号       | admin/123456                            |
 
 ## 概述
