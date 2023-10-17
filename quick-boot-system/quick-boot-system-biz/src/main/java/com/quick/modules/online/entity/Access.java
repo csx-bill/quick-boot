@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.quick.common.aspect.annotation.Dict;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,6 +27,7 @@ public class Access implements Serializable {
     @Schema(description = "ID")
     private String id;
 
+    @Dict(dictCode = "access_debug")
     @Schema(description = "是否为 DEBUG: 0-否，1-是。")
     private int debug;
 
@@ -44,4 +46,8 @@ public class Access implements Serializable {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime date;
+
+    @Schema(description = "描述")
+    private String detail;
+
 }
