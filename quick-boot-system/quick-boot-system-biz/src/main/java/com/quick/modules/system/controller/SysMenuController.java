@@ -37,11 +37,18 @@ public class SysMenuController extends SuperController<ISysMenuService, SysMenu,
         return Result.success(baseService.getUserMenuTree(userId));
     }
 
-    @PostMapping(value = "/getSysMenuTree")
-    @Operation(summary = "获取系统菜单树和按钮权限", description = "获取系统菜单树和按钮权限")
-    public Result<List<SysMenuTreeVO>> getSysMenuTree(@RequestBody SysMenu entity) {
+    @PostMapping(value = "/getSysMenuTreeSearch")
+    @Operation(summary = "条件获取系统菜单树和按钮权限", description = "条件获取系统菜单树和按钮权限")
+    public Result<List<SysMenuTreeVO>> getSysMenuTreeSearch(@RequestBody SysMenu entity) {
         List<SysMenu> sysMenuList = baseService.getSysMenu(entity);
         List<SysMenuTreeVO> sysMenuTree = baseService.getSysMenuTree(sysMenuList);
+        return Result.success(sysMenuTree);
+    }
+
+    @GetMapping(value = "/getSysMenuTree")
+    @Operation(summary = "获取系统菜单树和按钮权限", description = "获取系统菜单树和按钮权限")
+    public Result<List<SysMenuTreeVO>> getSysMenuTree() {
+        List<SysMenuTreeVO> sysMenuTree = baseService.getSysMenuTree(baseService.list());
         return Result.success(sysMenuTree);
     }
 
