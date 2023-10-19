@@ -10,6 +10,11 @@ import java.util.List;
 @Mapper
 public interface SysMenuMapper extends BaseMapper<SysMenu> {
     List<SysMenu> queryByUser(@Param("userId") String userId);
-    List<SysMenu> getSuperAdminMenus();
+
+    /**
+     * 根据角色id 查询按钮权限
+     * @param roleId
+     * @return
+     */
     List<SysMenu> getUserRolePermission(@Param("roleId") String roleId);
 }

@@ -10,6 +10,7 @@ public interface ISysMenuService extends IService<SysMenu> {
     List<SysMenuTreeVO> getRoutes();
     List<SysMenu> queryByUser(String userId);
     List<SysMenuTreeVO> getUserMenuTree(String userId);
+    List<SysMenu> getSysMenu(SysMenu entity);
     List<SysMenuTreeVO> getSysMenuTree(List<SysMenu> sysMenuList);
     List<SysMenuTreeVO> getChildren(SysMenuTreeVO root,List<SysMenuTreeVO> sysMenuList);
     List<SysMenu> getUserMenu(String userId);

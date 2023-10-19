@@ -14,10 +14,8 @@
                      p.icon,
                      p.hide_in_menu,
                      p.`status`,
-                     p.access_id,
-                     ac.`schema`
+                     p.`schema`
               FROM sys_menu p
-                       LEFT JOIN sys_access_schema ac ON p.access_id = ac.access_id
               WHERE (
                   EXISTS(
                           SELECT a.id
@@ -41,31 +39,12 @@
         sys_role_menu a
         JOIN sys_menu b ON a.menu_id = b.id
         WHERE
-        b.menu_type = "button"
+        b.menu_type = "BUTTON"
         AND b.del_flag = 0
         AND b.`status` = 'A'
         <if test="roleId != null and roleId != ''">
             AND a.role_id = #{roleId}
         </if>
-    </select>
-
-    <select id="getSuperAdminMenus" resultType="com.quick.modules.system.entity.SysMenu">
-        SELECT p.id,
-               p.parent_id,
-               p.`name`,
-               p.path,
-               p.menu_type,
-               p.perms,
-               p.order_no,
-               p.icon,
-               p.hide_in_menu,
-               p.`status`,
-               p.access_id,
-               ac.`schema`
-        FROM sys_menu p
-                 LEFT JOIN sys_access_schema ac ON p.access_id = ac.access_id
-        WHERE p.`status` = 'A'
-          AND p.del_flag = 0
     </select>
 
 </mapper>

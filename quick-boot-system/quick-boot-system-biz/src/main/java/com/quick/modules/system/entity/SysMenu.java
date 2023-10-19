@@ -1,5 +1,6 @@
 package com.quick.modules.system.entity;
 
+import com.baomidou.mybatisplus.annotation.SqlCondition;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.quick.common.aspect.annotation.Dict;
 import com.quick.common.entity.BaseEntity;
@@ -21,6 +22,7 @@ public class SysMenu extends BaseEntity implements Serializable {
     @Schema(description = "父id")
     private String parentId;
 
+    @TableField(condition = SqlCondition.LIKE)
     @Schema(description = "菜单名称")
     private String name;
 
@@ -50,23 +52,16 @@ public class SysMenu extends BaseEntity implements Serializable {
     private String description;
 
     /**
-     * 是否隐藏菜单: 0否,1是（默认值0）
+     * 是否隐藏菜单: N否,Y是
      */
     @Schema(description = "是否隐藏菜单")
-    private Boolean hideInMenu;
+    private String hideInMenu;
 
     @Dict(dictCode = "sys_menu_status")
     @Schema(description = "状态")
     private String status;
 
-    @TableField(exist = false)
     @Schema(description = "schema")
     private String schema;
-
-    @Schema(description = "accessId")
-    private String accessId;
-
-    @Schema(description = "组件")
-    private String component;
 
 }

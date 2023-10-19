@@ -49,6 +49,11 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
         return this.getSysMenuTree(sysMenus);
     }
 
+    @Override
+    public List<SysMenu> getSysMenu(SysMenu entity) {
+        return list(new LambdaQueryWrapper(entity));
+    }
+
     /**
      * 组合菜单树
      *
@@ -101,7 +106,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
         List<SysMenu> sysMenus = new ArrayList<>();
         // 超级管理员拥有所有权限
         if (SuperAdminUtils.isSuperAdmin(userId)) {
-            sysMenus = baseMapper.getSuperAdminMenus();
+           sysMenus = list();
         } else {
             sysMenus = this.queryByUser(userId);
         }
