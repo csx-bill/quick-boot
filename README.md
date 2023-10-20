@@ -45,3 +45,8 @@ APIJSON 是一种基于 JSON 数据格式的 API 定义语言。它可以根据 
 
 ## 结论
 基于 AMIS 和 APIJSON 的低代码系统是一种可以帮助企业快速构建和部署 Web 应用程序的解决方案。它利用 AMIS 提供的丰富组件和模板库以及 APIJSON 的自动生成代码能力，可以大大减少开发工作量，提高开发效率，降低开发成本，同时还能提高代码质量。
+
+## 项目截图
+![预览.png](images/nacos.png)
+![预览.png](images/monitor.png)
+![预览.png](images/doc.png)
