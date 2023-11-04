@@ -28,14 +28,16 @@ public class SaTokenConfigure {
                 // 开放地址
                 .addExclude("/favicon.ico",
                         "/doc.html",
-                        "/**/v3/api-docs/**",
+                        "/api/system/v3/api-docs/**",
+                        "/api/auth/v3/api-docs/**",
                         "/webjars/**",
                         "/swagger-resources/**",
+                        "/v3/api-docs/**",
                         "/actuator/**",
                         "/instances/**",
                         "/api/system/SysMenu/getRoutes",
-                        "/**/doLogin",
-                        "/**/oauth2/**"
+                        "/api/auth/doLogin",
+                        "/api/auth/oauth2/**"
                 )
                 // 鉴权方法：每次访问进入
                 .setAuth(obj -> {
