@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: quick-boot-gateway
+  profiles:
+    active: @profiles.active@
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${nacos.ip}:${nacos.port}
+        namespace: ${nacos.namespace}
+      config:
+        server-addr: ${spring.cloud.nacos.discovery.server-addr}
+        namespace: ${spring.cloud.nacos.discovery.namespace}
+  config:
+    import:
+      - optional:classpath:${profiles.active}.properties
+      - optional:nacos:redis.yml
+      - optional:nacos:sa-token.yml
+      - optional:nacos:logging.yml
+      - optional:nacos:monitor.yml
+      - optional:nacos:${spring.application.name}.yml

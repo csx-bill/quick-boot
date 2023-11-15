@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quick.system.mapper.SysDictMapper">
+
+    <select id="queryDictTextByKey" resultType="java.lang.String">
+        SELECT
+            s.dict_text
+        FROM
+            sys_dict_data s
+        WHERE
+                s.dict_id = (
+                SELECT
+                    id
+                FROM
+                    sys_dict
+                WHERE
+                    dict_code = #{dictCode} AND del_flag = 0 )
+
+          AND s.dict_value = #{dictValue} AND s.del_flag = 0
+    </select>
+
+</mapper>

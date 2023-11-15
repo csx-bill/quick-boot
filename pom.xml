@@ -4,9 +4,9 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.quick</groupId>
     <artifactId>quick-boot-parent</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <packaging>pom</packaging>
-    <name>QUICK ${project.version}</name>
+    <name>Quick-Boot ${project.version}</name>
 
     <properties>
         <java.version>21</java.version>
@@ -16,7 +16,7 @@
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
-        <quick.version>1.0.0</quick.version>
+        <quick.version>1.0.1</quick.version>
         <spring-boot.version>3.1.5</spring-boot.version>
         <spring-cloud.version>2022.0.2</spring-cloud.version>
         <micrometer.version>1.11.5</micrometer.version>
@@ -42,6 +42,7 @@
     <modules>
         <module>quick-boot-base</module>
         <module>quick-boot-system</module>
+        <module>quick-boot-online</module>
         <module>quick-boot-oauth2</module>
         <module>quick-boot-monitor</module>
         <module>quick-boot-gateway</module>
@@ -97,13 +98,74 @@
 
             <dependency>
                 <groupId>com.quick</groupId>
-                <artifactId>quick-boot-base-core</artifactId>
+                <artifactId>quick-boot-system-controller</artifactId>
                 <version>${quick.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.quick</groupId>
-                <artifactId>quick-boot-monitor</artifactId>
+                <artifactId>quick-boot-system-domain</artifactId>
+                <version>${quick.version}</version>
+            </dependency>
+
+
+            <dependency>
+                <groupId>com.quick</groupId>
+                <artifactId>quick-boot-core</artifactId>
+                <version>${quick.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.quick</groupId>
+                <artifactId>quick-boot-pom</artifactId>
+                <version>${quick.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.quick</groupId>
+                <artifactId>quick-boot-oauth2-api</artifactId>
+                <version>${quick.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.quick</groupId>
+                <artifactId>quick-boot-oauth2-domain</artifactId>
+                <version>${quick.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.quick</groupId>
+                <artifactId>quick-boot-oauth2-biz</artifactId>
+                <version>${quick.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.quick</groupId>
+                <artifactId>quick-boot-oauth2-controller</artifactId>
+                <version>${quick.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.quick</groupId>
+                <artifactId>quick-boot-online-api</artifactId>
+                <version>${quick.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.quick</groupId>
+                <artifactId>quick-boot-online-domain</artifactId>
+                <version>${quick.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.quick</groupId>
+                <artifactId>quick-boot-online-biz</artifactId>
+                <version>${quick.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.quick</groupId>
+                <artifactId>quick-boot-online-controller</artifactId>
                 <version>${quick.version}</version>
             </dependency>
 

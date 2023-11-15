@@ -5,7 +5,7 @@
     <parent>
         <artifactId>quick-boot-parent</artifactId>
         <groupId>com.quick</groupId>
-        <version>1.0.0</version>
+        <version>1.0.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>quick-boot-oauth2</artifactId>
@@ -18,6 +18,10 @@
     </properties>
 
     <modules>
+        <module>quick-boot-oauth2-api</module>
+        <module>quick-boot-oauth2-domain</module>
         <module>quick-boot-oauth2-biz</module>
+        <module>quick-boot-oauth2-controller</module>
+        <module>quick-boot-oauth2-start</module>
     </modules>
 </project>

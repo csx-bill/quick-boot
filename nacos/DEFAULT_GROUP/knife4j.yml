@@ -8,7 +8,7 @@ springdoc:
   group-configs:
     - group: 'default'
       paths-to-match: '/**'
-      packages-to-scan: com.quick.modules
+      packages-to-scan: com.quick
 
 knife4j:
   enable: true
