@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.quick.online.mapper.SysTableColumnMapper">
 
-    <select id="selectByTableName" resultType="com.quick.modules.online.entity.SysTableColumn">
+    <select id="selectByTableName" resultType="com.quick.online.entity.SysTableColumn">
         SELECT
             COLUMN_NAME as dbFieldName,
             COLUMN_COMMENT as dbFieldTxt,

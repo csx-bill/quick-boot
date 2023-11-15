@@ -4,4 +4,7 @@ mysql-server:
   username: root
   password: 123456
   driver-class-name: com.p6spy.engine.spy.P6SpyDriver
+  # APIJSON的配置
+  default-database: MYSQL
+  db-version: 8.0.31
 
