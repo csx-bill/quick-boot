@@ -15,6 +15,7 @@ spring:
     import:
       - optional:classpath:${profiles.active}.properties
       - optional:nacos:${spring.application.name}.yml
+      - optional:nacos:mysql.yml
       - optional:nacos:knife4j.yml
       - optional:nacos:logging.yml
       - optional:nacos:monitor.yml
