@@ -8,7 +8,7 @@ import apijson.framework.APIJSONParser;
 import apijson.orm.Parser;
 import com.alibaba.fastjson.JSONObject;
 import com.quick.common.vo.Result;
-import com.quick.online.parser.OnlineJSONParse;
+import com.quick.online.parser.OnlineParser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -29,7 +29,7 @@ public class OnlineApiController extends APIJSONController<Long> {
 
     @Override
     public Parser<Long> newParser(HttpSession session, RequestMethod method) {
-        Parser parser = new OnlineJSONParse();
+        Parser parser = new OnlineParser();
         if (parser instanceof APIJSONParser) {
             ((APIJSONParser)parser).setSession(session);
         }

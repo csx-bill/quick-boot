@@ -23,8 +23,20 @@ public interface CommonConstant {
     // 按钮
     String BUTTON = "BUTTON";
 
+
+    /**
+     * 树结构顶级ID
+     */
     String PARENTID = "0";
 
+
+    /**
+     * 数据表 基础字段 创建人 创建时间 更新人 更新时间
+     */
+    String CREATE_TIME = "create_time";
+    String CREATE_BY = "create_by";
+    String UPDATE_TIME = "update_time";
+    String UPDATE_BY = "update_by";
 
 
     String COLUMN_QUERY_TYPE = "COLUMN_QUERY_TYPE";
@@ -34,8 +46,9 @@ public interface CommonConstant {
     /**
      * 系统服务名
      */
-    String SERVICE_SYSTEM = "quick-boot-system-biz";
-    String SERVICE_OAUTH2 = "quick-boot-oauth2-biz";
-    String SERVICE_GATEWAY = "quick-boot-gateway-biz";
+    String SERVICE_SYSTEM = "quick-boot-system";
+    String SERVICE_OAUTH2 = "quick-boot-oauth2";
+    String SERVICE_GATEWAY = "quick-boot-gateway";
+    String SERVICE_ONLINE = "quick-boot-online";
 
 }

@@ -3,10 +3,12 @@ package com.quick.online;
 import apijson.Log;
 import apijson.framework.APIJSONApplication;
 import apijson.framework.APIJSONCreator;
+import apijson.orm.Parser;
 import apijson.orm.SQLConfig;
 import apijson.orm.SQLExecutor;
 import com.quick.online.config.OnlineSQLConfig;
 import com.quick.online.config.OnlineSQLExecutor;
+import com.quick.online.parser.OnlineParser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -42,6 +44,11 @@ public class QuickOnlineApplication {
     static {
         // 使用本项目的自定义处理类
         APIJSONApplication.DEFAULT_APIJSON_CREATOR = new APIJSONCreator<Long>() {
+            @Override
+            public Parser<Long> createParser() {
+                return new OnlineParser();
+            }
+
             @Override
             public SQLConfig createSQLConfig() {
                 return new OnlineSQLConfig();
