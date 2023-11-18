@@ -38,6 +38,11 @@ public interface CommonConstant {
     String UPDATE_TIME = "update_time";
     String UPDATE_BY = "update_by";
 
+    String CREATETIME = "createTime";
+    String CREATEBY = "createBy";
+    String UPDATETIME = "updateTime";
+    String UPDATEBY = "updateBy";
+
 
     String COLUMN_QUERY_TYPE = "COLUMN_QUERY_TYPE";
     String COLUMN_SHOW_TYPE = "COLUMN_SHOW_TYPE";
