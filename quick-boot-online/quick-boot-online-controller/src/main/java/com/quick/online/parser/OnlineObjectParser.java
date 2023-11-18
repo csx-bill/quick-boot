@@ -26,6 +26,8 @@ public class OnlineObjectParser extends APIJSONObjectParser {
         if (request != null && method == RequestMethod.POST) {
             request.put(CommonConstant.CREATE_TIME, LocalDateTime.now());
             request.put(CommonConstant.CREATE_BY, StpUtil.getLoginIdAsString());
+        }
+        if(request != null && method == RequestMethod.PUT){
             request.put(CommonConstant.UPDATE_TIME, LocalDateTime.now());
             request.put(CommonConstant.UPDATE_BY, StpUtil.getLoginIdAsString());
         }
