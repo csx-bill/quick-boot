@@ -10,7 +10,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.quick.common.vo.Result;
 import com.quick.online.parser.OnlineParser;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -55,25 +54,6 @@ public class OnlineApiController extends APIJSONController<Long> {
         return processResponse(super.crud(method, request, session));
     }
 
-    /**
-     * 增删改查统一接口，这个一个接口可替代 7 个万能通用接口，牺牲一些路由解析性能来提升一点开发效率
-     *
-     * @param method
-     * @param tag
-     * @param params
-     * @param request
-     * @param session
-     * @return
-     */
-    @PostMapping("{method}/{tag}")
-    @Operation(summary = "在线通用接口", description = "增删改查统一接口，这个一个接口可替代 7 个万能通用接口")
-    @Parameter(name = "method", description = "get,gets,head,heads,post,put,delete")
-    @Parameter(name = "tag", description = "由后端Request表中指定")
-    @Parameter(name = "params", description = "参数")
-    @Override
-    public String crudByTag(@PathVariable String method, @PathVariable String tag, @RequestParam Map<String, String> params, @RequestBody String request, HttpSession session) {
-        return processResponse(super.crudByTag(method, tag, params, request, session));
-    }
 
     /**
      * 统一响应 格式
