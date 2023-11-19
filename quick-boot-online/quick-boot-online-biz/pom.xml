@@ -21,6 +21,12 @@
             <groupId>com.quick</groupId>
             <artifactId>quick-boot-online-domain</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.quick</groupId>
+            <artifactId>quick-boot-system-api</artifactId>
+        </dependency>
+
     </dependencies>
 
 

@@ -26,7 +26,7 @@
     </select>
 
 
-    <select id="unauthorizedUserPage" resultType="entity.com.quick.system.SysUser">
+    <select id="unauthorizedUserPage" resultType="com.quick.system.entity.SysUser">
         SELECT
         b.id,
         b.create_time,

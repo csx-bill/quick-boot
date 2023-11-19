@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.quick.common.api.ISysDictBaseApi;
 import com.quick.common.aspect.annotation.Dict;
+import com.quick.common.constant.CommonConstant;
 import com.quick.common.util.ObjConvertUtils;
 import com.quick.common.vo.Result;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -31,10 +32,6 @@ import java.util.List;
 @Aspect
 @Component
 public class DictAspect {
-    /**
-     * 字典后缀
-     */
-    private static String DICT_TEXT_SUFFIX = "Text";
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -45,9 +42,9 @@ public class DictAspect {
     /**
      * 切点，切入 controller 包下面的所有方法
      */
-    @Pointcut("execution(public * com.quick.modules.*.controller.*.*(..)) " +
+    @Pointcut("execution(public * com.quick.*.controller.*.*(..)) " +
             "|| execution(public * com.quick.*.controller.*.*(..))" +
-            "&& !execution( * com.quick.modules.online.controller.*.*(..))")
+            "&& !execution( * com.quick.online.controller.*.*(..))")
     public void dict() {
 
     }
@@ -57,11 +54,11 @@ public class DictAspect {
         long time1 = System.currentTimeMillis();
         Object result = pjp.proceed();
         long time2 = System.currentTimeMillis();
-        log.info("获取JSON数据 耗时：" + (time2 - time1) + "ms");
+        log.warn("获取JSON数据 耗时：" + (time2 - time1) + "ms");
         long start = System.currentTimeMillis();
         this.parseDictText(result);
         long end = System.currentTimeMillis();
-        log.info("解析注入JSON数据  耗时" + (end - start) + "ms");
+        log.warn("解析注入JSON数据  耗时" + (end - start) + "ms");
         return result;
     }
 
@@ -106,7 +103,7 @@ public class DictAspect {
                                 item.put(text, textValue);
                             } else {
                                 // 走默认策略
-                                item.put(field.getName() + DICT_TEXT_SUFFIX, textValue);
+                                item.put(field.getName() + CommonConstant.DICT_TEXT_SUFFIX, textValue);
                             }
                         }
                     }

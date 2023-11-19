@@ -43,6 +43,12 @@ public interface CommonConstant {
     String UPDATETIME = "updateTime";
     String UPDATEBY = "updateBy";
 
+    /**
+     * 字典解析后缀
+     */
+    String DICT_TEXT_SUFFIX = "Text";
+    String _DICT_TEXT_SUFFIX = "_text";
+
 
     String COLUMN_QUERY_TYPE = "COLUMN_QUERY_TYPE";
     String COLUMN_SHOW_TYPE = "COLUMN_SHOW_TYPE";
