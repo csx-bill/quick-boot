@@ -7,14 +7,16 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.env.Environment;
 
 import java.net.InetAddress;
 
 @Slf4j
-@EnableFeignClients
+@EnableFeignClients(value ={"com.quick.*"})
 @EnableDiscoveryClient
 @SpringBootApplication
+@ComponentScan(value = {"com.quick.*"})
 public class QuickSystemApplication {
     public static void main(String[] args) throws Exception {
         ConfigurableApplicationContext application = SpringApplication.run(QuickSystemApplication.class, args);
