@@ -24,10 +24,10 @@ import java.util.Map;
 @RequestMapping("/Online/Api")
 @RequiredArgsConstructor
 @Tag(name = "在线接口")
-public class OnlineApiController extends APIJSONController<Long> {
+public class OnlineApiController extends APIJSONController<String> {
 
     @Override
-    public Parser<Long> newParser(HttpSession session, RequestMethod method) {
+    public Parser<String> newParser(HttpSession session, RequestMethod method) {
         Parser parser = new OnlineParser();
         if (parser instanceof APIJSONParser) {
             ((APIJSONParser)parser).setSession(session);
