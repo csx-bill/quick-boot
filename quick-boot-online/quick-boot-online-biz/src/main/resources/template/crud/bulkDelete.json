@@ -1,0 +1,35 @@
+{
+  "id": "u:aa29b4023396",
+  "type": "button",
+  "label": "批量删除",
+  "level": "danger",
+  "onEvent": {
+    "click": {
+      "actions": [
+        {
+          "api": {
+            "url": "/api/online/Request/removeBatchByIds",
+            "method": "delete",
+            "adaptor": "",
+            "messages": {
+            },
+            "requestAdaptor": ""
+          },
+          "options": {
+          },
+          "outputVar": "responseResult",
+          "actionType": "ajax"
+        },
+        {
+          "groupType": "component",
+          "actionType": "search",
+          "componentId": "u:409d663e6acd"
+        }
+      ]
+    }
+  },
+  "behavior": "BulkDelete",
+  "className": "m-r-xs",
+  "disabledOn": "${selectedItems != null && selectedItems.length < 1}",
+  "confirmText": "确认要批量删除数据「${JOIN(ARRAYMAP(selectedItems, item => item.id), ',')}」"
+}

@@ -1,0 +1,13 @@
+{
+  "id": "u:af7cc4fba8bf",
+  "body": [],
+  "mode": "inline",
+  "type": "form",
+  "title": "",
+  "actions": [],
+  "behavior": [
+    "SimpleQuery"
+  ],
+  "wrapWithPanel": false,
+  "clearValueOnHidden": true
+}

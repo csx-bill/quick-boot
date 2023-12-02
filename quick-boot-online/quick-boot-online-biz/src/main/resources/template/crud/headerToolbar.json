@@ -1,0 +1,59 @@
+[
+  {
+    "id": "u:478ec124b0ff",
+    "type": "flex",
+    "items": [
+      {
+        "id": "u:48c7c1a6cd20",
+        "body": [],
+        "type": "container",
+        "align": "left",
+        "style": {
+          "flex": "1 1 auto",
+          "display": "flex",
+          "flexGrow": 1,
+          "flexWrap": "nowrap",
+          "position": "static",
+          "flexBasis": "auto",
+          "alignItems": "stretch",
+          "flexDirection": "row",
+          "justifyContent": "flex-start"
+        },
+        "behavior": [
+          "Insert",
+          "BulkEdit",
+          "BulkDelete"
+        ],
+        "wrapperBody": false
+      },
+      {
+        "id": "u:f73bf96ae70a",
+        "body": [
+        ],
+        "type": "container",
+        "align": "right",
+        "style": {
+          "flex": "1 1 auto",
+          "display": "flex",
+          "flexGrow": 1,
+          "flexWrap": "nowrap",
+          "position": "static",
+          "flexBasis": "auto",
+          "alignItems": "stretch",
+          "flexDirection": "row",
+          "justifyContent": "flex-end"
+        },
+        "behavior": [
+          "FuzzyQuery"
+        ],
+        "wrapperBody": false
+      }
+    ],
+    "style": {
+      "position": "static"
+    },
+    "justify": "flex-start",
+    "direction": "row",
+    "alignItems": "stretch"
+  }
+]

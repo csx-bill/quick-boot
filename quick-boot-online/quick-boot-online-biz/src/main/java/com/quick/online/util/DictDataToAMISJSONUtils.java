@@ -1,6 +1,9 @@
 package com.quick.online.util;
 
 
+import com.quick.online.dto.OptionsVO;
+import com.quick.system.api.dto.SysDictDataApiDTO;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,22 +17,18 @@ public class DictDataToAMISJSONUtils {
      * @param list
      * @return
      */
-//    public static SelectOptionsVO selectOptions(List<SysDictData> list){
-//        SelectOptionsVO selectOptionsVO = new SelectOptionsVO();
-//
-//        List<OptionsVO> options = list.stream()
-//                .map(sysDictData -> {
-//                    String dictValue = sysDictData.getDictValue();
-//                    String dictText = sysDictData.getDictText();
-//                    OptionsVO optionsVO = new OptionsVO();
-//                    optionsVO.setLabel(dictText);
-//                    optionsVO.setValue(dictValue);
-//                    return optionsVO;
-//                })
-//                .collect(Collectors.toList());
-//        selectOptionsVO.setOptions(options);
-//        return selectOptionsVO;
-//    }
+    public static List<OptionsVO> selectOptions(List<SysDictDataApiDTO> list){
+       return  list.stream()
+                .map(sysDictData -> {
+                    String dictValue = sysDictData.getDictValue();
+                    String dictText = sysDictData.getDictText();
+                    OptionsVO optionsVO = new OptionsVO();
+                    optionsVO.setLabel(dictText);
+                    optionsVO.setValue(dictValue);
+                    return optionsVO;
+                })
+                .collect(Collectors.toList());
+    }
 
 
 }

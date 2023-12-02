@@ -1,0 +1,78 @@
+{
+  "id": "u:e020e2db9ca6",
+  "type": "button",
+  "label": "新增",
+  "level": "primary",
+  "onEvent": {
+    "click": {
+      "actions": [
+        {
+          "drawer": {
+            "id": "u:fad10640cc4a",
+            "body": [
+              {
+                "id": "u:a7c9e77757ac",
+                "api": {
+                  "url": "/api/online/Request/save",
+                  "method": "put",
+                  "adaptor": "",
+                  "messages": {
+                  },
+                  "requestAdaptor": ""
+                },
+                "body": [
+                  {
+                    "id": "u:288747b6d84a",
+                    "name": "text",
+                    "type": "input-text",
+                    "label": "表单字段"
+                  }
+                ],
+                "feat": "Insert",
+                "mode": "horizontal",
+                "type": "form",
+                "title": "表单",
+                "dsType": "api",
+                "actions": [
+                ],
+                "resetAfterSubmit": true,
+                "onEvent": {
+                  "submitSucc": {
+                    "actions": [
+                      {
+                        "groupType": "component",
+                        "actionType": "search",
+                        "componentId": "u:409d663e6acd"
+                      }
+                    ]
+                  }
+                }
+              }
+            ],
+            "type": "drawer",
+            "title": "新增数据",
+            "actions": [
+              {
+                "id": "u:a8b73b034b91",
+                "type": "button",
+                "label": "取消",
+                "actionType": "cancel"
+              },
+              {
+                "id": "u:989c17598a33",
+                "type": "button",
+                "label": "确认",
+                "primary": true,
+                "actionType": "confirm"
+              }
+            ],
+            "className": "app-popover"
+          },
+          "actionType": "drawer"
+        }
+      ]
+    }
+  },
+  "behavior": "Insert",
+  "className": "m-r-xs"
+}

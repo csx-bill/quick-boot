@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Schema(name = "请求参数校验配置")
+@Schema(name = "APIJSON接口请求参数校验")
 public class Request implements Serializable {
     private static final long serialVersionUID = 1L;
 

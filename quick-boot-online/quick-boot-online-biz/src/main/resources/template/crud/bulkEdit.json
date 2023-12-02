@@ -1,0 +1,78 @@
+{
+  "id": "u:597744aa6de3",
+  "type": "button",
+  "label": "批量编辑",
+  "onEvent": {
+    "click": {
+      "actions": [
+        {
+          "drawer": {
+            "id": "u:af66db762c9f",
+            "body": [
+              {
+                "id": "u:4528b806d4d4",
+                "api": {
+                  "url": "/api/online/Request/updateById",
+                  "method": "put",
+                  "adaptor": "",
+                  "messages": {
+                  },
+                  "requestAdaptor": ""
+                },
+                "body": [
+                  {
+                    "id": "u:5a000d6a5c97",
+                    "name": "tag",
+                    "type": "input-text",
+                    "label": "表单字段"
+                  }
+                ],
+                "feat": "BulkEdit",
+                "mode": "horizontal",
+                "type": "form",
+                "title": "批量编辑",
+                "dsType": "api",
+                "actions": [
+                ],
+                "onEvent": {
+                  "submitSucc": {
+                    "actions": [
+                      {
+                        "groupType": "component",
+                        "actionType": "search",
+                        "componentId": "u:409d663e6acd"
+                      }
+                    ]
+                  }
+                },
+                "resetAfterSubmit": true
+              }
+            ],
+            "type": "drawer",
+            "title": "批量编辑",
+            "actions": [
+              {
+                "id": "u:b90a433e09bf",
+                "type": "button",
+                "label": "取消",
+                "actionType": "cancel"
+              },
+              {
+                "id": "u:d605a4185583",
+                "type": "button",
+                "label": "确认",
+                "primary": true,
+                "actionType": "confirm"
+              }
+            ],
+            "className": "app-popover"
+          },
+          "actionType": "drawer"
+        }
+      ]
+    }
+  },
+  "behavior": "BulkEdit",
+  "className": "m-r-xs",
+  "disabledOn": "${selectedItems != null && selectedItems.length < 1}"
+}

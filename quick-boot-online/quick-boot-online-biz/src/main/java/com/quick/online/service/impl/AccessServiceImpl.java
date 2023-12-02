@@ -4,15 +4,23 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.quick.common.constant.CommonConstant;
+import com.quick.common.vo.Result;
 import com.quick.online.dto.AccessVO;
-import com.quick.online.dto.SelectOptionsVO;
-import com.quick.online.dto.SysTableColumnVO;
+import com.quick.online.dto.OptionsVO;
 import com.quick.online.entity.Access;
+import com.quick.online.entity.Document;
+import com.quick.online.entity.Request;
 import com.quick.online.entity.SysTableColumn;
 import com.quick.online.mapper.AccessMapper;
 import com.quick.online.service.IAccessService;
+import com.quick.online.service.IDocumentService;
+import com.quick.online.service.IRequestService;
 import com.quick.online.service.ISysTableColumnService;
+import com.quick.online.util.APIJSONDocumentUtils;
+import com.quick.online.util.APIJSONRequestUtils;
 import com.quick.online.util.DictDataToAMISJSONUtils;
+import com.quick.system.api.ISysDictApi;
+import com.quick.system.api.dto.SysDictDataApiDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -31,7 +39,12 @@ public class AccessServiceImpl extends ServiceImpl<AccessMapper, Access> impleme
 
     private final ISysTableColumnService sysTableColumnService;
 
-    //private final ISysDictDataService sysDictDataService;
+    private final ISysDictApi sysDictApi;
+
+    private final IRequestService requestService;
+
+    private final IDocumentService documentService;
+
     @Override
     public List<Map<String, String>> listByTableName(List<String> tableNames,String tableName) {
         return baseMapper.listByTableName(tableNames,tableName);
@@ -66,16 +79,13 @@ public class AccessServiceImpl extends ServiceImpl<AccessMapper, Access> impleme
                 SysTableColumn sysTableColumn = fieldList.get(i);
                 sysTableColumn.setAccessId(access.getId());
                 sysTableColumn.setSort(i);
-                // 时间控件
-                if ("create_time".equals(sysTableColumn.getDbFieldName())
-                        || "update_time".equals(sysTableColumn.getDbFieldName())
-                ) {
-                    sysTableColumn.setShowType("DATE");
-                    sysTableColumn.setQueryType("BETWEEN");
-                }
                 list.add(sysTableColumn);
             }
             sysTableColumnService.saveBatch(list);
+
+            // 构建APISJON crud 接口
+            requestService.saveBatch(APIJSONRequestUtils.builderCRUDRequest(pascalCase, fieldList));
+            documentService.saveBatch(APIJSONDocumentUtils.builderCRUDDocument(pascalCase, fieldList));
         }
         return true;
     }
@@ -89,36 +99,15 @@ public class AccessServiceImpl extends ServiceImpl<AccessMapper, Access> impleme
         List<SysTableColumn> columns = sysTableColumnService.list(new LambdaQueryWrapper<SysTableColumn>().eq(SysTableColumn::getAccessId, id));
 
         // 字典信息
-//        List<SysDictData> queryTypeSysDictData = sysDictDataService.queryDictDataByDictCode(CommonConstant.COLUMN_QUERY_TYPE);
-//        List<SysDictData> showTypeSysDictData = sysDictDataService.queryDictDataByDictCode(CommonConstant.COLUMN_SHOW_TYPE);
-//        List<SysDictData> dictTableJoinSysDictData = sysDictDataService.queryDictDataByDictCode(CommonConstant.COLUMN_TABLE_JOIN);
+        Result<List<SysDictDataApiDTO>> queryTypeResult = sysDictApi.queryDictDataByDictCode(CommonConstant.COLUMN_QUERY_TYPE);
+        Result<List<SysDictDataApiDTO>> showTypeResult = sysDictApi.queryDictDataByDictCode(CommonConstant.COLUMN_SHOW_TYPE);
 
-//        SelectOptionsVO queryTypeOptionsVO = DictDataToAMISJSONUtils.selectOptions(queryTypeSysDictData);
-//        SelectOptionsVO showTypeOptionsVO = DictDataToAMISJSONUtils.selectOptions(showTypeSysDictData);
-//        SelectOptionsVO dictTableJoiOptionsVO = DictDataToAMISJSONUtils.selectOptions(dictTableJoinSysDictData);
+        List<OptionsVO> queryTypeOptions = DictDataToAMISJSONUtils.selectOptions(queryTypeResult.getData());
+        List<OptionsVO> showTypeOptions = DictDataToAMISJSONUtils.selectOptions(showTypeResult.getData());
 
-        List<SysTableColumnVO> columnsVO = new ArrayList<>();
-//        for (SysTableColumn sysTableColumn : columns) {
-//            SysTableColumnVO sysTableColumnVO = new SysTableColumnVO();
-//            BeanUtils.copyProperties(sysTableColumn, sysTableColumnVO);
-//            SelectOptionsVO queryType = new SelectOptionsVO();
-//            queryType.setValue(sysTableColumn.getQueryType());
-//            queryType.setOptions(queryTypeOptionsVO.getOptions());
-//            sysTableColumnVO.setQueryType(queryType);
-//
-//            SelectOptionsVO showType = new SelectOptionsVO();
-//            showType.setValue(sysTableColumn.getShowType());
-//            showType.setOptions(showTypeOptionsVO.getOptions());
-//            sysTableColumnVO.setShowType(showType);
-//
-//            SelectOptionsVO dictTableJoin = new SelectOptionsVO();
-//            dictTableJoin.setValue(sysTableColumn.getDictTableJoin());
-//            dictTableJoin.setOptions(dictTableJoiOptionsVO.getOptions());
-//            sysTableColumnVO.setDictTableJoin(dictTableJoin);
-//
-//            columnsVO.add(sysTableColumnVO);
-//        }
-        accessVO.setColumns(columnsVO);
+        accessVO.setColumns(columns);
+        accessVO.setQueryTypeOptions(queryTypeOptions);
+        accessVO.setShowTypeOptions(showTypeOptions);
         return accessVO;
     }
 
@@ -126,13 +115,13 @@ public class AccessServiceImpl extends ServiceImpl<AccessMapper, Access> impleme
     @Override
     public boolean updateAccessColumnsById(AccessVO entity) {
         Access access = new Access();
-        BeanUtils.copyProperties(entity,access);
+        access.setId(entity.getId());
+        access.setDebug(entity.getDebug());
+        access.setDetail(entity.getDetail());
         updateById(access);
         //更新字段信息
-        //List<SysTableColumn> columns = entity.getColumns();
-        //sysTableColumnService.updateBatchById(columns);
-        // 更新 Schema
-
+        List<SysTableColumn> columns = entity.getColumns();
+        sysTableColumnService.saveOrUpdateBatch(columns);
         return true;
     }
 }

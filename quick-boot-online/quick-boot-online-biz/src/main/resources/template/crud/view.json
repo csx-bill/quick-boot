@@ -1,0 +1,59 @@
+{
+  "id": "u:7e35c6f56916",
+  "type": "button",
+  "label": "查看",
+  "level": "link",
+  "onEvent": {
+    "click": {
+      "actions": [
+        {
+          "drawer": {
+            "id": "u:c21f6ad05e13",
+            "body": [
+              {
+                "id": "u:3e1e89050a1c",
+                "body": [
+                  {
+                    "id": "u:33d54d6b0fa5",
+                    "name": "id",
+                    "type": "input-text",
+                    "label": "表单查看字段"
+                  }
+                ],
+                "feat": "View",
+                "mode": "horizontal",
+                "type": "form",
+                "title": "表单",
+                "dsType": "api",
+                "static": true,
+                "actions": [
+                ],
+                "initApi": {
+                  "url": "/api/online/Request/getById",
+                  "method": "get",
+                  "adaptor": "",
+                  "messages": {
+                  },
+                  "requestAdaptor": ""
+                }
+              }
+            ],
+            "type": "drawer",
+            "title": "查看数据",
+            "actions": [
+              {
+                "id": "u:6a888f45b1b2",
+                "type": "button",
+                "label": "关闭",
+                "actionType": "cancel"
+              }
+            ],
+            "className": "app-popover"
+          },
+          "actionType": "drawer"
+        }
+      ]
+    }
+  },
+  "behavior": "View"
+}

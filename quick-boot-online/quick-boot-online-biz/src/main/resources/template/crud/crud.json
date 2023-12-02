@@ -1,0 +1,36 @@
+{
+  "type": "page",
+  "id": "u:uuid",
+  "body": [
+    {
+      "id": "u:409d663e6acd",
+      "api": {
+        "url": "/api/online/Request/page",
+        "method": "post",
+        "adaptor": "return {\r\n    \"status\": payload.status,\r\n    \"msg\": payload.msg,\r\n    \"data\": {\r\n        \"items\": payload.data.records,\r\n        \"total\": payload.data.total\r\n    }\r\n}",
+        "messages": {
+        },
+        "requestAdaptor": ""
+      },
+      "mode": "table2",
+      "type": "crud2",
+      "dsType": "api",
+      "filter": {},
+      "columns": [],
+      "loadType": "pagination",
+      "multiple": true,
+      "selectable": true,
+      "primaryField": "id",
+      "syncLocation": true,
+      "footerToolbar": [],
+      "headerToolbar": []
+    }
+  ],
+  "style": {
+    "boxShadow": " 0px 0px 0px 0px transparent"
+  },
+  "pullRefresh": {
+    "disabled": true
+  },
+  "asideResizor": false
+}

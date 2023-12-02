@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.quick.common.aspect.annotation.PreAuth;
+import com.quick.common.constant.CommonConstant;
 import com.quick.common.util.PageParam;
 import com.quick.common.vo.Result;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -24,7 +26,7 @@ public abstract class SuperController<S extends IService<Entity>, Entity, Id ext
     protected S baseService;
 
     @PostMapping(value = "/page")
-    @Operation(summary = "分页查询", description = "分页查询")
+    @Operation(summary = CommonConstant.PAGE_MSG)
     public Result<IPage<Entity>> page(@RequestBody PageParam<Entity> pageParam) {
         Page<Entity> page = pageParam.buildPage();
         Entity entity = pageParam.getModel();
@@ -32,36 +34,44 @@ public abstract class SuperController<S extends IService<Entity>, Entity, Id ext
         return Result.success(baseService.page(page, queryWrapper));
     }
 
-    @PreAuth("{}add")
+    @PreAuth("{}"+ CommonConstant.ADD)
     @PostMapping(value = "/save")
-    @Operation(summary = "保存", description = "保存")
+    @Operation(summary = CommonConstant.SAVE_MSG)
     public Result<Boolean> save(@RequestBody Entity entity) {
         return Result.success(baseService.save(entity));
     }
 
+    @PreAuth("{}"+ CommonConstant.VIEW)
     @GetMapping(value = "/getById")
-    @Operation(summary = "根据ID获取", description = "根据ID获取")
+    @Operation(summary = CommonConstant.GET_BY_ID_MSG)
     public Result<Entity> getById(Id id) {
         return Result.success(baseService.getById(id));
     }
 
-    @PreAuth("{}update")
+    @PreAuth("{}"+ CommonConstant.UPDATE)
     @PutMapping(value = "/updateById")
-    @Operation(summary = "根据ID更新", description = "根据ID更新")
+    @Operation(summary = CommonConstant.UPDATE_BY_ID_MSG)
     public Result<Boolean> updateById(@RequestBody Entity entity) {
         return Result.success(baseService.updateById(entity));
     }
 
-    @PreAuth("{}delete")
+    @PreAuth("{}"+ CommonConstant.BATCHUPDATE)
+    @PutMapping(value = "/updateBatchById")
+    @Operation(summary = CommonConstant.UPDATE_BATCH_BY_ID_MSG)
+    public Result<Boolean> updateBatchById(@RequestBody List<Entity> entity) {
+        return Result.success(baseService.updateBatchById(entity));
+    }
+
+    @PreAuth("{}"+ CommonConstant.DELETE)
     @DeleteMapping(value = "/removeById")
-    @Operation(summary = "根据ID删除", description = "根据ID删除")
+    @Operation(summary = CommonConstant.REMOVE_BY_ID_MSG)
     public Result<Boolean> removeById(Id id) {
         return Result.success(baseService.removeById(id));
     }
 
-    @PreAuth("{}delete")
+    @PreAuth("{}"+ CommonConstant.BATCHDELETE)
     @DeleteMapping(value = "/removeBatchByIds")
-    @Operation(summary = "根据ID批量删除", description = "根据ID批量删除")
+    @Operation(summary = CommonConstant.REMOVE_BATCH_BY_IDS_MSG)
     public Result<Boolean> removeBatchByIds(String ids) {
         return Result.success(baseService.removeBatchByIds(Arrays.asList(ids.split(","))));
     }

@@ -1,13 +1,23 @@
 package com.quick.online.config;
 
+import apijson.RequestMethod;
 import apijson.framework.APIJSONSQLConfig;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import java.util.Map;
+
 @Slf4j
 @Component
 public class OnlineSQLConfig extends APIJSONSQLConfig {
+    public OnlineSQLConfig() {
+        super();
+    }
+
+    public OnlineSQLConfig(RequestMethod method, String table) {
+        super(method, table);
+    }
 
     private static String defaultDatabase;
 
@@ -45,6 +55,24 @@ public class OnlineSQLConfig extends APIJSONSQLConfig {
     @Override
     public String getDBVersion() {
         return dbVersion;
+    }
+
+
+    /**
+     * 软删除 配置
+     */
+    @Override
+    public boolean isFakeDelete() {
+        return true;
+    }
+
+    @Override
+    public Map<String, Object> onFakeDelete(Map map) {
+        return super.onFakeDelete(map);
+    }
+
+    static {
+
     }
 
 }

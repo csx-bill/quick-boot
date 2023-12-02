@@ -21,16 +21,6 @@
             <groupId>com.quick</groupId>
             <artifactId>quick-boot-online-biz</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>com.github.APIJSON</groupId>
-            <artifactId>apijson-framework</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.github.Tencent</groupId>
-            <artifactId>APIJSON</artifactId>
-        </dependency>
     </dependencies>
 
 </project>

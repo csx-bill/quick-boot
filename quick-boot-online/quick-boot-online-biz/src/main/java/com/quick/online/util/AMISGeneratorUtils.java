@@ -1,178 +1,301 @@
 package com.quick.online.util;
 
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.JSONPath;
 import com.quick.common.constant.CommonConstant;
 import com.quick.online.entity.SysTableColumn;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.stereotype.Component;
 
+import java.io.IOException;
+import java.net.URI;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
-import java.util.Map;
 
 /**
- * AMIS 页面配置 生成工具类
+ * AMIS 页面配置 生成工具类  自动构建 CRUD 基础功能
  */
+@Slf4j
+@Component
 public class AMISGeneratorUtils {
 
+    @Value("classpath:template/crud/crud.json")
+    private Resource crudJsonFile;
+
+    @Value("classpath:template/crud/filter.json")
+    private Resource filterJsonFile;
+
+    @Value("classpath:template/crud/footerToolbar.json")
+    private Resource footerToolbarJsonFile;
+
+    @Value("classpath:template/crud/headerToolbar.json")
+    private Resource headerToolbarJsonFile;
+
+    @Value("classpath:template/crud/add.json")
+    private Resource addJsonFile;
+
+    @Value("classpath:template/crud/bulkDelete.json")
+    private Resource bulkDeleteJsonFile;
+
+    @Value("classpath:template/crud/bulkEdit.json")
+    private Resource bulkEditJsonFile;
+
+    @Value("classpath:template/crud/delete.json")
+    private Resource deleteJsonFile;
+
+    @Value("classpath:template/crud/edit.json")
+    private Resource editJsonFile;
+
+    @Value("classpath:template/crud/view.json")
+    private Resource viewJsonFile;
+
+
+
     /**
-     * 生成 schema
-     *
+     * 构建 crud
+     * @param aliasTableName
+     * @param fieldList
      * @return
+     * @throws IOException
      */
-    public static String generateAMISCrudSchema(String aliasTableName, List<SysTableColumn> fieldList) {
-        JSONObject schema = new JSONObject();
-        schema.put("id", "u:" + IdUtil.simpleUUID());
-        schema.put("body", body(aliasTableName, fieldList));
-        schema.put("type", "page");
-        schema.put("regions", new JSONArray("body"));
-        schema.put("toolbar", new JSONArray());
-        JSONObject pullRefresh = new JSONObject();
-        pullRefresh.put("disabled", true);
-        schema.put("pullRefresh", pullRefresh);
-        schema.put("asideResizor", false);
-        JSONObject style = new JSONObject();
-        style.put("boxShadow", " 0px 0px 0px 0px transparent");
-        schema.put("style", style);
-        return schema.toJSONString();
-    }
+    public JSONObject crud(String aliasTableName, List<SysTableColumn> fieldList) throws IOException {
 
-    public static JSONArray body(String aliasTableName, List<SysTableColumn> fieldList) {
-        JSONArray body = new JSONArray();
-        body.add(crud(aliasTableName, fieldList));
-        return body;
-    }
+        // 读取文件内容
+        JSONObject crud = readJsonFile(crudJsonFile.getURI());
+        crud.put("id",getUuid());
 
-    /**
-     * body->crud
-     */
-    public static JSONObject crud(String aliasTableName, List<SysTableColumn> fieldList) {
-        JSONObject crud = new JSONObject();
-        crud.put("id", "u:" + IdUtil.simpleUUID());
-        crud.put("api", api(aliasTableName));
-        crud.put("type", "crud");
-        crud.put("pageField", pageField());
-        crud.put("perPageField", perPageField());
-        crud.put("perPageAvailable", perPageAvailable());
-        // 列表 展示字段
-        crud.put("columns", columns(aliasTableName,fieldList));
-        crud.put("features", features());
-        crud.put("filter", filter(fieldList));
-        crud.put("filterEnabledList", filterEnabledList(fieldList));
-        crud.put("filterSettingSource", filterSettingSource(fieldList));
-        crud.put("bulkActions", bulkActions(aliasTableName));
-        crud.put("headerToolbar", headerToolbar(aliasTableName,fieldList));
-        crud.put("footerToolbar", footerToolbar());
-        crud.put("itemActions", itemActions());
+        // 获取body中的JSONArray
+        JSONArray bodyArray = crud.getJSONArray("body");
+
+        // 修改JSONArray中的JSONObject  此处用表别名
+        bodyArray.getJSONObject(0).put("id",aliasTableName);
+
+        // 添加 分页查询接口
+        JSONObject api = createApi(aliasTableName, CommonConstant.GET,
+                CommonConstant.PAGE, pageRequestAdaptor(aliasTableName),
+                pageAdaptor(aliasTableName));
+        bodyArray.getJSONObject(0).put("api",api);
+
+        // 添加 filter 即 查询参数
+        bodyArray.getJSONObject(0).put("filter",filter(fieldList));
+
+        // 添加 columns 即 列表展示字段
+        bodyArray.getJSONObject(0).put("columns",columns(aliasTableName,fieldList));
+
+        // 添加 headerToolbar
+        bodyArray.getJSONObject(0).put("headerToolbar",headerToolbar(aliasTableName,fieldList));
+
+        // 添加 footerToolbar
+        bodyArray.getJSONObject(0).put("footerToolbar",footerToolbar());
+
+        // 将修改后的JSONArray重新设置到JSONObject中
+        crud.put("body", bodyArray);
+
         return crud;
     }
 
-    /**
-     * crud->api
-     * 格式
-     * {
-     * "url":"/api/system/SysUser/page",
-     * "method":"post",
-     * "adaptor":"",
-     * "messages":{
-     * <p>
-     * },
-     * "requestAdaptor":"api.data.model={\"username\":api.data.username,\"realName\":api.data.realName};\r\nreturn api;"
-     * }
-     */
-    public static JSONObject api(String aliasTableName) {
-        JSONObject api = new JSONObject();
-        api.put("url", "/api/system/Online/Api/get");
-        api.put("method", "post");
-        api.put("requestAdaptor", pageRequestAdaptor(aliasTableName));
-        api.put("adaptor", pageAdaptor(aliasTableName));
 
-        return api;
-    }
 
     /**
+     * 转成 APIJSON 格式
      * 分页请求适配器
      * api->requestAdaptor
      */
-    public static String pageRequestAdaptor(String aliasTableName) {
-        // 转成 APIJONS 分页查询参数
-        String requestAdaptor = "api.data={\n" +
-                "  \"[]\": {\n" +
-                "    \"" + aliasTableName + "\": {\n" +
-                "       },\n" +
-                "    \"page\": (api.data.page-1),\n" +
-                "    \"count\": api.data.count,\n" +
-                "    \"query\": 2\n" +
-                "  },\n" +
-                " \"total@\": \"/[]/total\",\n" +
-                " \"info@\": \"/[]/info\"\n" +
-                "};\r\nreturn api;";
-        return requestAdaptor;
-    }
-
-    /**
-     * 新增请求适配器
-     * api->requestAdaptor
-     */
-    public static String addRequestAdaptor(String aliasTableName) {
-        // 转成 APIJONS 新增参数
-        String requestAdaptor =  "api.data = {\n" +
-                "\""+aliasTableName+"\": api.data,\n" +
-                "  \"tag\": \""+aliasTableName+"\"\n" +
-                "}\n" +
-                "return api;";
-        return requestAdaptor;
+    private String pageRequestAdaptor(String aliasTableName) {
+        return """
+                var page = (api.data.page - 1);
+                var count = api.data.perPage
+                // 删除 perPage
+                delete api.data['page'];
+                delete api.data['perPage'];
+                
+                // 必须加个 条件 否则 APIJSON 软删除不生效
+                api.data['@order'] = "id";
+                
+                api.data={
+                  "%s[]": {
+                    "%s": api.data,
+                    "page": page,
+                    "count": count
+                  },
+                  "total@": "/%s[]/total",
+                  "format": true
+                };
+                return api;
+                """.formatted(aliasTableName,aliasTableName,aliasTableName);
     }
 
 
     /**
+     * 转成 AMIS 接收格式
      * 分页接收适配器
      *
      * @return
      */
-    public static String pageAdaptor(String aliasTableName) {
-        String adaptor = "return {\r\n    " +
-                "\"status\": payload.status,\r\n    " +
-                "\"msg\": payload.msg,\r\n    " +
-                "\"data\": {\r\n        " +
-                "\"items\": payload.data[\"[]\"].map(obj => obj." + aliasTableName + "),\r\n        " +
-                "\"total\": payload.data.total\r\n    " +
-                "}" +
-                "\r\n}";
-        return adaptor;
+    private String pageAdaptor(String aliasTableName) {
+        return """                                
+                return {
+                    "status": payload.status,
+                    "msg": payload.msg,
+                    "data": {
+                        "items": payload.data.%s ? payload.data.%s : [],
+                        "total": payload.data.%s ? payload.data.total : 0
+                    }
+                };
+                """.formatted(StrUtil.lowerFirst(aliasTableName),StrUtil.lowerFirst(aliasTableName),StrUtil.lowerFirst(aliasTableName));
     }
 
 
     /**
+     * 转成 APIJSON 格式
+     * GetById 请求适配器
+     * api->requestAdaptor
+     */
+    private String getByIdRequestAdaptor(String aliasTableName) {
+        return """
+           api.data={
+             "%s": {
+             "id": context.id
+             },
+           };
+           return api;
+           """.formatted(aliasTableName);
+    }
+
+
+    /**
+     * 转成 AMIS 接收格式
+     * GetById 接收适配器
+     *
+     * @return
+     */
+    private String getByIdAdaptor(String aliasTableName) {
+        return """
+           return {
+               "status": payload.status,
+               "msg": payload.msg,
+               "data": payload.data.%s
+           };
+           """.formatted(aliasTableName);
+    }
+
+
+    /**
+     * 转成 APIJSON 格式
+     * UpdateById 请求适配器
+     * api->requestAdaptor
+     */
+    private String updateByIdRequestAdaptor(String aliasTableName) {
+        return """
+           api.data={
+             "%s": api.data
+           };
+           return api;
+           """.formatted(aliasTableName);
+    }
+
+    /**
+     * 转成 APIJSON 格式
+     * UpdateBatchById 请求适配器
+     * api->requestAdaptor
+     */
+    private String updateBatchByIdRequestAdaptor(String aliasTableName) {
+        return """
+           // 添加新属性
+           api.data['id{}'] = api.data.ids.split(",");
+           api.data={
+             "%s": api.data
+           };
+           return api;
+           """.formatted(aliasTableName);
+    }
+
+    /**
+     * 转成 APIJSON 格式
+     * RemoveById 请求适配器
+     * api->requestAdaptor
+     */
+    private String removeByIdRequestAdaptor(String aliasTableName) {
+        return """
+           api.data={
+             "%s": {
+                "id": context.id
+             }
+           };
+           return api;
+           """.formatted(aliasTableName);
+    }
+
+
+    /**
+     * 转成 APIJSON 格式
+     * RemoveBatchByIds 请求适配器
+     * api->requestAdaptor
+     */
+    private String removeBatchByIdsRequestAdaptor(String aliasTableName) {
+        return """
+           api.data={
+             "%s": {
+                "id{}": context.ids.split(",")
+             }
+           };
+           return api;
+           """.formatted(aliasTableName);
+    }
+
+
+
+
+
+    /**
+     * 转成 APIJSON 格式
+     * Save 请求适配器
+     * api->requestAdaptor
+     */
+    public static String saveRequestAdaptor(String aliasTableName) {
+        return """
+           api.data={
+             "%s": api.data
+           };
+           return api;
+           """.formatted(aliasTableName);
+    }
+
+
+
+
+
+    /**
      * crud->columns
-     * 格式
-     * {
-     * "id":"u:9eabdbc8bcda",
-     * "name":"createTime",
-     * "type":"text",
-     * "label":"创建时间"
-     * }
      * 通过读取表结构来构建
      */
-    public static JSONArray columns(String aliasTableName,List<SysTableColumn> fieldList) {
+    public JSONArray columns(String aliasTableName,List<SysTableColumn> fieldList) throws IOException {
         JSONArray columns = new JSONArray();
 
         for (SysTableColumn fieldDetail : fieldList) {
 
             // 忽略删除标记字段
-            if ("del_flag".equals(fieldDetail.getDbFieldName())) {
+            if (CommonConstant.DEL_FLAG.equals(fieldDetail.getDbFieldName())) {
                 continue;
             }
 
             // 跳过不需要显示列表字段
-            if (!fieldDetail.getIsShowList().equals(CommonConstant.Y)) {
+            if (!fieldDetail.getIsShowList().equals(CommonConstant.Y)){
                 continue;
             }
 
             JSONObject column = new JSONObject();
-            column.put("id", "u:" + IdUtil.simpleUUID());
-            column.put("type", "text");
+            column.put("id", getUuid());
+            column.put("type", "tpl");
             column.put("name", fieldDetail.getDbFieldName());
-            column.put("label", fieldDetail.getDbFieldTxt());
+            column.put("title", fieldDetail.getDbFieldTxt());
             columns.add(column);
         }
 
@@ -183,16 +306,21 @@ public class AMISGeneratorUtils {
     }
 
     /**
-     * columns->operation
+     * columns->操作栏
      */
-    public static JSONObject operation(String aliasTableName,List<SysTableColumn> fieldList) {
+    public JSONObject operation(String aliasTableName,List<SysTableColumn> fieldList) throws IOException {
         // 操作栏
         JSONObject operation = new JSONObject();
-        operation.put("id", "u:" + IdUtil.simpleUUID());
+        operation.put("id", getUuid());
         operation.put("type", "operation");
+        operation.put("title", "操作");
 
         JSONArray buttons = new JSONArray();
+        // 查看
+        buttons.add(operationView(aliasTableName,fieldList));
+        // 编辑
         buttons.add(operationEdit(aliasTableName,fieldList));
+        // 删除
         buttons.add(operationDelete(aliasTableName));
 
         operation.put("buttons", buttons);
@@ -201,236 +329,249 @@ public class AMISGeneratorUtils {
     }
 
     /**
-     * operation->edit
+     * 操作栏->查看
      */
-    public static JSONObject operationEdit(String aliasTableName,List<SysTableColumn> fieldList) {
+    public JSONObject operationView(String aliasTableName,List<SysTableColumn> fieldList) throws IOException {
 
-        JSONObject edit = new JSONObject();
-        edit.put("id", "u:" + IdUtil.simpleUUID());
-        edit.put("type", "button");
-        edit.put("label", "编辑");
-        edit.put("level", "link");
-        edit.put("hiddenOn", "${!ARRAYINCLUDES(permsCode,'"+aliasTableName+":update')}");
-        edit.put("editorState", "default");
+        JSONObject view = readJsonFile(viewJsonFile.getURI());
+        view.put("id", getUuid());
+        // 添加按钮权限控制
+        updateButtonHiddenOn(view,aliasTableName,CommonConstant.VIEW);
 
-        JSONObject onEvent = new JSONObject();
-        JSONObject click = new JSONObject();
-        click.put("weight",0);
-        JSONArray actions = new JSONArray();
+        // 使用 JSONPath 获取 $.onEvent.click.actions[0] 数组的第一个元素
+        JSONObject firstAction = (JSONObject) JSONPath.eval(view, "$.onEvent.click.actions[0]");
+        JSONObject drawer = firstAction.getJSONObject("drawer");
+        drawer.put("id", getUuid());
 
-        JSONObject action = new JSONObject();
+        // 使用 JSONPath 获取 drawer  $.body[0] 数组的第一个元素
+        JSONObject firstDrawerBody = (JSONObject) JSONPath.eval(drawer, "$.body[0]");
+        firstDrawerBody.put("id", getUuid());
 
-        JSONObject drawer = new JSONObject();
-        drawer.put("id", "u:" + IdUtil.simpleUUID());
-        drawer.put("type", "drawer");
-        drawer.put("title", "编辑");
-        drawer.put("resizable", false);
+        // 添加编辑表单字段
+        JSONArray formFields = createFormFields(fieldList);
+        firstDrawerBody.put("body",formFields);
 
-        JSONObject body = new JSONObject();
-        body.put("id", "u:" + IdUtil.simpleUUID());
-        JSONObject api = new JSONObject();
-        api.put("url", "/api/system/Online/Api/put");
-        api.put("method", "post");
-        api.put("adaptor", "");
-        api.put("requestAdaptor", "api.data = {\n" +
-                "\""+aliasTableName+"\": api.data,\n" +
-                "  \"tag\": \""+aliasTableName+"\"\n" +
-                "}\n" +
-                "return api;");
+        // 初始化接口
+        JSONObject initApi = createApi(aliasTableName, CommonConstant.GET,
+                CommonConstant.GET_BY_ID, getByIdRequestAdaptor(aliasTableName),
+                getByIdAdaptor(aliasTableName));
+
+        firstDrawerBody.put("initApi", initApi);
+
+        // 使用 JSONPath 修改 关闭 的元素的 id 属性
+        JSONPath.set(drawer, "$.actions[0].id", getUuid());
+
+        // 将修改后的 drawer  $.body[0] 数组的第一个元素  对象插入回原始的 JSON 结构中
+        JSONPath.set(drawer, "$.body[0]", firstDrawerBody);
+
+        firstAction.put("drawer",drawer);
+
+        // 将修改后的 firstAction 对象插入回原始的 JSON 结构中
+        JSONPath.set(view, "$.onEvent.click.actions[0]", firstAction);
+
+        return view;
+    }
 
 
-        body.put("api", api);
-        body.put("type", "form");
+    /**
+     * 操作栏->编辑
+     */
+    public JSONObject operationEdit(String aliasTableName,List<SysTableColumn> fieldList) throws IOException {
 
-        JSONObject initApi = new JSONObject();
-        initApi.put("url", "/api/system/Online/Api/get");
-        initApi.put("method", "post");
+        JSONObject edit = readJsonFile(editJsonFile.getURI());
+        edit.put("id", getUuid());
+        // 添加按钮权限控制
+        updateButtonHiddenOn(edit,aliasTableName,CommonConstant.UPDATE);
 
-        String initApiAdaptor = "return {\r\n    " +
-                "\"status\": payload.status,\r\n    " +
-                "\"msg\": payload.msg,\r\n    " +
-                "\"data\": payload.data." + aliasTableName + "\r\n        " +
-                "\r\n}";
+        // 使用 JSONPath 获取 $.onEvent.click.actions[0] 数组的第一个元素
+        JSONObject firstAction = (JSONObject) JSONPath.eval(edit, "$.onEvent.click.actions[0]");
+        JSONObject drawer = firstAction.getJSONObject("drawer");
+        drawer.put("id", getUuid());
 
-        initApi.put("adaptor", initApiAdaptor);
-        initApi.put("requestAdaptor", "api.data = {\n" +
-                "\""+aliasTableName+"\": {\n" +
-                "        \"id\": api.data.id\n" +
-                "    }\n" +
-                "}\n" +
-                "return api;");
+        // 使用 JSONPath 获取 drawer  $.body[0] 数组的第一个元素
+        JSONObject firstDrawerBody = (JSONObject) JSONPath.eval(drawer, "$.body[0]");
+        firstDrawerBody.put("id", getUuid());
 
-        body.put("initApi", initApi);
+        // 添加编辑表单字段
+        JSONArray formFields = createFormFields(fieldList);
+        firstDrawerBody.put("body",formFields);
 
-        JSONArray form = new JSONArray();
-        for (SysTableColumn fieldDetail : fieldList) {
-            // 忽略字段
-            String dbFieldName = fieldDetail.getDbFieldName();
-            if ("del_flag".equals(dbFieldName)
-                    || "create_time".equals(dbFieldName)
-                    || "create_by".equals(dbFieldName)
-                    || "update_time".equals(dbFieldName)
-                    || "update_by".equals(dbFieldName)
-            ) {
-                continue;
-            }
-            JSONObject column = new JSONObject();
-            column.put("id", "u:" + IdUtil.simpleUUID());
-            column.put("type", "input-text");
-            column.put("editorPath", "input.base.default");
-            column.put("editorPath", "input.base.default");
-            column.put("editorState", "default");
-            column.put("name", dbFieldName);
-            column.put("label", fieldDetail.getDbFieldTxt());
-            if("id".equals(fieldDetail)){
-                column.put("hidden", true);
-            }
-            form.add(column);
-        }
+        // 更新接口
+        JSONObject api = createApi(aliasTableName, CommonConstant.PUT,
+                CommonConstant.UPDATE_BY_ID, updateByIdRequestAdaptor(aliasTableName),"");
 
-        body.put("body", form);
+        firstDrawerBody.put("api",api);
 
-        drawer.put("body",new JSONArray(body));
+        // 初始化接口
+        JSONObject initApi = createApi(aliasTableName, CommonConstant.GET,
+                CommonConstant.GET_BY_ID, getByIdRequestAdaptor(aliasTableName),
+                getByIdAdaptor(aliasTableName));
 
-        action.put("drawer",drawer);
-        action.put("actionType","drawer");
+        firstDrawerBody.put("initApi", initApi);
 
-        actions.add(action);
-        click.put("actions",actions);
-        onEvent.put("click",click);
-        edit.put("onEvent", onEvent);
+        // 使用 JSONPath 修改 取消 & 确认 的元素的 id 属性
+        JSONPath.set(drawer, "$.actions[0].id", getUuid());
+        // 使用 JSONPath 更新数组中的元素的 id 属性
+        JSONPath.set(drawer, "$.actions[1].id", getUuid());
+
+        // 编辑成功后列表 重新搜索事件 componentId 必须是 当前crud body id
+        JSONPath.set(firstDrawerBody, "$.onEvent.submitSucc.actions[0].componentId", aliasTableName);
+
+        // 将修改后的 drawer  $.body[0] 数组的第一个元素  对象插入回原始的 JSON 结构中
+        JSONPath.set(drawer, "$.body[0]", firstDrawerBody);
+
+        firstAction.put("drawer",drawer);
+
+        // 将修改后的 firstAction 对象插入回原始的 JSON 结构中
+        JSONPath.set(edit, "$.onEvent.click.actions[0]", firstAction);
 
         return edit;
     }
 
     /**
-     * operation->delete
+     * 操作栏->删除
      */
-    public static JSONObject operationDelete(String aliasTableName) {
+    public JSONObject operationDelete(String aliasTableName) throws IOException {
 
-        JSONObject delete = new JSONObject();
-        delete.put("id", "u:" + IdUtil.simpleUUID());
-        delete.put("type", "button");
-        delete.put("label", "删除");
-        delete.put("level", "link");
+        JSONObject delete = readJsonFile(deleteJsonFile.getURI());
+        delete.put("id", getUuid());
+        // 添加按钮权限控制
         delete.put("hiddenOn", "${!ARRAYINCLUDES(permsCode,'"+aliasTableName+":delete')}");
-        delete.put("editorState", "default");
+        // 添加按钮权限控制
+        updateButtonHiddenOn(delete,aliasTableName,CommonConstant.DELETE);
 
-        JSONObject api = new JSONObject();
-        api.put("url", "/api/system/Online/Api/delete");
-        api.put("method", "post");
-        api.put("adaptor", "");
-        api.put("requestAdaptor", "api.data = {\n" +
-                "\""+aliasTableName+"\": {\n" +
-                "        \"id\": api.data.id\n" +
-                "    },\n" +
-                "  \"tag\": \""+aliasTableName+"\"\n" +
-                "}\n" +
-                "return api;");
+        // 添加删除接口
+        JSONObject api = createApi(aliasTableName, CommonConstant.DELETE,
+                CommonConstant.REMOVE_BY_ID, removeByIdRequestAdaptor(aliasTableName), "");
 
-        delete.put("api",api);
-        delete.put("className","text-danger");
-        delete.put("actionType","ajax");
-        delete.put("confirmText","确定要删除？");
+        // 使用 JSONPath $.onEvent.click.actions[0].api 插入 JSON 结构中
+        JSONPath.set(delete, "$.onEvent.click.actions[0].api", api);
+
+        // 表单重新查询
+        // 使用 JSONPath $.onEvent.click.actions[1].componentId 插入 JSON 结构中
+        JSONPath.set(delete, "$.onEvent.click.actions[1].componentId", aliasTableName);
 
         return delete;
     }
 
 
-    /**
-     * crud->features
-     */
-    public static JSONArray features() {
-        return new JSONArray("create", "filter", "bulkDelete", "update", "view", "delete");
-    }
-
-    /**
-     * crud->messages
-     */
-    public static void messages() {
-
-    }
 
     /**
      * 批量删除
-     * crud->bulkActions
+     * crud->bulkDelete
      */
-    public static JSONArray bulkActions(String aliasTableName) {
-        JSONObject bulkActions = new JSONObject();
-        bulkActions.put("id", "u:" + IdUtil.simpleUUID());
-        bulkActions.put("type", "button");
-        bulkActions.put("label", "批量删除");
-        bulkActions.put("level", "danger");
-        bulkActions.put("hiddenOn", "${!ARRAYINCLUDES(permsCode,'"+aliasTableName+":delete')}");
-        bulkActions.put("editorState", "default");
+    public JSONObject bulkDelete(String aliasTableName) throws IOException {
+        JSONObject bulkDelete = readJsonFile(bulkDeleteJsonFile.getURI());
+        bulkDelete.put("id", getUuid());
+        // 添加按钮权限控制
+        updateButtonHiddenOn(bulkDelete,aliasTableName,CommonConstant.BATCHDELETE);
 
-        JSONObject api = new JSONObject();
-        api.put("url", "/api/system/Online/Api/delete");
-        api.put("method", "post");
-        api.put("adaptor", "");
-        api.put("requestAdaptor", "api.data = {\n" +
-                "\""+aliasTableName+"\": {\n" +
-                "        \"id{}\": api.data.ids.split(\",\")\n" +
-                "    },\n" +
-                "  \"tag\": \""+aliasTableName+"\"\n" +
-                "}\n" +
-                "return api;");
+        JSONObject api = createApi(aliasTableName, CommonConstant.DELETE,
+                CommonConstant.REMOVE_BATCH_BY_IDS, removeBatchByIdsRequestAdaptor(aliasTableName), "");
 
-        bulkActions.put("api",api);
-        bulkActions.put("actionType","ajax");
-        bulkActions.put("confirmText","确定要删除？");
+        // 使用 JSONPath $.onEvent.click.actions[0].api 插入 JSON 结构中
+        JSONPath.set(bulkDelete, "$.onEvent.click.actions[0].api", api);
 
-        return new JSONArray(bulkActions);
+        // 表单重新查询
+        // 使用 JSONPath $.onEvent.click.actions[1].componentId 插入 JSON 结构中
+        JSONPath.set(bulkDelete, "$.onEvent.click.actions[1].componentId", aliasTableName);
+
+        return bulkDelete;
 
     }
 
     /**
-     * crud->itemActions
+     * 操作栏->编辑
      */
-    public static JSONArray itemActions() {
-        return new JSONArray();
+    public JSONObject bulkEdit(String aliasTableName,List<SysTableColumn> fieldList) throws IOException {
+
+        JSONObject bulkEdit = readJsonFile(bulkEditJsonFile.getURI());
+        bulkEdit.put("id", getUuid());
+        // 添加按钮权限控制
+        updateButtonHiddenOn(bulkEdit,aliasTableName,CommonConstant.BATCHUPDATE);
+
+        // 使用 JSONPath 获取 $.onEvent.click.actions[0] 数组的第一个元素
+        JSONObject firstAction = (JSONObject) JSONPath.eval(bulkEdit, "$.onEvent.click.actions[0]");
+        JSONObject drawer = firstAction.getJSONObject("drawer");
+        drawer.put("id", getUuid());
+
+        // 使用 JSONPath 获取 drawer  $.body[0] 数组的第一个元素
+        JSONObject firstDrawerBody = (JSONObject) JSONPath.eval(drawer, "$.body[0]");
+        firstDrawerBody.put("id", getUuid());
+
+        // 添加编辑表单字段
+        JSONArray formFields = createFormFields(fieldList);
+        firstDrawerBody.put("body",formFields);
+
+        // 批量更新接口
+        JSONObject api = createApi(aliasTableName, CommonConstant.PUT,
+                CommonConstant.UPDATE_BATCH_BY_ID, updateBatchByIdRequestAdaptor(aliasTableName), "");
+
+        firstDrawerBody.put("api",api);
+
+        // 使用 JSONPath 修改 取消 & 确认 的元素的 id 属性
+        JSONPath.set(drawer, "$.actions[0].id", getUuid());
+        // 使用 JSONPath 更新数组中的元素的 id 属性
+        JSONPath.set(drawer, "$.actions[1].id", getUuid());
+
+        // 编辑成功后列表 重新搜索事件 componentId 必须是 当前crud body id
+        JSONPath.set(firstDrawerBody, "$.onEvent.submitSucc.actions[0].componentId", aliasTableName);
+
+        // 将修改后的 drawer  $.body[0] 数组的第一个元素  对象插入回原始的 JSON 结构中
+        JSONPath.set(drawer, "$.body[0]", firstDrawerBody);
+
+        firstAction.put("drawer",drawer);
+
+        // 将修改后的 firstAction 对象插入回原始的 JSON 结构中
+        JSONPath.set(bulkEdit, "$.onEvent.click.actions[0]", firstAction);
+
+        return bulkEdit;
     }
+
+
 
     /**
      * crud->headerToolbar
      */
-    public static JSONArray headerToolbar(String aliasTableName,List<SysTableColumn> fieldList) {
-        JSONArray headerToolbar = new JSONArray();
-        headerToolbar.add(operationAdd(aliasTableName,fieldList));
-        JSONObject type = new JSONObject();
-        type.put("type","bulk-actions");
-        headerToolbar.add(type);
+    public JSONArray headerToolbar(String aliasTableName,List<SysTableColumn> fieldList) throws IOException {
+        JSONArray headerToolbar = readJsonFileArray(headerToolbarJsonFile.getURI());
 
-        JSONObject tpl = new JSONObject();
-        tpl.put("tpl","内容");
-        tpl.put("type","columns-toggler");
-        tpl.put("align","right");
-        tpl.put("wrapperComponent","");
+        JSONPath.set(headerToolbar.getJSONObject(0), "$.id", getUuid());
 
-        headerToolbar.add(tpl);
+        // 第一个容器
+        JSONPath.set(headerToolbar.getJSONObject(0), "$.items[0].id", getUuid());
+
+        // 第一个容器 $.[0].items[0].body 新增 批量编辑 批量删除
+        JSONArray body = new JSONArray();
+        // 新增
+        body.add(operationAdd(aliasTableName, fieldList));
+        // 批量删除
+        body.add(bulkDelete(aliasTableName));
+        // 批量编辑
+        body.add(bulkEdit(aliasTableName,fieldList));
+
+        JSONPath.set(headerToolbar.getJSONObject(0), "$.items[0].body", body);
+
+        // 第二个容器
+        JSONPath.set(headerToolbar.getJSONObject(0), "$.items[1].id", getUuid());
 
         return headerToolbar;
     }
 
-    public static JSONArray footerToolbar() {
-        JSONArray headerToolbar = new JSONArray();
+    public JSONArray footerToolbar() throws IOException {
 
-        JSONObject statistics = new JSONObject();
-        statistics.put("type","statistics");
-        headerToolbar.add(statistics);
+        JSONArray footerToolbar = readJsonFileArray(footerToolbarJsonFile.getURI());
 
-        JSONObject pagination = new JSONObject();
-        pagination.put("type","pagination");
-        headerToolbar.add(pagination);
+        JSONPath.set(footerToolbar.getJSONObject(0), "$.id", getUuid());
 
-        JSONObject tpl = new JSONObject();
-        tpl.put("tpl","内容");
-        tpl.put("type","switch-per-page");
-        tpl.put("wrapperComponent","");
+        // 第一个容器
+        JSONPath.set(footerToolbar.getJSONObject(0), "$.items[0].id", getUuid());
 
-        headerToolbar.add(tpl);
+        // 第二个容器
+        JSONPath.set(footerToolbar.getJSONObject(0), "$.items[1].id", getUuid());
+        JSONPath.set(footerToolbar.getJSONObject(0), "$.items[1].body[0].id", getUuid());
 
-        return headerToolbar;
+        return footerToolbar;
     }
 
 
@@ -439,96 +580,59 @@ public class AMISGeneratorUtils {
      * @param aliasTableName
      * @return
      */
-    public static JSONObject operationAdd(String aliasTableName,List<SysTableColumn> fieldList) {
+    public JSONObject operationAdd(String aliasTableName,List<SysTableColumn> fieldList) throws IOException {
 
-        JSONObject add = new JSONObject();
-        add.put("id", "u:" + IdUtil.simpleUUID());
-        add.put("type", "button");
-        add.put("label", "新增");
-        add.put("level", "primary");
-        add.put("hiddenOn", "${!ARRAYINCLUDES(permsCode,'"+aliasTableName+":add')}");
-        add.put("editorState", "default");
+        JSONObject add = readJsonFile(addJsonFile.getURI());
+        add.put("id", getUuid());
+        // 添加按钮权限控制
+        updateButtonHiddenOn(add,aliasTableName,CommonConstant.ADD);
 
-        JSONObject onEvent = new JSONObject();
-        JSONObject click = new JSONObject();
-        click.put("weight",0);
-        JSONArray actions = new JSONArray();
+        // 使用 JSONPath 获取 $.onEvent.click.actions[0].drawer
+        JSONObject drawer = (JSONObject) JSONPath.eval(add, "$.onEvent.click.actions[0].drawer");
+        drawer.put("id", getUuid());
 
-        JSONObject action = new JSONObject();
-
-        JSONObject drawer = new JSONObject();
-        drawer.put("id", "u:" + IdUtil.simpleUUID());
-        drawer.put("type", "drawer");
-        drawer.put("title", "新增");
-        drawer.put("resizable", false);
-
-        JSONObject body = new JSONObject();
-        body.put("id", "u:" + IdUtil.simpleUUID());
-        JSONObject api = new JSONObject();
-        api.put("url", "/api/system/Online/Api/post");
-        api.put("method", "post");
-        api.put("adaptor", "");
-        api.put("requestAdaptor", addRequestAdaptor(aliasTableName));
+        JSONObject firstDrawerBody = (JSONObject) JSONPath.eval(drawer, "$.body[0]");
+        firstDrawerBody.put("id", getUuid());
+        // 添加表单字段
+        JSONArray formFields = createFormFields(fieldList);
+        JSONPath.set(firstDrawerBody, "$.body", formFields);
 
 
-        body.put("api", api);
-        body.put("type", "form");
+        // 添加 接口
+        JSONObject api = createApi(aliasTableName, CommonConstant.POST,
+                CommonConstant.SAVE, saveRequestAdaptor(aliasTableName), "");
 
-        JSONArray form = new JSONArray();
-        for (SysTableColumn fieldDetail : fieldList) {
-            String dbFieldName = fieldDetail.getDbFieldName();
-            // 忽略字段
-            if ("del_flag".equals(dbFieldName)
-                    || "id".equals(dbFieldName)
-                    || "create_time".equals(dbFieldName)
-                    || "create_by".equals(dbFieldName)
-                    || "update_time".equals(dbFieldName)
-                    || "update_by".equals(dbFieldName)
-            ) {
-                continue;
-            }
-            JSONObject column = new JSONObject();
-            column.put("id", "u:" + IdUtil.simpleUUID());
-            column.put("type", "input-text");
-            column.put("editorPath", "input.base.default");
-            column.put("editorPath", "input.base.default");
-            column.put("editorState", "default");
-            column.put("name", dbFieldName);
-            column.put("label", fieldDetail.getDbFieldTxt());
-            form.add(column);
-        }
+        firstDrawerBody.put("api",api);
 
-        body.put("body", form);
+        // 使用 JSONPath 修改 取消 & 确认 的元素的 id 属性
+        JSONPath.set(drawer, "$.actions[0].id", getUuid());
+        // 使用 JSONPath 更新数组中的元素的 id 属性
+        JSONPath.set(drawer, "$.actions[1].id", getUuid());
 
-        drawer.put("body",new JSONArray(body));
+        // 新增成功后列表 重新搜索事件 componentId 必须是 当前crud body id
+        JSONPath.set(firstDrawerBody, "$.onEvent.submitSucc.actions[0].componentId", aliasTableName);
 
-        action.put("drawer",drawer);
-        action.put("actionType","drawer");
-
-        actions.add(action);
-        click.put("actions",actions);
-        onEvent.put("click",click);
-        add.put("onEvent", onEvent);
+        // 使用 JSONPath 更新
+        JSONPath.set(add, "$.onEvent.click.actions[0].drawer", drawer);
 
         return add;
     }
 
-    /**
-     * crud->perPageAvailable
-     */
-    public static JSONArray perPageAvailable() {
-        return new JSONArray(10,20,30,40,50,60,70,80,90,100);
-    }
 
     /**
      * crud->filter
+     * 查询参数
      */
-    public static JSONObject filter(List<SysTableColumn> fieldList) {
+    public JSONObject filter(List<SysTableColumn> fieldList) throws IOException {
+        JSONObject filter = readJsonFile(filterJsonFile.getURI());
+        filter.put("id",getUuid());
+
+        // 添加 filter 即 查询参数
         JSONArray body = new JSONArray();
         for (SysTableColumn fieldDetail : fieldList) {
             String dbFieldName = fieldDetail.getDbFieldName();
-            // 忽略字段
-            if ("del_flag".equals(dbFieldName) || "id".equals(dbFieldName)) {
+            // 忽略字段 删除标记 主键 字段
+            if (CommonConstant.DEL_FLAG.equals(dbFieldName) || CommonConstant.Y.equals(fieldDetail.getDbIsKey())) {
                 continue;
             }
             // 跳过非查询字段
@@ -537,77 +641,140 @@ public class AMISGeneratorUtils {
             }
 
             JSONObject column = new JSONObject();
-            column.put("id", "u:" + IdUtil.simpleUUID());
+            column.put("id", getUuid());
             column.put("type", "input-text");
-            column.put("editorPath", "input.base.default");
-            column.put("editorPath", "input.base.default");
-            column.put("editorState", "default");
+            column.put("size", "full");
+            column.put("name", fieldDetail.getDbFieldName());
             column.put("label", fieldDetail.getDbFieldTxt());
             body.add(column);
         }
-        JSONObject filter = new JSONObject();
-        filter.put("id", "u:" + IdUtil.simpleUUID());
-        filter.put("mode", "horizontal");
-        filter.put("columnCount", 3);
+
+        // 查询  重置 按钮
+        JSONObject submit = new JSONObject();
+        submit.put("id", getUuid());
+        submit.put("type", "submit");
+        submit.put("label", "查询");
+        submit.put("level", "primary");
+        body.add(submit);
+
+        JSONObject reset = new JSONObject();
+        reset.put("id", getUuid());
+        reset.put("type", "reset");
+        reset.put("label", "重置");
+        body.add(reset);
+
+        // 将修改后的JSONArray重新设置到JSONObject中
         filter.put("body", body);
 
         return filter;
     }
 
-    /**
-     * crud->filterEnabledList
-     * 格式
-     * [{
-     * "label":"realName",
-     * "value":"realName"
-     * }]
-     */
-    public static JSONArray filterEnabledList(List<SysTableColumn> fieldList) {
-        JSONArray filterEnabledList = new JSONArray();
 
+
+    /**
+     * 获取UUID
+     * @return
+     */
+    public String getUuid(){
+        return CommonConstant.U+IdUtil.nanoId(12);
+    }
+
+    /**
+     * 读取JSON文件内容
+     *
+     * @param filePath 文件路径
+     * @return JSON对象
+     * @throws IOException 读取文件异常
+     */
+    public JSONObject readJsonFile(URI filePath) throws IOException {
+        byte[] bytes = Files.readAllBytes(Path.of(filePath));
+        String jsonStr = new String(bytes, StandardCharsets.UTF_8);
+        return JSONObject.parseObject(jsonStr);
+    }
+
+    /**
+     * 读取JSON数组文件内容
+     *
+     * @param filePath 文件路径
+     * @return JSON数组
+     * @throws IOException 读取文件异常
+     */
+    public JSONArray readJsonFileArray(URI filePath) throws IOException {
+        byte[] bytes = Files.readAllBytes(Path.of(filePath));
+        String jsonStr = new String(bytes, StandardCharsets.UTF_8);
+        return JSONArray.parseArray(jsonStr);
+    }
+
+
+    /**
+     * 表单字段
+     * @param fieldList
+     * @return
+     */
+    private JSONArray createFormFields(List<SysTableColumn> fieldList) {
+        JSONArray body = new JSONArray();
         for (SysTableColumn fieldDetail : fieldList) {
-            String dbFieldName = fieldDetail.getDbFieldName();
-            // 忽略字段
-            if ("del_flag".equals(dbFieldName) || "id".equals(dbFieldName)) {
-                continue;
+            if (!shouldIgnoreField(fieldDetail)) {
+                JSONObject column = new JSONObject();
+                column.put("id", getUuid());
+                column.put("type", "input-text");
+                column.put("required", CommonConstant.Y.equals(fieldDetail.getIsRequired()));
+                column.put("name", fieldDetail.getDbFieldName());
+                column.put("label", fieldDetail.getDbFieldTxt());
+
+                if (CommonConstant.Y.equals(fieldDetail.getDbIsKey())) {
+                    column.put("hidden", true);
+                }
+
+                body.add(column);
             }
-            JSONObject column = new JSONObject();
-            column.put("label", dbFieldName);
-            column.put("value", dbFieldName);
-            filterEnabledList.add(column);
         }
-        return filterEnabledList;
+        return body;
     }
 
     /**
-     * crud->filterSettingSource
+     * 忽略字段
+     * @param fieldDetail
+     * @return
      */
-    public static JSONArray filterSettingSource(List<SysTableColumn> fieldList) {
-        JSONArray filterSettingSource = new JSONArray();
-        for (SysTableColumn fieldDetail : fieldList) {
-            String dbFieldName = fieldDetail.getDbFieldName();
-            // 忽略删除标记字段
-            if ("del_flag".equals(dbFieldName)) {
-                continue;
-            }
-            filterSettingSource.add(dbFieldName);
-        }
-        return filterSettingSource;
+    private boolean shouldIgnoreField(SysTableColumn fieldDetail) {
+        String dbFieldName = fieldDetail.getDbFieldName();
+        return CommonConstant.DEL_FLAG.equals(dbFieldName)
+                || CommonConstant.CREATE_TIME.equals(dbFieldName)
+                || CommonConstant.CREATE_BY.equals(dbFieldName)
+                || CommonConstant.UPDATE_TIME.equals(dbFieldName)
+                || CommonConstant.UPDATE_BY.equals(dbFieldName);
     }
 
     /**
-     * page 页码
-     * crud->pageField
+     * 按钮权限
+     * @param jsonObject
+     * @param aliasTableName
+     * @param actionType  操作类型
+     * @return
      */
-    public static String pageField() {
-        return "page";
+    public JSONObject updateButtonHiddenOn(JSONObject jsonObject, String aliasTableName, String actionType) {
+        String hiddenOnValue = "${!ARRAYINCLUDES(permsCode, '" + aliasTableName + ":" + actionType + "')}";
+        jsonObject.put("hiddenOn", hiddenOnValue);
+        return jsonObject;
     }
 
+
     /**
-     * 每页 数量
-     * crud->perPageField
+     * 创建接口对象
+     *
+     * @param aliasTableName 表别名
+     * @return 初始化接口的 JSONObject
      */
-    public static String perPageField() {
-        return "count";
+    private JSONObject createApi(String aliasTableName,String method,String tag, String requestAdaptor,String adaptor) {
+        JSONObject api = new JSONObject();
+        String url = String.format("/api/online/crud/%s/%s%s", method, aliasTableName,tag);
+        api.put("url", url);
+        api.put("method", "post");
+        // 请求适配
+        api.put("requestAdaptor", requestAdaptor);
+        // 接收适配
+        api.put("adaptor", adaptor);
+        return api;
     }
 }

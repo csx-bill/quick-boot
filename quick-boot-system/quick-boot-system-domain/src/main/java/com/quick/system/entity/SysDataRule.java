@@ -17,8 +17,8 @@ import java.io.Serializable;
 @Schema(name = "数据权限")
 public class SysDataRule extends BaseEntity implements Serializable {
     private static final long serialVersionUID = 1L;
-    @Schema(description = "菜单id")
-    private String menuId;
+    @Schema(description = "接口地址")
+    private String apiPath;
 
     @Schema(description = "规则名称")
     private String ruleName;

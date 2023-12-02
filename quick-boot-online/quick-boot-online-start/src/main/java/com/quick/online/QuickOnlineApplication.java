@@ -3,14 +3,13 @@ package com.quick.online;
 import apijson.Log;
 import apijson.framework.APIJSONApplication;
 import apijson.framework.APIJSONCreator;
-import apijson.orm.FunctionParser;
-import apijson.orm.Parser;
-import apijson.orm.SQLConfig;
-import apijson.orm.SQLExecutor;
+import apijson.orm.*;
 import com.quick.online.config.OnlineSQLConfig;
 import com.quick.online.config.OnlineSQLExecutor;
 import com.quick.online.parser.OnlineFunctionParser;
 import com.quick.online.parser.OnlineParser;
+import com.quick.online.parser.OnlineVerifier;
+import com.quick.online.util.ApijsonInitUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -20,7 +19,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.env.Environment;
-
 import java.net.InetAddress;
 
 @Slf4j
@@ -42,19 +40,24 @@ public class QuickOnlineApplication {
         APPLICATION_CONTEXT = application;
         //关闭debug 信息
         Log.DEBUG = false;
-        APIJSONApplication.init(false);
+
+        AbstractParser.MAX_OBJECT_COUNT = 20;
+        // 批量更新最大条数
+        AbstractParser.MAX_UPDATE_COUNT = 100;
+
+        ApijsonInitUtil.init();
     }
 
     static {
         // 使用本项目的自定义处理类
-        APIJSONApplication.DEFAULT_APIJSON_CREATOR = new APIJSONCreator<Long>() {
+        APIJSONApplication.DEFAULT_APIJSON_CREATOR = new APIJSONCreator<String>() {
             @Override
             public FunctionParser createFunctionParser() {
                 return new OnlineFunctionParser();
             }
 
             @Override
-            public Parser<Long> createParser() {
+            public Parser<String> createParser() {
                 return new OnlineParser();
             }
 
@@ -66,6 +69,11 @@ public class QuickOnlineApplication {
             @Override
             public SQLExecutor createSQLExecutor() {
                 return new OnlineSQLExecutor();
+            }
+
+            @Override
+            public Verifier<String> createVerifier() {
+                return new OnlineVerifier();
             }
         };
     }

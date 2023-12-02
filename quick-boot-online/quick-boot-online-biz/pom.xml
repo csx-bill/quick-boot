@@ -27,6 +27,12 @@
             <artifactId>quick-boot-system-api</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.github.Tencent</groupId>
+            <artifactId>APIJSON</artifactId>
+            <version>bill</version>
+        </dependency>
+
     </dependencies>
 
 

@@ -43,6 +43,8 @@ public interface CommonConstant {
     String UPDATETIME = "updateTime";
     String UPDATEBY = "updateBy";
 
+    String DEL_FLAG = "del_flag";
+
     /**
      * 字典解析后缀
      */
@@ -61,5 +63,51 @@ public interface CommonConstant {
     String SERVICE_OAUTH2 = "quick-boot-oauth2";
     String SERVICE_GATEWAY = "quick-boot-gateway";
     String SERVICE_ONLINE = "quick-boot-online";
+
+    /**
+     * amis
+     */
+    String U = "u:";
+
+    /**
+     * 增删改查权限
+     */
+    String ADD = "add";
+    String VIEW = "view";
+    String UPDATE = "update";
+    String DELETE = "delete";
+    String BATCHDELETE = "batchDelete";
+    String BATCHUPDATE = "batchUpdate";
+
+    /**
+     * APIJSON 请求方式
+     */
+    String GET = "get";
+    String POST = "post";
+    String PUT = "put";
+
+    //String DELETE = "delete";
+
+    /**
+     *  接口后缀
+     */
+    String PAGE = "Page";
+    String GET_BY_ID = "GetById";
+    String SAVE = "Save";
+    String UPDATE_BY_ID = "UpdateById";
+    String UPDATE_BATCH_BY_ID = "UpdateBatchById";
+    String REMOVE_BY_ID = "RemoveById";
+    String REMOVE_BATCH_BY_IDS = "RemoveBatchByIds";
+
+    /**
+     *  接口描述
+     */
+    String PAGE_MSG = "分页查询";
+    String GET_BY_ID_MSG = "根据ID查询";
+    String SAVE_MSG = "保存";
+    String UPDATE_BY_ID_MSG = "根据ID更新";
+    String UPDATE_BATCH_BY_ID_MSG = "根据ID批量更新";
+    String REMOVE_BY_ID_MSG = "根据ID删除";
+    String REMOVE_BATCH_BY_IDS_MSG = "根据ID批量删除";
 
 }

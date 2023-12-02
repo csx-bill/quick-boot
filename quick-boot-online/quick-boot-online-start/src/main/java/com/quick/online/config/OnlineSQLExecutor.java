@@ -15,7 +15,7 @@ public class OnlineSQLExecutor extends APIJSONSQLExecutor {
     @Override
     public Connection getConnection(SQLConfig config) throws Exception {
         String key = config.getDatasource() + "-" + config.getDatabase();
-        Connection c = connectionMap.get(key);
+        Connection c = (Connection) connectionMap.get(key);
         if (c == null || c.isClosed()) {
             DataSource dataSource = SpringBeanUtils.getBean(DataSource.class);
             DynamicRoutingDataSource datasource = (DynamicRoutingDataSource) dataSource;

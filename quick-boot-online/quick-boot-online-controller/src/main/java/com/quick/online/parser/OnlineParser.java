@@ -3,10 +3,11 @@ package com.quick.online.parser;
 import apijson.RequestMethod;
 import apijson.framework.APIJSONObjectParser;
 import apijson.framework.APIJSONParser;
+import apijson.orm.AbstractParser;
 import apijson.orm.SQLConfig;
 import com.alibaba.fastjson.JSONObject;
 
-public class OnlineParser extends APIJSONParser<Long> {
+public class OnlineParser extends APIJSONParser<String> {
     public OnlineParser() {
         super();
     }
@@ -29,4 +30,10 @@ public class OnlineParser extends APIJSONParser<Long> {
     public APIJSONObjectParser createObjectParser(JSONObject request, String parentPath, SQLConfig arrayConfig, boolean isSubquery, boolean isTable, boolean isArrayMainTable) throws Exception {
         return new OnlineObjectParser(getSession(),request, parentPath, arrayConfig, isSubquery, isTable, isArrayMainTable).setMethod(getMethod()).setParser(this);
     }
+
+    @Override
+    public boolean isNeedVerifyLogin() {
+        return false;
+    }
+
 }

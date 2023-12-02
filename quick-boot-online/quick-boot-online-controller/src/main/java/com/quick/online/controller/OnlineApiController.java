@@ -3,12 +3,10 @@ package com.quick.online.controller;
 import apijson.JSON;
 import apijson.JSONResponse;
 import apijson.RequestMethod;
-import apijson.framework.APIJSONController;
-import apijson.framework.APIJSONParser;
 import apijson.orm.Parser;
+import apijson.router.APIJSONRouterController;
 import com.alibaba.fastjson.JSONObject;
 import com.quick.common.vo.Result;
-import com.quick.online.parser.OnlineParser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpSession;
@@ -16,41 +14,35 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @Slf4j
 @RestController
-@RequestMapping("/Online/Api")
+@RequestMapping("/crud")
 @RequiredArgsConstructor
-@Tag(name = "在线接口")
-public class OnlineApiController extends APIJSONController<String> {
+@Tag(name = "增删改查统一接口")
+public class OnlineApiController extends APIJSONRouterController<String> {
 
     @Override
     public Parser<String> newParser(HttpSession session, RequestMethod method) {
-        Parser parser = new OnlineParser();
-        if (parser instanceof APIJSONParser) {
-            ((APIJSONParser)parser).setSession(session);
-        }
-        parser.setMethod(method);
-        parser.setNeedVerify(false);
-        // 校验 Request 表的 structure
-        parser.setNeedVerifyContent(true);
-        return parser;
+        return super.newParser(session, method).setNeedVerify(false).setNeedVerifyLogin(false)
+                .setNeedVerifyContent(true);
     }
 
-    /**
-     * 增删改查统一接口，这个一个接口可替代 7 个万能通用接口，牺牲一些路由解析性能来提升一点开发效率
-     *
-     * @param method
-     * @param request
-     * @param session
-     * @return
-     */
-    @Operation(summary = "在线通用接口", description = "增删改查统一接口，这个一个接口可替代 7 个万能通用接口")
-    @PostMapping(value = "{method}")
+
+    @Operation(summary = "增删改查统一接口", description = "增删改查统一接口，这个一个接口可替代 7 个万能通用接口")
+    @PostMapping("/{method}/{tag}")
     @Override
-    public String crud(@PathVariable String method, @RequestBody String request, HttpSession session) {
-        return processResponse(super.crud(method, request, session));
+    public String router(@PathVariable String method, @PathVariable String tag,@RequestParam Map<String, String> params,@RequestBody String request, HttpSession session) {
+        return processResponse(super.router(method, tag, params, request, session));
     }
 
+    @Operation(summary = "重新加载 APIJSON配置", description = "重新加载 APIJSON配置")
+    @PostMapping("reload")
+    @Override
+    public JSONObject reload(String type) {
+        return super.reload("ALL");
+    }
 
     /**
      * 统一响应 格式
