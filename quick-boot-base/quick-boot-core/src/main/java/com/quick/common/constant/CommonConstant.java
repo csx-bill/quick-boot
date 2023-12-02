@@ -44,6 +44,8 @@ public interface CommonConstant {
     String UPDATEBY = "updateBy";
 
     String DEL_FLAG = "del_flag";
+    String DELETED_VALUE = "1";
+    String NOT_DELETED_VALUE = "0";
 
     /**
      * 字典解析后缀

@@ -26,11 +26,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Slf4j
 @Service
@@ -70,9 +73,19 @@ public class AccessServiceImpl extends ServiceImpl<AccessMapper, Access> impleme
                     .name(tableName)
                     .detail(tableComment)
                     .debug(0).date(LocalDateTime.now()).build();
-            save(access);
+
             // 获取表字段
             List<SysTableColumn> fieldList = sysTableColumnService.selectByTableName(tableName);
+            
+            // 填充软删除字段
+            List<SysTableColumn> delField = fieldList.stream().filter(field -> field.getDbFieldName().equals(CommonConstant.DEL_FLAG)).collect(Collectors.toList());
+            if(!CollectionUtils.isEmpty(delField)){
+                access.setDeletedKey(CommonConstant.DEL_FLAG);
+                access.setDeletedValue(CommonConstant.DELETED_VALUE);
+                access.setNotDeletedValue(CommonConstant.NOT_DELETED_VALUE);
+            }
+            save(access);
+
 
             List<SysTableColumn> list = new ArrayList<>();
             for (int i = 0; i < fieldList.size(); i++) {
@@ -118,6 +131,9 @@ public class AccessServiceImpl extends ServiceImpl<AccessMapper, Access> impleme
         access.setId(entity.getId());
         access.setDebug(entity.getDebug());
         access.setDetail(entity.getDetail());
+        access.setDeletedKey(entity.getDeletedKey());
+        access.setDeletedValue(entity.getDeletedValue());
+        access.setNotDeletedValue(entity.getNotDeletedValue());
         updateById(access);
         //更新字段信息
         List<SysTableColumn> columns = entity.getColumns();

@@ -50,4 +50,16 @@ public class Access implements Serializable {
     @Schema(description = "描述")
     private String detail;
 
+    @Schema(description = "删除字段名")
+    @TableField(value = "deletedKey")
+    private String deletedKey;
+
+    @Schema(description = "删除字段值")
+    @TableField(value = "deletedValue")
+    private String deletedValue;
+
+    @Schema(description = "未删除字段值")
+    @TableField(value = "notDeletedValue")
+    private String notDeletedValue;
+
 }
