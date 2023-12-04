@@ -7,10 +7,12 @@ import apijson.orm.Parser;
 import apijson.router.APIJSONRouterController;
 import com.alibaba.fastjson.JSONObject;
 import com.quick.common.vo.Result;
+import com.quick.online.util.ApijsonInitUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,11 +39,13 @@ public class OnlineApiController extends APIJSONRouterController<String> {
         return processResponse(super.router(method, tag, params, request, session));
     }
 
+    @SneakyThrows
     @Operation(summary = "重新加载 APIJSON配置", description = "重新加载 APIJSON配置")
     @PostMapping("reload")
     @Override
     public JSONObject reload(String type) {
-        return super.reload("ALL");
+        ApijsonInitUtil.init();
+        return JSON.parseObject(Result.success());
     }
 
     /**

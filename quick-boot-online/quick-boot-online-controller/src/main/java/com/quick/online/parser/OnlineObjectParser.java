@@ -7,8 +7,14 @@ import apijson.orm.SQLConfig;
 import cn.dev33.satoken.stp.StpUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.quick.common.constant.CommonConstant;
+import com.quick.common.util.SpringBeanUtils;
 import com.quick.online.config.OnlineSQLConfig;
+import com.quick.system.api.ISysDataRuleApi;
+import com.quick.system.api.dto.SysDataRuleApiDTO;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -31,6 +37,38 @@ public class OnlineObjectParser extends APIJSONObjectParser {
             request.put(CommonConstant.UPDATE_TIME, LocalDateTime.now());
             request.put(CommonConstant.UPDATE_BY, StpUtil.getLoginIdAsString());
         }
+
+        if(request != null && method == RequestMethod.GET){
+            // 处理数据权限
+            handleDataRule(request);
+        }
+
         return OnlineSQLConfig.newSQLConfig(method,table,alias,request,joinList,isProcedure);
+    }
+
+    /**
+     * 处理数据权限
+     */
+    private void handleDataRule(JSONObject request){
+        // 获取当前请求的HttpServletRequest
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        if (attributes != null) {
+            HttpServletRequest httpRequest = attributes.getRequest();
+            // 获取当前请求的URL地址
+            String currentUrl ="%s%s".formatted(CommonConstant.ONLINE_PREFIX_API,httpRequest.getRequestURI());
+            //通过当前url 匹配数据权限
+            ISysDataRuleApi sysDataRuleApi = SpringBeanUtils.getBean(ISysDataRuleApi.class);
+            List<SysDataRuleApiDTO> data = sysDataRuleApi.queryDataRuleByApiPath(currentUrl).getData();
+
+            // 处理数据权限
+            for (SysDataRuleApiDTO dataRule : data) {
+                String ruleColumn = dataRule.getRuleColumn();
+                // 要根据这个条件去实现 待处理
+                //String ruleConditions = dataRule.getRuleConditions();
+                String ruleValue = dataRule.getRuleValue();
+                request.put(ruleColumn,ruleValue);
+            }
+        }
+
     }
 }

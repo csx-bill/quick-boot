@@ -14,6 +14,15 @@ public interface CommonConstant {
     String N = "N";
 
     /**
+     * 有效
+     */
+    String A = "A";
+    /**
+     * 无效
+     */
+    String I = "I";
+
+    /**
      * 菜单类型
      */
     // 菜单
@@ -28,6 +37,11 @@ public interface CommonConstant {
      * 树结构顶级ID
      */
     String PARENTID = "0";
+
+    /**
+     * 在线API前缀
+     */
+    String ONLINE_PREFIX_API ="/api/online";
 
 
     /**
