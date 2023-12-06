@@ -17,7 +17,7 @@
         FROM
             information_schema.COLUMNS
         WHERE
-            TABLE_SCHEMA = ('quick-boot')
+            TABLE_SCHEMA = (select database())
           AND TABLE_NAME = #{tableName}
     </select>
 </mapper>

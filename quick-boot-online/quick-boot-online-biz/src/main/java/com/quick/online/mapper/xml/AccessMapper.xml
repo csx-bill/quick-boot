@@ -9,7 +9,7 @@
         FROM
         information_schema.TABLES
         WHERE
-        TABLE_SCHEMA = ('quick-boot')
+        TABLE_SCHEMA = (select database())
         <if test="tableNames != null and tableNames.size()>0">
             AND TABLE_NAME IN
             <foreach collection='tableNames' item='tableName' index='index' open='(' close=')' separator=','>

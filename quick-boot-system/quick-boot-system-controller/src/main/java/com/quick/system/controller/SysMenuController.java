@@ -18,10 +18,10 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/SysMenu")
+@RequestMapping("/menu")
 @RequiredArgsConstructor
 @Tag(name = "菜单信息")
-@PreAuth(replace = "SysMenu:")
+@PreAuth(replace = "system:sys_menu:")
 public class SysMenuController extends SuperController<ISysMenuService, SysMenu, String> {
 
     @GetMapping(value = "/getRoutes")

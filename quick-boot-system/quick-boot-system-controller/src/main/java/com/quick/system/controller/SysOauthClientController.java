@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping("/SysOauthClient")
+@RequestMapping("/oauthClient")
 @RequiredArgsConstructor
 @Tag(name = "客户端信息")
 public class SysOauthClientController {

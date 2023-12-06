@@ -19,10 +19,10 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/SysDept")
+@RequestMapping("/dept")
 @RequiredArgsConstructor
 @Tag(name = "部门信息")
-@PreAuth(replace = "SysDept:")
+@PreAuth(replace = "system:sys_dept:")
 public class SysDeptController extends SuperController<ISysDeptService, SysDept, String> {
 
     @GetMapping(value = "/getDeptTree")

@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping("/Function")
+@RequestMapping("/function")
 @RequiredArgsConstructor
 @Tag(name = "远程函数")
-@PreAuth(replace = "Function:")
+@PreAuth(replace = "online:function:")
 public class FunctionController extends SuperController<IFunctionService, Function, String> {
 
 }

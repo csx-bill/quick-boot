@@ -17,7 +17,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/SysUser/Api")
+@RequestMapping("/user/api")
 @RequiredArgsConstructor
 @Tag(name = "用户信息API")
 public class SysUserApiController {

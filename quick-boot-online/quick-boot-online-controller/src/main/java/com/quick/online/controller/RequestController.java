@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping("/Request")
+@RequestMapping("/request")
 @RequiredArgsConstructor
 @Tag(name = "请求参数校验配置")
-@PreAuth(replace = "Request:")
+@PreAuth(replace = "online:request:")
 public class RequestController extends SuperController<IRequestService, Request, String> {
 
 }

@@ -18,10 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping("/SysUser")
+@RequestMapping("/user")
 @RequiredArgsConstructor
 @Tag(name = "用户信息")
-@PreAuth(replace = "SysUser:")
+@PreAuth(replace = "system:sys_user:")
 public class SysUserController extends SuperController<ISysUserService, SysUser, String> {
 
     @GetMapping(value = "/getUserInfo")

@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping("/SysDataRule")
+@RequestMapping("/dataRule")
 @RequiredArgsConstructor
 @Tag(name = "数据权限")
-@PreAuth(replace = "SysDataRule:")
+@PreAuth(replace = "system:sys_data_rule:")
 public class SysDataRuleController extends SuperController<ISysDataRuleService, SysDataRule, String> {
 
 }

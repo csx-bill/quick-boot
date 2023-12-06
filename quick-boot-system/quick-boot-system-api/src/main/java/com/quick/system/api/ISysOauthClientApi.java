@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Component
-@FeignClient(contextId = "ISysOauthClientApi", value = CommonConstant.SERVICE_SYSTEM, fallbackFactory = SysOauthClientApiFallback.class)
+@FeignClient(contextId = "IoauthClientApi", value = CommonConstant.SERVICE_SYSTEM, fallbackFactory = SysOauthClientApiFallback.class)
 public interface ISysOauthClientApi {
     /**
      * 根据应用ID查询客户端
@@ -18,6 +18,6 @@ public interface ISysOauthClientApi {
      * @param clientId
      * @return
      */
-    @GetMapping("/SysOauthClient/Api/findByClientId")
+    @GetMapping("/oauthClient/api/findByClientId")
     Result<SysOauthClientApiDTO> findByClientId(@RequestParam(value = "clientId") String clientId);
 }

@@ -25,7 +25,7 @@ public interface ISysDictApi extends ISysDictBaseApi {
      * @param dictValue
      * @return
      */
-    @GetMapping("/SysDict/Api/translateDict")
+    @GetMapping("/dict/api/translateDict")
     @Override
     Result<String> translateDict(@RequestParam("dictCode") String dictCode, @RequestParam("dictValue") String dictValue);
 
@@ -34,6 +34,6 @@ public interface ISysDictApi extends ISysDictBaseApi {
      * @param dictCode
      * @return
      */
-    @GetMapping(value = "/SysDict/Api/queryDictDataByDictCode")
+    @GetMapping(value = "/dict/api/queryDictDataByDictCode")
     Result<List<SysDictDataApiDTO>> queryDictDataByDictCode(@RequestParam("dictCode") String dictCode);
 }

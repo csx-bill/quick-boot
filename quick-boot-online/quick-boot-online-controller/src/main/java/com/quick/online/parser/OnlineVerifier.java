@@ -20,14 +20,7 @@ public class OnlineVerifier extends APIJSONVerifier<String> {
 
     @Override
     public boolean verifyAccess(SQLConfig config) throws Exception {
-        // 启动加载
-        if (config.getMethod() == RequestMethod.GET
-                && (config.getTable().equals("Script") || config.getTable().equals("Function")
-                || config.getTable().equals("Access") || config.getTable().equals("Request")
-                || config.getTable().equals("Document"))) {
-            return true;
-        }
-        return super.verifyAccess(config);
+        return true;
     }
 
     @Override

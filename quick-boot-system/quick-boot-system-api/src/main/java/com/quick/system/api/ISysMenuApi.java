@@ -13,6 +13,6 @@ import java.util.List;
 @FeignClient(contextId = "ISysMenuApi", value = CommonConstant.SERVICE_SYSTEM, fallbackFactory = SysMenuApiFactory.class)
 public interface ISysMenuApi {
 
-    @GetMapping("/SysMenu/Api/getPermission")
+    @GetMapping("/menu/api/getPermission")
     Result<List<String>> getPermission();
 }

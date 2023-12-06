@@ -15,7 +15,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/SysMenu/Api")
+@RequestMapping("/menu/api")
 @RequiredArgsConstructor
 @Tag(name = "菜单信息API")
 public class SysMenuApiController {

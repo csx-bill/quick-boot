@@ -754,7 +754,8 @@ public class AMISGeneratorUtils {
      * @return
      */
     public JSONObject updateButtonHiddenOn(JSONObject jsonObject, String aliasTableName, String actionType) {
-        String hiddenOnValue = "${!ARRAYINCLUDES(permsCode, '" + aliasTableName + ":" + actionType + "')}";
+        String permission = "online:%s:%s".formatted(StrUtil.toUnderlineCase(aliasTableName),actionType);
+        String hiddenOnValue = "${!ARRAYINCLUDES(permsCode,%s)}".formatted(permission);
         jsonObject.put("hiddenOn", hiddenOnValue);
         return jsonObject;
     }
@@ -768,7 +769,7 @@ public class AMISGeneratorUtils {
      */
     private JSONObject createApi(String aliasTableName,String method,String tag, String requestAdaptor,String adaptor) {
         JSONObject api = new JSONObject();
-        String url = String.format("/api/online/crud/%s/%s%s", method, aliasTableName,tag);
+        String url = String.format("/api/online/crud/%s/%s%s", method, StrUtil.lowerFirst(aliasTableName),tag);
         api.put("url", url);
         api.put("method", "post");
         // 请求适配

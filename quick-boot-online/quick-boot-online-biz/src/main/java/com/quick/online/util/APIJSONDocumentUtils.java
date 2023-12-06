@@ -1,9 +1,11 @@
 package com.quick.online.util;
 
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSON;
 import com.quick.common.constant.CommonConstant;
 import com.quick.online.entity.Document;
 import com.quick.online.entity.SysTableColumn;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -31,7 +33,7 @@ public class APIJSONDocumentUtils {
                     "%s":%s
                 }
                 """.formatted(aliasTableName, JSON.toJSON(columnValues));
-        return builderDocument(CommonConstant.SAVE_MSG,CommonConstant.POST,aliasTableName,CommonConstant.SAVE, requestAndApijson, requestAndApijson);
+        return builderDocument(CommonConstant.SAVE_MSG,CommonConstant.POST,aliasTableName,CommonConstant.SAVE, requestAndApijson, requestAndApijson,CommonConstant.ADD);
     }
 
     /**
@@ -45,7 +47,7 @@ public class APIJSONDocumentUtils {
                     }
                 }
                 """.formatted(aliasTableName);
-        return builderDocument(CommonConstant.GET_BY_ID_MSG,CommonConstant.GET,aliasTableName,CommonConstant.GET_BY_ID, requestAndApijson, requestAndApijson);
+        return builderDocument(CommonConstant.GET_BY_ID_MSG,CommonConstant.GET,aliasTableName,CommonConstant.GET_BY_ID, requestAndApijson, requestAndApijson,null);
     }
 
     /**
@@ -65,7 +67,7 @@ public class APIJSONDocumentUtils {
                 }
                 """.formatted(aliasTableName, JSON.toJSON(columnValues));
 
-        return builderDocument(CommonConstant.UPDATE_BY_ID_MSG,CommonConstant.PUT,aliasTableName,CommonConstant.UPDATE_BY_ID, requestAndApijson, requestAndApijson);
+        return builderDocument(CommonConstant.UPDATE_BY_ID_MSG,CommonConstant.PUT,aliasTableName,CommonConstant.UPDATE_BY_ID, requestAndApijson, requestAndApijson,CommonConstant.UPDATE);
     }
 
     /**
@@ -85,7 +87,7 @@ public class APIJSONDocumentUtils {
                 }
                 """.formatted(aliasTableName,JSON.toJSON(columnValues));
 
-        return builderDocument(CommonConstant.UPDATE_BATCH_BY_ID_MSG,CommonConstant.PUT,aliasTableName,CommonConstant.UPDATE_BATCH_BY_ID, requestAndApijson, requestAndApijson);
+        return builderDocument(CommonConstant.UPDATE_BATCH_BY_ID_MSG,CommonConstant.PUT,aliasTableName,CommonConstant.UPDATE_BATCH_BY_ID, requestAndApijson, requestAndApijson,CommonConstant.BATCHUPDATE);
     }
 
 
@@ -111,7 +113,7 @@ public class APIJSONDocumentUtils {
                 }
                 """.formatted(aliasTableName,aliasTableName,JSON.toJSON(columnValues),aliasTableName);
 
-        return builderDocument(CommonConstant.PAGE_MSG,CommonConstant.GET,aliasTableName,CommonConstant.PAGE, requestAndApijson, requestAndApijson);
+        return builderDocument(CommonConstant.PAGE_MSG,CommonConstant.GET,aliasTableName,CommonConstant.PAGE, requestAndApijson, requestAndApijson,null);
     }
 
     /**
@@ -126,7 +128,7 @@ public class APIJSONDocumentUtils {
                 }
                 """.formatted(aliasTableName);
 
-        return builderDocument(CommonConstant.REMOVE_BY_ID_MSG,CommonConstant.DELETE,aliasTableName,CommonConstant.REMOVE_BY_ID, requestAndApijson, requestAndApijson);
+        return builderDocument(CommonConstant.REMOVE_BY_ID_MSG,CommonConstant.DELETE,aliasTableName,CommonConstant.REMOVE_BY_ID, requestAndApijson, requestAndApijson,CommonConstant.DELETE);
     }
 
     /**
@@ -141,7 +143,7 @@ public class APIJSONDocumentUtils {
                 }
                 """.formatted(aliasTableName);
 
-        return builderDocument(CommonConstant.REMOVE_BATCH_BY_IDS_MSG,CommonConstant.DELETE,aliasTableName,CommonConstant.REMOVE_BATCH_BY_IDS, requestAndApijson, requestAndApijson);
+        return builderDocument(CommonConstant.REMOVE_BATCH_BY_IDS_MSG,CommonConstant.DELETE,aliasTableName,CommonConstant.REMOVE_BATCH_BY_IDS, requestAndApijson, requestAndApijson,CommonConstant.BATCHDELETE);
     }
 
     /**
@@ -154,7 +156,7 @@ public class APIJSONDocumentUtils {
      * @param apijson
      * @return
      */
-   private static Document builderDocument(String name,String method,String aliasTableName,String tag,String request,String apijson){
+   private static Document builderDocument(String name,String method,String aliasTableName,String tag,String request,String apijson,String permission){
        Document document = Document.builder()
                .debug(0)
                .userId("0")
@@ -162,10 +164,12 @@ public class APIJSONDocumentUtils {
                .version(0)
                .name(name)
                .type("JSON")
-               .url("%s/crud/%s/%s%s".formatted(CommonConstant.ONLINE_PREFIX_API,method,aliasTableName,tag))
+               .url("%s/crud/%s/%s%s".formatted(CommonConstant.ONLINE_PREFIX_API,method, StrUtil.lowerFirst(aliasTableName),tag))
                .request(request)
                .apijson(apijson)
-               .date(LocalDateTime.now()).build();
+               .date(LocalDateTime.now())
+               .permission(builderCRUDPermissions(aliasTableName,permission))
+               .build();
        return document;
     }
 
@@ -205,5 +209,15 @@ public class APIJSONDocumentUtils {
                 || CommonConstant.UPDATE_BY.equals(dbFieldName);
     }
 
+    /**
+     * 构建接口权限
+     * @return 格式 online:sys_user:add
+     */
+    private static String builderCRUDPermissions(String aliasTableName,String permission){
+        if(StringUtils.hasText(permission)){
+            return "online:%s:%s".formatted(StrUtil.toUnderlineCase(aliasTableName),permission);
+        }
+        return null;
+    }
 
 }

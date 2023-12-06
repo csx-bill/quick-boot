@@ -24,7 +24,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/SysUserOnline")
+@RequestMapping("/userOnline")
 @RequiredArgsConstructor
 @Tag(name = "在线用户")
 public class SysUserOnlineController {

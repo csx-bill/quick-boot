@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping("/SysOauthClient/Api")
+@RequestMapping("/oauthClient/api")
 @RequiredArgsConstructor
 @Tag(name = "客户端信息API")
 public class SysOauthClientApiController {

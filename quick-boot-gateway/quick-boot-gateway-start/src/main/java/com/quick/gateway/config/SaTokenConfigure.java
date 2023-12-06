@@ -35,7 +35,7 @@ public class SaTokenConfigure {
                         "/v3/api-docs/**",
                         "/actuator/**",
                         "/instances/**",
-                        "/api/system/SysMenu/getRoutes",
+                        "/api/system/menu/getRoutes",
                         "/api/auth/doLogin",
                         "/api/auth/oauth2/**"
                 )

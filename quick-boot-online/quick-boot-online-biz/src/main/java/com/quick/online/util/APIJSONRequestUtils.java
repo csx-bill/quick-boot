@@ -1,5 +1,7 @@
 package com.quick.online.util;
 
+import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson2.JSON;
 import com.quick.common.constant.CommonConstant;
 import com.quick.online.entity.Document;
 import com.quick.online.entity.Request;
@@ -8,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.time.LocalDateTime;
 import java.util.*;
+
+import static apijson.orm.AbstractVerifier.UNKNOWN;
 
 /**
  * APIJSON 接口请求构建工具类
@@ -193,7 +197,7 @@ public class APIJSONRequestUtils {
      */
     private static Request builderRequest(String detail, String method, String aliasTableName, String tag, String structure){
         Request request = Request.builder()
-                .tag("%s%s".formatted(aliasTableName,tag))
+                .tag("%s%s".formatted(StrUtil.lowerFirst(aliasTableName),tag))
                 .structure(structure)
                 .method(method)
                 .detail(detail)

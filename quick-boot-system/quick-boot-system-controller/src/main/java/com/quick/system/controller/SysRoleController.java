@@ -27,10 +27,10 @@ import java.util.Arrays;
 
 @Slf4j
 @RestController
-@RequestMapping("/SysRole")
+@RequestMapping("/role")
 @RequiredArgsConstructor
 @Tag(name = "角色信息")
-@PreAuth(replace = "SysRole:")
+@PreAuth(replace = "system:sys_role:")
 public class SysRoleController extends SuperController<ISysRoleService, SysRole,String> {
 
     private final ISysUserService sysUserService;

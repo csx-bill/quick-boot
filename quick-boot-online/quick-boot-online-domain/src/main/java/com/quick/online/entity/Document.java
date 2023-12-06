@@ -86,12 +86,8 @@ public class Document implements Serializable {
     @Schema(description = "描述")
     private String detail;
 
-
-
-
-
-
-
+    @Schema(description = "接口权限")
+    private String permission;
 
 
 }

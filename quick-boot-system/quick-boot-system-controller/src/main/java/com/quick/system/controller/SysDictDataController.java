@@ -20,10 +20,10 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/SysDictData")
+@RequestMapping("/dictData")
 @RequiredArgsConstructor
 @Tag(name = "字典数据信息")
-@PreAuth(replace = "SysDictData:")
+@PreAuth(replace = "system:sys_dict_data:")
 public class SysDictDataController extends SuperController<ISysDictDataService, SysDictData, String> {
     @GetMapping(value = "/queryDictDataByDictCode")
     @Operation(summary = "通过字典code获取字典数据", description = "通过字典code获取字典数据")

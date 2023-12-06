@@ -9,10 +9,12 @@ import com.quick.common.util.SpringBeanUtils;
 import com.quick.common.vo.Result;
 import com.quick.system.api.ISysDictApi;
 import jakarta.servlet.http.HttpSession;
+import lombok.extern.slf4j.Slf4j;
 
 /**可远程调用的函数类，用于自定义业务逻辑处理
  * 具体见 https://github.com/Tencent/APIJSON/issues/101
  */
+@Slf4j
 public class OnlineFunctionParser extends APIJSONFunctionParser {
     public static final String TAG = "OnlineFunctionParser";
 
@@ -38,10 +40,14 @@ public class OnlineFunctionParser extends APIJSONFunctionParser {
      * @param dictValueKey 字典值Key(字段名)
      */
     public void translateDict(@NotNull JSONObject current,@NotNull String dictCode, String dictValueKey) {
-        ISysDictApi sysDictApi = SpringBeanUtils.getBean(ISysDictApi.class);
-        Result<String> result = sysDictApi.translateDict(dictCode, current.getString(dictValueKey));
-        String textValue = result.getData();
-        current.put(dictValueKey + CommonConstant._DICT_TEXT_SUFFIX, textValue);
+        try {
+            ISysDictApi sysDictApi = SpringBeanUtils.getBean(ISysDictApi.class);
+            Result<String> result = sysDictApi.translateDict(dictCode, current.getString(dictValueKey));
+            String textValue = result.getData();
+            current.put(dictValueKey + CommonConstant._DICT_TEXT_SUFFIX, textValue);
+        }catch (Exception e){
+            log.error(e.getMessage());
+        }
     }
 
 

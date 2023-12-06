@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping("/Document")
+@RequestMapping("/document")
 @RequiredArgsConstructor
 @Tag(name = "APIJSON接口文档")
-@PreAuth(replace = "Document:")
+@PreAuth(replace = "online:document:")
 public class DocumentController extends SuperController<IDocumentService, Document, String> {
 
 }

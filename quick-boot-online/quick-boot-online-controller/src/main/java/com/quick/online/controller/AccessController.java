@@ -23,10 +23,10 @@ import java.util.Map;
 
 @Slf4j
 @RestController
-@RequestMapping("/Access")
+@RequestMapping("/access")
 @RequiredArgsConstructor
 @Tag(name = "权限配置")
-@PreAuth(replace = "Access:")
+@PreAuth(replace = "online:access:")
 public class AccessController extends SuperController<IAccessService, Access, String> {
 
     private final AMISGeneratorUtils amisGeneratorUtils;

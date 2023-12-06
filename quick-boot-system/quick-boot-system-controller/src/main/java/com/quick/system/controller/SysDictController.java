@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping("/SysDict")
+@RequestMapping("/dict")
 @RequiredArgsConstructor
 @Tag(name = "字典信息")
-@PreAuth(replace = "SysDict:")
+@PreAuth(replace = "system:sys_dict:")
 public class SysDictController extends SuperController<ISysDictService, SysDict, String> {
 
 }
