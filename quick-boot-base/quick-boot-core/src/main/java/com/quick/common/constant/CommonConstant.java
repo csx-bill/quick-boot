@@ -126,4 +126,15 @@ public interface CommonConstant {
     String REMOVE_BY_ID_MSG = "根据ID删除";
     String REMOVE_BATCH_BY_IDS_MSG = "根据ID批量删除";
 
+
+    String APIJSON_IN = "{}";
+    String APIJSON_LIKE = "$";
+    String IN = "IN";
+    String LIKE = "LIKE";
+
+    /**
+     * 数据权限 当前用户上下文变量
+     */
+    String LOGIN_USER_ID = "login_user_id";
+
 }

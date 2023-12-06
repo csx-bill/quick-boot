@@ -41,7 +41,7 @@ public abstract class SuperController<S extends IService<Entity>, Entity, Id ext
         return Result.success(baseService.save(entity));
     }
 
-    @PreAuth("{}"+ CommonConstant.VIEW)
+    //@PreAuth("{}"+ CommonConstant.VIEW)
     @GetMapping(value = "/getById")
     @Operation(summary = CommonConstant.GET_BY_ID_MSG)
     public Result<Entity> getById(Id id) {

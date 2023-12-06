@@ -43,8 +43,7 @@ public class DictAspect {
      * 切点，切入 controller 包下面的所有方法
      */
     @Pointcut("execution(public * com.quick.*.controller.*.*(..)) " +
-            "|| execution(public * com.quick.*.controller.*.*(..))" +
-            "&& !execution( * com.quick.online.controller.*.*(..))")
+            "|| @annotation(com.quick.common.aspect.annotation.Dict)")
     public void dict() {
 
     }
