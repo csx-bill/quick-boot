@@ -17,14 +17,15 @@
         <maven.compiler.target>21</maven.compiler.target>
         <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
         <quick.version>1.0.1</quick.version>
-        <spring-boot.version>3.1.6</spring-boot.version>
-        <spring-cloud.version>2022.0.4</spring-cloud.version>
+        <spring-boot.version>3.2.0</spring-boot.version>
+        <spring-cloud.version>2023.0.0</spring-cloud.version>
         <micrometer.version>1.11.5</micrometer.version>
         <spring-cloud-alibaba.version>2022.0.0.0</spring-cloud-alibaba.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <mysql.version>8.0.31</mysql.version>
         <native-maven-plugin.version>0.9.28</native-maven-plugin.version>
-        <mybatis-plus.version>3.5.4</mybatis-plus.version>
+        <mybatis-plus.version>3.5.4.1</mybatis-plus.version>
+        <mybatis-spring.version>3.0.3</mybatis-spring.version>
         <dynamic-datasource.version>4.2.0</dynamic-datasource.version>
         <p6spy.version>3.9.1</p6spy.version>
         <spring-boot-admin.version>3.1.7</spring-boot-admin.version>
@@ -32,7 +33,7 @@
         <knife4j.version>4.3.0</knife4j.version>
         <fastjson2.version>2.0.23</fastjson2.version>
         <sa-token.version>1.37.0</sa-token.version>
-        <redisson.version>3.19.1</redisson.version>
+        <redisson.version>3.25.0</redisson.version>
         <hutool-all.version>5.8.16</hutool-all.version>
         <APIJSON.version>6.1.0</APIJSON.version>
         <apijson-framework.version>6.1.0_springboot3</apijson-framework.version>
@@ -198,6 +199,12 @@
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-boot-starter</artifactId>
                 <version>${mybatis-plus.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.mybatis</groupId>
+                <artifactId>mybatis-spring</artifactId>
+                <version>${mybatis-spring.version}</version>
             </dependency>
 
             <!--监控服务端-->
