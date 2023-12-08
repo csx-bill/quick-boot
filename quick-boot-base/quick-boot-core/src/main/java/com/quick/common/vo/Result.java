@@ -1,6 +1,8 @@
 package com.quick.common.vo;
 
 import com.quick.common.constant.CommonConstant;
+import com.quick.common.util.SpringBeanUtils;
+import io.micrometer.tracing.Tracer;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -34,6 +36,8 @@ public class Result<T> implements Serializable {
 	 * 返回数据对象 data
 	 */
 	private T data;
+
+	private String traceId = SpringBeanUtils.getBean(Tracer.class).currentSpan().context().traceId();
 
 	public Result() {
 
