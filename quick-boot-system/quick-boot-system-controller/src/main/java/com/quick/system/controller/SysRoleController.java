@@ -16,6 +16,8 @@ import com.quick.system.service.ISysUserRoleService;
 import com.quick.system.service.ISysUserService;
 import com.quick.system.vo.RolePermissionsVO;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +41,8 @@ public class SysRoleController extends SuperController<ISysRoleService, SysRole,
 
     @GetMapping(value = "/getRolePermissions")
     @Operation(summary = "查询角色权限", description = "查询角色权限")
-    public Result<RolePermissionsVO> getRolePermissions(String id) {
+    @Parameter(name = "id",required = true,description = "角色ID")
+    public Result<RolePermissionsVO> getRolePermissions(@RequestParam("id") String id) {
         return Result.success(baseService.getRolePermissions(id));
     }
 
@@ -67,7 +70,13 @@ public class SysRoleController extends SuperController<ISysRoleService, SysRole,
     @DeleteMapping(value = "/cancelAuthorizedUser")
     @Operation(summary = "取消已授权用户", description = "取消已授权用户")
     @CacheEvict(value={CacheConstant.SYS_USER_ROLE_CACHE}, allEntries=true)
-    public Result<Boolean> cancelAuthorizedUser(String roleId,String userId) {
+    @Parameters(
+            value = {
+            @Parameter(name = "roleId",required = true,description = "角色ID"),
+            @Parameter(name = "userId",required = true,description = "用户ID")
+            }
+    )
+    public Result<Boolean> cancelAuthorizedUser(@RequestParam("roleId") String roleId,@RequestParam("userId")String userId) {
         return Result.success(sysUserRoleService.remove(new LambdaQueryWrapper<SysUserRole>()
                 .eq(SysUserRole::getRoleId,roleId)
                 .eq(SysUserRole::getUserId,userId)
@@ -78,7 +87,13 @@ public class SysRoleController extends SuperController<ISysRoleService, SysRole,
     @DeleteMapping(value = "/batchCancelAuthorizedUser")
     @Operation(summary = "批量取消已授权用户", description = "批量取消已授权用户")
     @CacheEvict(value={CacheConstant.SYS_USER_ROLE_CACHE}, allEntries=true)
-    public Result<Boolean> batchCancelAuthorizedUser(String roleId,String userIds) {
+    @Parameters(
+            value = {
+                    @Parameter(name = "roleId",required = true,description = "角色ID"),
+                    @Parameter(name = "userIds",required = true,description = "用户ID 多个逗号拼接")
+            }
+    )
+    public Result<Boolean> batchCancelAuthorizedUser(@RequestParam("roleId") String roleId,@RequestParam("userIds")String userIds) {
         return Result.success(sysUserRoleService.remove(new LambdaQueryWrapper<SysUserRole>()
                 .eq(SysUserRole::getRoleId,roleId)
                 .in(SysUserRole::getUserId,Arrays.asList(userIds.split(",")))
@@ -88,7 +103,13 @@ public class SysRoleController extends SuperController<ISysRoleService, SysRole,
 
     @PostMapping(value = "/batchAuthorizedUser")
     @Operation(summary = "批量授权用户", description = "批量授权用户")
-    public Result<Boolean> batchAuthorizedUser(String roleId,String userIds) {
+    @Parameters(
+            value = {
+                    @Parameter(name = "roleId",required = true,description = "角色ID"),
+                    @Parameter(name = "userIds",required = true,description = "用户ID 多个逗号拼接")
+            }
+    )
+    public Result<Boolean> batchAuthorizedUser(@RequestParam("roleId") String roleId,@RequestParam("userIds")String userIds) {
         return Result.success(sysUserRoleService.batchAuthorizedUser(roleId,userIds));
     }
 }
