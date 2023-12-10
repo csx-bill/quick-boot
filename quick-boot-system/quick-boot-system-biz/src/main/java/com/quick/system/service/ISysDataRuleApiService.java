@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface ISysDataRuleApiService {
 
-    List<SysDataRule> queryDataRuleByApiPath(String apiPath);
+    List<SysDataRule> queryDataRuleByPath(String menuPath,String apiPath);
 
 
 }

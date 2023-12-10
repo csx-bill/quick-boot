@@ -14,7 +14,7 @@ public class SysDataRuleApiFallback implements ISysDataRuleApi {
     private Throwable cause;
 
     @Override
-    public Result<List<SysDataRuleApiDTO>> queryDataRuleByApiPath(String apiPath) {
+    public Result<List<SysDataRuleApiDTO>> queryDataRuleByPath(String menuPath,String apiPath) {
         log.error("请求失败 {}", cause);
         return null;
     }

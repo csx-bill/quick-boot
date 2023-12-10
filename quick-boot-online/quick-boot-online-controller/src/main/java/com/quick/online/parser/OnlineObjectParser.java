@@ -15,13 +15,15 @@ import com.quick.online.config.OnlineSQLConfig;
 import com.quick.online.entity.Document;
 import com.quick.online.service.IDocumentService;
 import com.quick.system.api.ISysDataRuleApi;
+import com.quick.system.api.ISysMenuApi;
 import com.quick.system.api.dto.SysDataRuleApiDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -60,7 +62,7 @@ public class OnlineObjectParser extends APIJSONObjectParser {
      * 处理接口访问权限
      */
     private void hasPermission(){
-        String currentUrl =currentUrl();
+        String currentUrl =currentApiUrl();
         // 处理接口访问权限
         if(StringUtils.hasText(currentUrl)){
             IDocumentService documentService = SpringBeanUtils.getBean(IDocumentService.class);
@@ -81,33 +83,39 @@ public class OnlineObjectParser extends APIJSONObjectParser {
      * 处理数据权限
      */
     private void handleDataRule(JSONObject request){
-        // 获取当前请求的URL地址
-        String currentUrl =currentUrl();
-        if(StringUtils.hasText(currentUrl)){
+        // 获取当前请求的接口URL地址
+        String currentApiUrl =currentApiUrl();
+        // 获取当前访问的菜单URL地址
+        String currentMenuUrlPath =currentMenuUrlPath();
+
+        if(StringUtils.hasText(currentApiUrl)&& StringUtils.hasText(currentMenuUrlPath)){
+
             //通过当前url 匹配数据权限
             ISysDataRuleApi sysDataRuleApi = SpringBeanUtils.getBean(ISysDataRuleApi.class);
-            List<SysDataRuleApiDTO> data = sysDataRuleApi.queryDataRuleByApiPath(currentUrl).getData();
+            List<SysDataRuleApiDTO> data = sysDataRuleApi.queryDataRuleByPath(currentMenuUrlPath,currentApiUrl).getData();
 
-            // 处理数据权限
-            for (SysDataRuleApiDTO dataRule : data) {
-                // 字段
-                String ruleColumn = dataRule.getRuleColumn();
-                // 条件
-                String ruleConditions = dataRule.getRuleConditions();
-                // 规则值
-                String ruleValue = dataRule.getRuleValue();
+            if(!CollectionUtils.isEmpty(data)){
+                // 处理数据权限
+                for (SysDataRuleApiDTO dataRule : data) {
+                    // 字段
+                    String ruleColumn = dataRule.getRuleColumn();
+                    // 条件
+                    String ruleConditions = dataRule.getRuleConditions();
+                    // 规则值
+                    String ruleValue = dataRule.getRuleValue();
 
-                if(CommonConstant.LOGIN_USER_ID.equals(ruleValue)){
-                    ruleValue = StpUtil.getLoginIdAsString();
-                }
+                    if(CommonConstant.LOGIN_USER_ID.equals(ruleValue)){
+                        ruleValue = StpUtil.getLoginIdAsString();
+                    }
 
-                if (CommonConstant.IN.equals(ruleConditions)){
-                    request.put("%s%s".formatted(ruleColumn,CommonConstant.APIJSON_IN), ruleValue.split(","));
-                }else
-                if (CommonConstant.LIKE.equals(ruleConditions)){
-                    request.put("%s%s".formatted(ruleColumn,CommonConstant.APIJSON_LIKE), ruleValue);
-                }else {
-                    request.put(ruleColumn,ruleValue);
+                    if (CommonConstant.IN.equals(ruleConditions)){
+                        request.put("%s%s".formatted(ruleColumn,CommonConstant.APIJSON_IN), ruleValue.split(","));
+                    }else
+                    if (CommonConstant.LIKE.equals(ruleConditions)){
+                        request.put("%s%s".formatted(ruleColumn,CommonConstant.APIJSON_LIKE), ruleValue);
+                    }else {
+                        request.put(ruleColumn,ruleValue);
+                    }
                 }
             }
         }
@@ -117,14 +125,33 @@ public class OnlineObjectParser extends APIJSONObjectParser {
      * 获取当前请求接口 url
      * @return
      */
-    private String currentUrl(){
+    private String currentApiUrl(){
         // 获取当前请求的HttpServletRequest
-        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        if (attributes != null) {
-            HttpServletRequest httpRequest = attributes.getRequest();
-            // 获取当前请求的URL地址
+        HttpServletRequest httpRequest = SpringBeanUtils.getHttpServletRequest();
+        if (httpRequest != null) {
+            // 获取当前请求的接口URL地址
             String currentUrl ="%s%s".formatted(CommonConstant.ONLINE_PREFIX_API,httpRequest.getRequestURI());
             return currentUrl;
+        }
+        return null;
+    }
+
+    /**
+     * 获取当前访问菜单URL地址
+     * @return
+     */
+    private String currentMenuUrlPath(){
+        HttpServletRequest httpRequest = SpringBeanUtils.getHttpServletRequest();
+        if (httpRequest != null) {
+            // 获取当前访问菜单URL地址
+            String currentMenuUrl = httpRequest.getHeader("referer");
+            URL url = null;
+            try {
+                url = new URL(currentMenuUrl);
+            } catch (MalformedURLException e) {
+                throw new RuntimeException(e);
+            }
+            return url.getPath();
         }
         return null;
     }

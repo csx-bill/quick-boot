@@ -23,7 +23,7 @@
                 "feat": "View",
                 "mode": "horizontal",
                 "type": "form",
-                "title": "表单",
+                "title": "",
                 "dsType": "api",
                 "static": true,
                 "actions": [
@@ -35,7 +35,8 @@
                   "messages": {
                   },
                   "requestAdaptor": ""
-                }
+                },
+                "wrapWithPanel": false
               }
             ],
             "type": "drawer",

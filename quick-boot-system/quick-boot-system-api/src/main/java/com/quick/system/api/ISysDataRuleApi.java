@@ -19,10 +19,10 @@ import java.util.List;
 public interface ISysDataRuleApi {
 
     /**
-     * 根据接口地址查询数据权限规则
+     * 根据前端访问地址查询 数据权限规则
      * @param apiPath
      * @return
      */
-    @GetMapping(value = "/dataRule/api/queryDataRuleByApiPath")
-    Result<List<SysDataRuleApiDTO>> queryDataRuleByApiPath(@RequestParam("apiPath") String apiPath);
+    @GetMapping(value = "/dataRule/api/queryDataRuleByPath")
+    Result<List<SysDataRuleApiDTO>> queryDataRuleByPath(@RequestParam("menuPath") String menuPath,@RequestParam("apiPath") String apiPath);
 }

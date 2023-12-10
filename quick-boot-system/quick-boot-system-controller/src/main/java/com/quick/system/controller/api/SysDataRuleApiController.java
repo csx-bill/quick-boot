@@ -24,10 +24,10 @@ public class SysDataRuleApiController {
 
     private final ISysDataRuleApiService sysDataRuleApiService;
 
-    @GetMapping(value = "/queryDataRuleByApiPath")
-    @Operation(summary = "根据接口地址查询数据权限规则")
-    public Result<List<SysDataRule>> queryDataRuleByApiPath(@RequestParam("apiPath") String apiPath){
-        return Result.success(sysDataRuleApiService.queryDataRuleByApiPath(apiPath));
+    @GetMapping(value = "/queryDataRuleByPath")
+    @Operation(summary = "根据前端访问地址查询数据权限规则")
+    public Result<List<SysDataRule>> queryDataRuleByPath(@RequestParam("menuPath") String menuPath,@RequestParam("apiPath") String apiPath){
+        return Result.success(sysDataRuleApiService.queryDataRuleByPath(menuPath,apiPath));
     }
 
 }

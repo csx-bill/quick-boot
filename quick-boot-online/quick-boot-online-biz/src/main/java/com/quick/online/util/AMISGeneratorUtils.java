@@ -296,6 +296,10 @@ public class AMISGeneratorUtils {
             column.put("type", "tpl");
             column.put("name", fieldDetail.getDbFieldName());
             column.put("title", fieldDetail.getDbFieldTxt());
+            // 主键隐藏
+            if(fieldDetail.getDbIsKey().equals(CommonConstant.Y)){
+                column.put("hidden", true);
+            }
             columns.add(column);
         }
 
@@ -754,7 +758,7 @@ public class AMISGeneratorUtils {
      * @return
      */
     public JSONObject updateButtonHiddenOn(JSONObject jsonObject, String aliasTableName, String actionType) {
-        String permission = "online:%s:%s".formatted(StrUtil.toUnderlineCase(aliasTableName),actionType);
+        String permission = "'online:%s:%s'".formatted(StrUtil.toUnderlineCase(aliasTableName),actionType);
         String hiddenOnValue = "${!ARRAYINCLUDES(permsCode,%s)}".formatted(permission);
         jsonObject.put("hiddenOn", hiddenOnValue);
         return jsonObject;

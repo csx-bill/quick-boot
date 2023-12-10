@@ -14,8 +14,8 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class SysDataRuleApiDTO extends BaseEntity implements Serializable {
     private static final long serialVersionUID = 1L;
-    @Schema(description = "接口地址")
-    private String apiPath;
+    @Schema(description = "菜单id")
+    private String menuId;
 
     @Schema(description = "规则名称")
     private String ruleName;

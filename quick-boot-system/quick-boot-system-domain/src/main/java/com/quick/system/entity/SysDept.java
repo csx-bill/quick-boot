@@ -1,5 +1,7 @@
 package com.quick.system.entity;
 
+import com.baomidou.mybatisplus.annotation.SqlCondition;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.quick.common.aspect.annotation.Dict;
 import com.quick.common.entity.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -20,6 +22,7 @@ public class SysDept extends BaseEntity implements Serializable {
     @Schema(description = "父部门ID")
     private String parentId;
 
+    @TableField(condition = SqlCondition.LIKE)
     @Schema(description = "部门名称")
     private String name;
 

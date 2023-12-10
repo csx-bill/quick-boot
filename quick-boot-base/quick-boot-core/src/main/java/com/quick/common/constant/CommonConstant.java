@@ -31,6 +31,8 @@ public interface CommonConstant {
     String DIR = "DIR";
     // 按钮
     String BUTTON = "BUTTON";
+    // 数据权限
+    String DATA_RULE = "DATA_RULE";
 
 
     /**

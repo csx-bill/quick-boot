@@ -35,7 +35,7 @@ public class OnlineApiController extends APIJSONRouterController<String> {
     @Operation(summary = "增删改查统一接口", description = "增删改查统一接口，这个一个接口可替代 7 个万能通用接口")
     @PostMapping("/{method}/{tag}")
     @Override
-    public String router(@PathVariable String method, @PathVariable String tag,@RequestParam Map<String, String> params,@RequestBody String request, HttpSession session) {
+    public String router(@PathVariable("method") String method, @PathVariable("tag") String tag,@RequestParam(value = "params",required = false) Map<String, String> params,@RequestBody String request, HttpSession session) {
         return processResponse(super.router(method, tag, params, request, session));
     }
 
