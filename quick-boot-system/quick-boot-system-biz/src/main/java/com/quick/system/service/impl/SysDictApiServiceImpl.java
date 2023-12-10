@@ -18,7 +18,7 @@ import java.util.List;
 public class SysDictApiServiceImpl implements ISysDictApiService {
     private final SysDictMapper sysDictMapper;
     private final SysDictDataMapper sysDictDataMapper;
-    @Cacheable(value = CacheConstant.SYS_DICT_CACHE,key = "#dictCode+':'+#dictValue", unless = "#result == null ")
+    @Cacheable(value = CacheConstant.SYS_DICT_CACHE,key = "#p0+':'+#p1", unless = "#result == null ")
     @Override
     public String translateDict(String dictCode, String dictValue) {
         return sysDictMapper.queryDictTextByKey(dictCode,dictValue);

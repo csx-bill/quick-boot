@@ -32,14 +32,14 @@ public class SysUserApiServiceImpl implements ISysUserApiService {
         return sysUserMapper.selectOne(new LambdaQueryWrapper<SysUser>().eq(SysUser::getUsername, username));
     }
 
-    @Cacheable(value = CacheConstant.SYS_USER_ROLE_CACHE,key = "#userId", unless = "#result == null ")
+    @Cacheable(value = CacheConstant.SYS_USER_ROLE_CACHE,key = "#p0", unless = "#result == null ")
     @Override
     public List<String> getUserRole(String userId) {
         List<SysUserRole> sysUserRoles = sysUserRoleMapper.selectList(new LambdaQueryWrapper<SysUserRole>().eq(SysUserRole::getUserId, userId));
         return sysUserRoles.stream().map(SysUserRole::getRoleId).collect(Collectors.toList());
     }
 
-    @Cacheable(value = CacheConstant.SYS_ROLE_PERMISSION_CACHE,key = "#roleId", unless = "#result == null ")
+    @Cacheable(value = CacheConstant.SYS_ROLE_PERMISSION_CACHE,key = "#p0", unless = "#result == null ")
     @Override
     public List<String> getUserRolePermission(String roleId) {
         List<SysMenu> sysRoleMenus = new ArrayList<>();

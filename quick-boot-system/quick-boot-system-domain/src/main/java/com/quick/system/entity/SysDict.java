@@ -1,6 +1,5 @@
 package com.quick.system.entity;
 
-import com.quick.common.aspect.annotation.Dict;
 import com.quick.common.entity.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -24,10 +23,6 @@ public class SysDict extends BaseEntity implements Serializable {
 
     @Schema(description = "字典编码")
     private String dictCode;
-
-    @Dict(dictCode = "sys_dict_status")
-    @Schema(description = "状态")
-    private String status;
 
 
 }
