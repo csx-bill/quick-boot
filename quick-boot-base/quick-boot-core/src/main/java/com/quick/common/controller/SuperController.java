@@ -9,6 +9,7 @@ import com.quick.common.constant.CommonConstant;
 import com.quick.common.util.PageParam;
 import com.quick.common.vo.Result;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,7 +45,8 @@ public abstract class SuperController<S extends IService<Entity>, Entity, Id ext
     //@PreAuth("{}"+ CommonConstant.VIEW)
     @GetMapping(value = "/getById")
     @Operation(summary = CommonConstant.GET_BY_ID_MSG)
-    public Result<Entity> getById(Id id) {
+    @Parameter(name = "id",required = true)
+    public Result<Entity> getById(@RequestParam("id") Id id) {
         return Result.success(baseService.getById(id));
     }
 
@@ -65,14 +67,16 @@ public abstract class SuperController<S extends IService<Entity>, Entity, Id ext
     @PreAuth("{}"+ CommonConstant.DELETE)
     @DeleteMapping(value = "/removeById")
     @Operation(summary = CommonConstant.REMOVE_BY_ID_MSG)
-    public Result<Boolean> removeById(Id id) {
+    @Parameter(name = "id",required = true)
+    public Result<Boolean> removeById(@RequestParam("id") Id id) {
         return Result.success(baseService.removeById(id));
     }
 
     @PreAuth("{}"+ CommonConstant.BATCHDELETE)
     @DeleteMapping(value = "/removeBatchByIds")
     @Operation(summary = CommonConstant.REMOVE_BATCH_BY_IDS_MSG)
-    public Result<Boolean> removeBatchByIds(String ids) {
+    @Parameter(name = "ids",required = true)
+    public Result<Boolean> removeBatchByIds(@RequestParam("ids") String ids) {
         return Result.success(baseService.removeBatchByIds(Arrays.asList(ids.split(","))));
     }
 }

@@ -9,6 +9,7 @@ import com.quick.system.service.ISysMenuService;
 import com.quick.system.vo.MenuSchemaVO;
 import com.quick.system.vo.SysMenuTreeVO;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -54,7 +55,8 @@ public class SysMenuController extends SuperController<ISysMenuService, SysMenu,
 
     @GetMapping(value = "/getSchemaById")
     @Operation(summary = "根据ID获取Schema")
-    public Result<MenuSchemaVO> getSchemaById(String id) {
+    @Parameter(name = "id",required = true)
+    public Result<MenuSchemaVO> getSchemaById(@RequestParam("id") String id) {
         SysMenu sysMenu = baseService.getById(id);
         return Result.success(MenuSchemaVO.builder().id(id).schema(sysMenu.getSchema()).build());
     }
