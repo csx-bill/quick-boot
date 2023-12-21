@@ -29,19 +29,16 @@
         <dynamic-datasource.version>4.2.0</dynamic-datasource.version>
         <p6spy.version>3.9.1</p6spy.version>
         <spring-boot-admin.version>3.1.8</spring-boot-admin.version>
-        <swagger-annotations-jakarta.version>2.2.7</swagger-annotations-jakarta.version>
+        <swagger-annotations-jakarta.version>2.2.19</swagger-annotations-jakarta.version>
         <knife4j.version>4.4.0</knife4j.version>
-        <fastjson2.version>2.0.23</fastjson2.version>
+        <fastjson2.version>2.0.43</fastjson2.version>
         <sa-token.version>1.37.0</sa-token.version>
         <redisson.version>3.25.0</redisson.version>
         <hutool-all.version>5.8.16</hutool-all.version>
-        <APIJSON.version>6.1.0</APIJSON.version>
-        <apijson-framework.version>6.1.0_springboot3</apijson-framework.version>
         <lombok.version>1.18.30</lombok.version>
     </properties>
     <!-- 模块 -->
     <modules>
-        <module>APIJSON</module>
         <module>quick-boot-base</module>
         <module>quick-boot-system</module>
         <module>quick-boot-online</module>
@@ -306,10 +303,23 @@
             </dependency>
 
             <dependency>
-                <groupId>com.github.Tencent</groupId>
+                <groupId>com.github.csx-bill</groupId>
                 <artifactId>APIJSON</artifactId>
-                <version>bill</version>
+                <version>30509f10</version>
             </dependency>
+
+            <dependency>
+                <groupId>com.github.csx-bill</groupId>
+                <artifactId>apijson-framework</artifactId>
+                <version>6.3.0_jdk17</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.csx-bill</groupId>
+                <artifactId>apijson-router</artifactId>
+                <version>1.8.0_jdk17</version>
+            </dependency>
+
 
         </dependencies>
     </dependencyManagement>

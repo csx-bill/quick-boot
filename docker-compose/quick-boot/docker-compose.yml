@@ -1,56 +1,69 @@
 version: "3.8"
 services:
-  quick-boot-gateway-biz:
-    container_name: quick-boot-gateway-biz
-    image: openjdk:17-jdk
+  quick-boot-gateway:
+    container_name: quick-boot-gateway
+    image: openjdk:21-jdk
     environment:
       - TZ=Asia/Shanghai
-      - JAR_NAME=quick-boot-gateway-biz.jar
+      - JAR_NAME=quick-boot-gateway-start.jar
       - JAVA_OPTIONS=-Dfile.encoding=UTF-8
     volumes:
       # ./quick-boot/quick-boot-gateway-biz.jar 挂载到容器 /app/ 目录下
-      - ./quick-boot-gateway-biz.jar:/app/quick-boot-gateway-biz.jar
+      - ./quick-boot-gateway-start.jar:/app/quick-boot-gateway-start.jar
       # ./quick-boot/logs/quick-boot-gateway-biz/ 挂载到容器 /logs/quick-boot-gateway-biz 目录下
-      - ./logs/quick-boot-gateway-biz/:/logs/quick-boot-gateway-biz
-    entrypoint: java -Xmx1024m -jar ./app/quick-boot-gateway-biz.jar
+      - ./logs/quick-boot-gateway/:/logs/quick-boot-gateway
+    entrypoint: java -Xmx1024m -jar ./app/quick-boot-gateway-start.jar
     network_mode: host
     restart: always
-  quick-boot-oauth2-biz:
-    container_name: quick-boot-oauth2-biz
-    image: openjdk:17-jdk
+  quick-boot-oauth2:
+    container_name: quick-boot-oauth2
+    image: openjdk:21-jdk
     environment:
       - TZ=Asia/Shanghai
-      - JAR_NAME=quick-boot-oauth2-biz.jar
+      - JAR_NAME=quick-boot-oauth2-start.jar
       - JAVA_OPTIONS=-Dfile.encoding=UTF-8
     volumes:
-      - ./quick-boot-oauth2-biz.jar:/app/quick-boot-oauth2-biz.jar
-      - ./logs/quick-boot-oauth2-biz/:/logs/quick-boot-oauth2-biz
-    entrypoint: java -Xmx1024m -jar ./app/quick-boot-oauth2-biz.jar
+      - ./quick-boot-oauth2-start.jar:/app/quick-boot-oauth2-start.jar
+      - ./logs/quick-boot-oauth2/:/logs/quick-boot-oauth2
+    entrypoint: java -Xmx1024m -jar ./app/quick-boot-oauth2-start.jar
     network_mode: host
     restart: always
-  quick-boot-system-biz:
-    container_name: quick-boot-system-biz
-    image: openjdk:17-jdk
+  quick-boot-system:
+    container_name: quick-boot-system
+    image: openjdk:21-jdk
     environment:
       - TZ=Asia/Shanghai
-      - JAR_NAME=quick-boot-system-biz.jar
+      - JAR_NAME=quick-boot-system-start.jar
       - JAVA_OPTIONS=-Dfile.encoding=UTF-8
     volumes:
-      - ./quick-boot-system-biz.jar:/app/quick-boot-system-biz.jar
-      - ./logs/quick-boot-system-biz/:/logs/quick-boot-system-biz
-    entrypoint: java -Xmx1024m -jar ./app/quick-boot-system-biz.jar
+      - ./quick-boot-system-start.jar:/app/quick-boot-system-start.jar
+      - ./logs/quick-boot-system/:/logs/quick-boot-system
+    entrypoint: java -Xmx1024m -jar ./app/quick-boot-system-start.jar
     network_mode: host
     restart: always
-  quick-boot-monitor-biz:
-    container_name: quick-boot-monitor-biz
-    image: openjdk:17-jdk
+  quick-boot-online:
+      container_name: quick-boot-online
+      image: openjdk:21-jdk
+      environment:
+        - TZ=Asia/Shanghai
+        - JAR_NAME=quick-boot-online-start.jar
+        - JAVA_OPTIONS=-Dfile.encoding=UTF-8
+      volumes:
+        - ./quick-boot-online-start.jar:/app/quick-boot-online-start.jar
+        - ./logs/quick-boot-online/:/logs/quick-boot-online
+      entrypoint: java -Xmx512m -jar ./app/quick-boot-online-start.jar
+      network_mode: host
+      restart: always
+  quick-boot-monitor:
+    container_name: quick-boot-monitor
+    image: openjdk:21-jdk
     environment:
       - TZ=Asia/Shanghai
-      - JAR_NAME=quick-boot-monitor-biz.jar
+      - JAR_NAME=quick-boot-monitor-start.jar
       - JAVA_OPTIONS=-Dfile.encoding=UTF-8
     volumes:
-      - ./quick-boot-monitor-biz.jar:/app/quick-boot-monitor-biz.jar
-      - ./logs/quick-boot-monitor-biz/:/logs/quick-boot-monitor-biz
-    entrypoint: java -Xmx512m -jar ./app/quick-boot-monitor-biz.jar
+      - ./quick-boot-monitor-start.jar:/app/quick-boot-monitor-start.jar
+      - ./logs/quick-boot-monitor/:/logs/quick-boot-monitor
+    entrypoint: java -Xmx512m -jar ./app/quick-boot-monitor-start.jar
     network_mode: host
     restart: always

@@ -1,5 +1,6 @@
 package com.quick.online.config;
 
+import apijson.JSONRequest;
 import apijson.RequestMethod;
 import apijson.framework.APIJSONSQLConfig;
 import jakarta.annotation.PostConstruct;
@@ -10,7 +11,7 @@ import java.util.Map;
 
 @Slf4j
 @Component
-public class OnlineSQLConfig extends APIJSONSQLConfig {
+public class OnlineSQLConfig extends APIJSONSQLConfig<String> {
     public OnlineSQLConfig() {
         super();
     }
@@ -71,8 +72,12 @@ public class OnlineSQLConfig extends APIJSONSQLConfig {
         return super.onFakeDelete(map);
     }
 
-    static {
-
-    }
+    /**
+     * 前端传参驼峰命名转为蛇形命名
+     */
+//    @Override
+//    public String getSQLKey(String key) {
+//        return super.getSQLKey(JSONRequest.recoverUnderline(key, false));
+//    }
 
 }

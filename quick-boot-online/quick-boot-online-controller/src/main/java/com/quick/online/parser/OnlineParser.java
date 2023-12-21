@@ -3,7 +3,6 @@ package com.quick.online.parser;
 import apijson.RequestMethod;
 import apijson.framework.APIJSONObjectParser;
 import apijson.framework.APIJSONParser;
-import apijson.orm.AbstractParser;
 import apijson.orm.SQLConfig;
 import com.alibaba.fastjson.JSONObject;
 
@@ -27,7 +26,7 @@ public class OnlineParser extends APIJSONParser<String> {
     }
 
     @Override
-    public APIJSONObjectParser createObjectParser(JSONObject request, String parentPath, SQLConfig arrayConfig, boolean isSubquery, boolean isTable, boolean isArrayMainTable) throws Exception {
+    public APIJSONObjectParser<String> createObjectParser(JSONObject request, String parentPath, SQLConfig arrayConfig, boolean isSubquery, boolean isTable, boolean isArrayMainTable) throws Exception {
         return new OnlineObjectParser(getSession(),request, parentPath, arrayConfig, isSubquery, isTable, isArrayMainTable).setMethod(getMethod()).setParser(this);
     }
 
@@ -36,4 +35,14 @@ public class OnlineParser extends APIJSONParser<String> {
         return false;
     }
 
+    /**
+     * 参考 https://github.com/Tencent/APIJSON/issues/548
+     * 重写响应格式
+     * @param request
+     * @return
+     */
+//    @Override
+//    public JSONObject parseResponse(JSONObject request) {
+//        return super.parseResponse(request);
+//    }
 }

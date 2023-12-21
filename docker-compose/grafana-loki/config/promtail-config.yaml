@@ -15,26 +15,34 @@ clients:
 
 # 配置日志数据源
 scrape_configs:
-  - job_name: quick-boot-gateway-biz # 设定 job 名称，可以任意取
+  - job_name: quick-boot-gateway # 设定 job 名称，可以任意取
     static_configs:
       - targets:
           - localhost # 设定 Promtail 在本机收集日志
         labels:
-          job: quick-boot-gateway-biz # 设定日志数据源的标签
-          __path__: /var/logs/quick-boot-gateway-biz/*.log # 设定日志文件的路径
+          job: quick-boot-gateway # 设定日志数据源的标签
+          __path__: /var/logs/quick-boot-gateway/*.log # 设定日志文件的路径
 
-  - job_name: quick-boot-oauth2-biz # 设定 job 名称
+  - job_name: quick-boot-oauth2 # 设定 job 名称
     static_configs:
       - targets:
           - localhost # 设定 Promtail 在本机收集日志
         labels:
-          job: quick-boot-oauth2-biz # 设定日志数据源的标签
-          __path__: /var/logs/quick-boot-oauth2-biz/*.log # 设定日志文件的路径
+          job: quick-boot-oauth2 # 设定日志数据源的标签
+          __path__: /var/logs/quick-boot-oauth2/*.log # 设定日志文件的路径
 
-  - job_name: quick-boot-system-biz # 设定 job 名称
+  - job_name: quick-boot-system # 设定 job 名称
     static_configs:
       - targets:
           - localhost # 设定 Promtail 在本机收集日志
         labels:
-          job: quick-boot-system-biz # 设定日志数据源的标签
-          __path__: /var/logs/quick-boot-system-biz/*.log # 设定日志文件的路径
+          job: quick-boot-system # 设定日志数据源的标签
+          __path__: /var/logs/quick-boot-system/*.log # 设定日志文件的路径
+
+  - job_name: quick-boot-online # 设定 job 名称
+    static_configs:
+      - targets:
+          - localhost # 设定 Promtail 在本机收集日志
+        labels:
+          job: quick-boot-online # 设定日志数据源的标签
+          __path__: /var/logs/quick-boot-online/*.log # 设定日志文件的路径

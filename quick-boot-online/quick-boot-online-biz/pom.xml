@@ -28,9 +28,18 @@
         </dependency>
 
         <dependency>
-            <groupId>com.github.Tencent</groupId>
+            <groupId>com.github.csx-bill</groupId>
             <artifactId>APIJSON</artifactId>
-            <version>bill</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.csx-bill</groupId>
+            <artifactId>apijson-framework</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.csx-bill</groupId>
+            <artifactId>apijson-router</artifactId>
         </dependency>
 
     </dependencies>

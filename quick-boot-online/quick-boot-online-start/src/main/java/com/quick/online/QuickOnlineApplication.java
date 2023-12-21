@@ -39,7 +39,7 @@ public class QuickOnlineApplication {
                 env.getProperty("server.port", "8080"));
         APPLICATION_CONTEXT = application;
         //关闭debug 信息
-        Log.DEBUG = false;
+        Log.DEBUG = true;
 
         AbstractParser.MAX_OBJECT_COUNT = 20;
         // 批量更新最大条数

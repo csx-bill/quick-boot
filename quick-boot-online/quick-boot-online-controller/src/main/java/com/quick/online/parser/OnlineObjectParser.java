@@ -15,7 +15,6 @@ import com.quick.online.config.OnlineSQLConfig;
 import com.quick.online.entity.Document;
 import com.quick.online.service.IDocumentService;
 import com.quick.system.api.ISysDataRuleApi;
-import com.quick.system.api.ISysMenuApi;
 import com.quick.system.api.dto.SysDataRuleApiDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -30,7 +29,7 @@ import java.util.List;
 /**
  * 统一处理 创建人 创建时间 更新人 更新时间 自动填充
  */
-public class OnlineObjectParser extends APIJSONObjectParser {
+public class OnlineObjectParser extends APIJSONObjectParser<String> {
     public OnlineObjectParser(HttpSession session, JSONObject request, String parentPath, SQLConfig arrayConfig, boolean isSubquery, boolean isTable, boolean isArrayMainTable) throws Exception {
         super(session, request, parentPath, arrayConfig, isSubquery, isTable, isArrayMainTable);
     }
@@ -67,12 +66,14 @@ public class OnlineObjectParser extends APIJSONObjectParser {
         if(StringUtils.hasText(currentUrl)){
             IDocumentService documentService = SpringBeanUtils.getBean(IDocumentService.class);
             Document document = documentService.getOne(new LambdaQueryWrapper<Document>().eq(Document::getUrl, currentUrl));
-            String permission = document.getPermission();
-            // 如果 permission 不等于空 校验权限
-            if(StringUtils.hasText(permission)){
-                boolean hasPermission  = StpUtil.hasPermission(permission);
-                if(!hasPermission){
-                    throw new ForbiddenException(ExceptionCode.FORBIDDEN_EXCEPTION.getCode(),ExceptionCode.FORBIDDEN_EXCEPTION.getMsg());
+            if(document!=null){
+                String permission = document.getPermission();
+                // 如果 permission 不等于空 校验权限
+                if(StringUtils.hasText(permission)){
+                    boolean hasPermission  = StpUtil.hasPermission(permission);
+                    if(!hasPermission){
+                        throw new ForbiddenException(ExceptionCode.FORBIDDEN_EXCEPTION.getCode(),ExceptionCode.FORBIDDEN_EXCEPTION.getMsg());
+                    }
                 }
             }
         }
