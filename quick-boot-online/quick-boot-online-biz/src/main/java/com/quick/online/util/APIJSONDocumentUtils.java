@@ -2,6 +2,7 @@ package com.quick.online.util;
 
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import com.quick.common.constant.CommonConstant;
 import com.quick.online.entity.Document;
 import com.quick.online.entity.SysTableColumn;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * APIJSON 接口文档 构建工具类
@@ -101,19 +103,55 @@ public class APIJSONDocumentUtils {
                 columnValues.put(sysTableColumn.getDbFieldName(),sysTableColumn.getDbFieldTxt());
             }
         }
-        String requestAndApijson = """
-                {
-                    "%s[]":{
-                        "%s":%s,
-                        "page":0,
-                        "count":10
-                    },
-                    "total@":"/%s[]/total",
-                    "format":true
-                }
-                """.formatted(aliasTableName,aliasTableName,JSON.toJSON(columnValues),aliasTableName);
+        // 过滤出需要解析字典的字段
+        List<SysTableColumn> dictFieldList = fieldList.stream().filter(field -> StringUtils.hasText(field.getDictCode())).collect(Collectors.toList());
+        // 字典字段
+        JSONObject dictObj = new JSONObject();
+        dictFieldList.forEach(field -> {
+            String key = field.getDbFieldName() + "()";
+            String value = String.format("translateDict(%s, %s)", field.getDictCode(), field.getDbFieldName());
+            dictObj.put(key, value);
+        });
 
-        return builderDocument(CommonConstant.PAGE_MSG,CommonConstant.GET,aliasTableName,CommonConstant.PAGE, requestAndApijson, requestAndApijson,null);
+
+        // 接口 (前端请求) 请求参数格式
+        String request = """
+                {
+                     "%s:rows[].page":0,
+                     "%s:rows[].count":10
+                }
+                """.formatted(aliasTableName,aliasTableName);
+        // request 转成 apijson  内部请求格式
+        String apijson = """
+                {
+                    "page@": "%s:rows[].page",
+                    "count@": "%s:rows[].count",
+                    "%s:rows[]": {
+                        "query": 2,
+                        "%s": %s
+                    },
+                    "total@": "/%s:rows[]/total",
+                    "format": true
+                }
+                """.formatted(aliasTableName,aliasTableName,aliasTableName,aliasTableName,JSON.toJSON(dictObj),aliasTableName);
+
+        // 过滤需要查询的字段
+        List<SysTableColumn> queryFieldList = fieldList.stream().filter(field -> !field.getIsQuery().equals(CommonConstant.Y)).collect(Collectors.toList());
+        // 构建请求 查询字段
+        JSONObject requestObj = JSON.parseObject(request);
+        // 构建请求 查询字段映射
+        JSONObject apijsonObj = JSON.parseObject(apijson);
+
+        queryFieldList.forEach(field -> {
+            // 此处转小驼峰，全局使用了小驼峰 风格
+            String camelCaseFieldName = StrUtil.toCamelCase(field.getDbFieldName());
+            String key = FormatToAPIJSONUtils.getKey(aliasTableName, field.getDbFieldName(), field.getQueryType());
+
+            requestObj.put(key, field.getDbFieldTxt());
+            apijsonObj.put(camelCaseFieldName + "@", key);
+        });
+
+        return builderDocument(CommonConstant.PAGE_MSG,CommonConstant.GET,aliasTableName,CommonConstant.PAGE, requestObj.toString(), apijsonObj.toString(),null);
     }
 
     /**

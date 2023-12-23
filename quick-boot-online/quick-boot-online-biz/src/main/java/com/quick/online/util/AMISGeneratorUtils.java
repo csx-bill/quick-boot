@@ -2,6 +2,7 @@ package com.quick.online.util;
 
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.alibaba.fastjson2.JSONPath;
@@ -11,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 import java.net.URI;
@@ -18,6 +20,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * AMIS 页面配置 生成工具类  自动构建 CRUD 基础功能
@@ -79,7 +82,7 @@ public class AMISGeneratorUtils {
 
         // 添加 分页查询接口
         JSONObject api = createApi(aliasTableName, CommonConstant.GET,
-                CommonConstant.PAGE, pageRequestAdaptor(aliasTableName),
+                CommonConstant.PAGE, pageRequestAdaptor(aliasTableName,fieldList),
                 pageAdaptor(aliasTableName));
         bodyArray.getJSONObject(0).put("api",api);
 
@@ -108,7 +111,17 @@ public class AMISGeneratorUtils {
      * 分页请求适配器
      * api->requestAdaptor
      */
-    private String pageRequestAdaptor(String aliasTableName) {
+    private String pageRequestAdaptor(String aliasTableName,List<SysTableColumn> fieldList) {
+
+        List<SysTableColumn> queryFieldList = fieldList.stream().filter(field -> !field.getIsQuery().equals(CommonConstant.Y)).collect(Collectors.toList());
+
+        StringBuilder keysStringBuilder = new StringBuilder();
+        queryFieldList.forEach(field->{
+            String key = FormatToAPIJSONUtils.getKey(aliasTableName, field.getDbFieldName(), field.getQueryType());
+            String formKey = "api.data.%s".formatted(StrUtil.toCamelCase(field.getDbFieldName()));
+            keysStringBuilder.append(",\"%s\": %s".formatted(key, formKey));
+        });
+
         return """
                 var page = (api.data.page - 1);
                 var count = api.data.perPage
@@ -116,20 +129,13 @@ public class AMISGeneratorUtils {
                 delete api.data['page'];
                 delete api.data['perPage'];
                 
-                // 必须加个 条件 否则 APIJSON 软删除不生效
-                api.data['@order'] = "id";
-                
                 api.data={
-                  "%s[]": {
-                    "%s": api.data,
-                    "page": page,
-                    "count": count
-                  },
-                  "total@": "/%s[]/total",
-                  "format": true
-                };
+                            "%s:rows[].page": page,
+                            "%s:rows[].count": count
+                            %s
+                        };
                 return api;
-                """.formatted(aliasTableName,aliasTableName,aliasTableName);
+                """.formatted(aliasTableName,aliasTableName,keysStringBuilder);
     }
 
 
@@ -145,8 +151,8 @@ public class AMISGeneratorUtils {
                     "status": payload.status,
                     "msg": payload.msg,
                     "data": {
-                        "items": payload.data.%s ? payload.data.%s : [],
-                        "total": payload.data.%s ? payload.data.total : 0
+                        "items": payload.data.rowsList : [],
+                        "total": payload.data.total : 0
                     }
                 };
                 """.formatted(StrUtil.lowerFirst(aliasTableName),StrUtil.lowerFirst(aliasTableName),StrUtil.lowerFirst(aliasTableName));
@@ -294,7 +300,12 @@ public class AMISGeneratorUtils {
             JSONObject column = new JSONObject();
             column.put("id", getUuid());
             column.put("type", "tpl");
-            column.put("name", fieldDetail.getDbFieldName());
+            // 如果 字典code 不为空 展示字典文本
+            if(StringUtils.hasText(fieldDetail.getDictCode())){
+                column.put("name", StrUtil.toCamelCase(fieldDetail.getDbFieldName())+CommonConstant.DICT_TEXT_SUFFIX);
+            }else {
+                column.put("name", StrUtil.toCamelCase(fieldDetail.getDbFieldName()));
+            }
             column.put("title", fieldDetail.getDbFieldTxt());
             // 主键隐藏
             if(fieldDetail.getDbIsKey().equals(CommonConstant.Y)){

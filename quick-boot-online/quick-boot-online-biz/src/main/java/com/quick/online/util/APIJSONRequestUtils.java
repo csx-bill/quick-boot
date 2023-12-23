@@ -126,33 +126,30 @@ public class APIJSONRequestUtils {
 
         List<String> fields = new ArrayList<>();
 
-        for (SysTableColumn sysTableColumn : fieldList) {
-            if(!CommonConstant.DEL_FLAG.equals(sysTableColumn.getDbFieldName())
-                    && !CommonConstant.Y.equals(sysTableColumn.getDbIsKey())){
-                fields.add("!"+sysTableColumn.getDbFieldName());
+        fieldList.forEach(field->{
+            if(!CommonConstant.DEL_FLAG.equals(field.getDbFieldName())
+                    && !CommonConstant.Y.equals(field.getDbIsKey())){
+                String key = FormatToAPIJSONUtils.getKey(aliasTableName, field.getDbFieldName(), field.getQueryType());
+                fields.add("!"+key);
             }
-        }
+        });
 
         fields.add("!");
 
         String refuse = String.join(",", fields);
 
-
-        // 必须传  page,count 并且是 NUMBER 类型
+        // 必须传  page,count 并且是 NUMBER 类型  structure 为参数校验
         String structure = """
                 {
-                    "%s[]":{
-                        "%s":{
-                            "REFUSE":"%s"  
-                        },
-                        "MUST":"page,count",
-                        "TYPE":{
-                            "page":"NUMBER",
-                            "count":"NUMBER"
-                        }
-                    }
+                "MUST":"%s:rows[].page,%s:rows[].count",
+                "TYPE":{
+                        "%s:rows[].page":"NUMBER",
+                        "%s:rows[].count":"NUMBER"
+                    },
+                "REFUSE":"%s" 
                 }
-                """.formatted(aliasTableName,aliasTableName,refuse);
+                """.formatted(aliasTableName,aliasTableName,aliasTableName,aliasTableName,refuse);
+
         return builderRequest(CommonConstant.PAGE_MSG,RequestMethod.GET.name(),aliasTableName, CommonConstant.PAGE,structure);
     }
 

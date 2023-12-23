@@ -130,9 +130,13 @@ public interface CommonConstant {
 
 
     String APIJSON_IN = "{}";
-    String APIJSON_LIKE = "$";
+    String APIJSON_LIKE = "~";
+    String APIJSON_BETWEEN = "%";
+
+
     String IN = "IN";
     String LIKE = "LIKE";
+    String BETWEEN = "BETWEEN";
 
     /**
      * 数据权限 当前用户上下文变量
