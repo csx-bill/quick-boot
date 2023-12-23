@@ -33,18 +33,21 @@ public class SysDataRuleApiServiceImpl  implements ISysDataRuleApiService {
     public List<SysDataRule> queryDataRuleByPath(String menuPath,String apiPath) {
         // 查询当前访问菜单id
         SysMenu sysMenu = sysMenuMapper.selectOne(new LambdaQueryWrapper<SysMenu>().eq(SysMenu::getPath, menuPath));
-        String parentId = sysMenu.getId();
-        // 查询当前菜单下 为 数据权限 并且 接口地址为 apiPath
-        List<SysMenu> sysMenus = sysMenuMapper.selectList(new LambdaQueryWrapper<SysMenu>()
-                .eq(SysMenu::getMenuType, CommonConstant.DATA_RULE)
-                .eq(SysMenu::getParentId, parentId)
-                .eq(SysMenu::getPath,apiPath)
-        );
+        if(sysMenu!=null){
+            String parentId = sysMenu.getId();
+            // 查询当前菜单下 为 数据权限 并且 接口地址为 apiPath
+            List<SysMenu> sysMenus = sysMenuMapper.selectList(new LambdaQueryWrapper<SysMenu>()
+                    .eq(SysMenu::getMenuType, CommonConstant.DATA_RULE)
+                    .eq(SysMenu::getParentId, parentId)
+                    .eq(SysMenu::getPath,apiPath)
+            );
 
-        List<String> menuIds = sysMenus.stream().map(BaseEntity::getId).collect(Collectors.toList());
+            List<String> menuIds = sysMenus.stream().map(BaseEntity::getId).collect(Collectors.toList());
 
-        return sysDataRuleMapper.selectList(new LambdaQueryWrapper<SysDataRule>()
-                .in(SysDataRule::getMenuId,menuIds)
-                .eq(SysDataRule::getStatus, CommonConstant.A));
+            return sysDataRuleMapper.selectList(new LambdaQueryWrapper<SysDataRule>()
+                    .in(SysDataRule::getMenuId,menuIds)
+                    .eq(SysDataRule::getStatus, CommonConstant.A));
+        }
+        return null;
     }
 }

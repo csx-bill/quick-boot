@@ -73,11 +73,17 @@ public class OnlineSQLConfig extends APIJSONSQLConfig<String> {
     }
 
     /**
-     * 前端传参驼峰命名转为蛇形命名
+     * 前端传参小驼峰命名转为蛇形命名
      */
-//    @Override
-//    public String getSQLKey(String key) {
-//        return super.getSQLKey(JSONRequest.recoverUnderline(key, false));
-//    }
+    @Override
+    public String getSQLKey(String key) {
+        return super.getSQLKey(JSONRequest.recoverUnderline(key, false));
+    }
+
+    @Override
+    public String getSQLTable() {
+        String t = super.getSQLTable();
+        return isInfluxDB() ? t.toLowerCase() : JSONRequest.recoverUnderline(t, false);
+    }
 
 }

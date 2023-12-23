@@ -25,7 +25,7 @@ public abstract class AbstractGlobalExceptionHandler {
     @ExceptionHandler(NullPointerException.class)
     @ResponseStatus(HttpStatus.OK)
     public Result<?> nullPointerException(Exception ex){
-        log.error("NullPointerException:{}", ex.getMessage());
+        log.error("NullPointerException:{}", ex);
         return Result.fail(ExceptionCode.NULL_POINT_EX.getCode(),ExceptionCode.NULL_POINT_EX.getMsg());
     }
 

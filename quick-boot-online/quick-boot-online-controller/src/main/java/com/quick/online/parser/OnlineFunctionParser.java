@@ -39,15 +39,18 @@ public class OnlineFunctionParser extends APIJSONFunctionParser {
      * @param dictCode 字典code
      * @param dictValueKey 字典值Key(字段名)
      */
-    public void translateDict(@NotNull JSONObject current,@NotNull String dictCode, String dictValueKey) {
+    public String translateDict(@NotNull JSONObject current,@NotNull String dictCode, String dictValueKey) {
         try {
             ISysDictApi sysDictApi = SpringBeanUtils.getBean(ISysDictApi.class);
             Result<String> result = sysDictApi.translateDict(dictCode, current.getString(dictValueKey));
             String textValue = result.getData();
-            current.put(dictValueKey + CommonConstant._DICT_TEXT_SUFFIX, textValue);
+            current.put(dictValueKey + CommonConstant.DICT_TEXT_SUFFIX, textValue);
+            // 此处如果不返回  current.getString(dictValueKey)   dictValueKey 的字段会丢失
+            return current.getString(dictValueKey);
         }catch (Exception e){
             log.error(e.getMessage());
         }
+        return null;
     }
 
 

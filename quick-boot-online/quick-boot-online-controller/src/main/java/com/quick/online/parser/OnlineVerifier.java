@@ -1,21 +1,15 @@
 package com.quick.online.parser;
 
 import apijson.RequestMethod;
-import apijson.framework.APIJSONVerifier;
 import apijson.orm.AbstractParser;
-import apijson.orm.AbstractVerifier;
 import apijson.orm.SQLConfig;
 import apijson.orm.SQLCreator;
+import apijson.router.APIJSONRouterVerifier;
 import com.alibaba.fastjson.JSONObject;
-import com.quick.common.util.SuperAdminUtils;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 /**
  * 权限校验器
  */
-public class OnlineVerifier extends APIJSONVerifier<String> {
+public class OnlineVerifier extends APIJSONRouterVerifier<String> {
     public static final String TAG = "OnlineVerifier";
 
 
