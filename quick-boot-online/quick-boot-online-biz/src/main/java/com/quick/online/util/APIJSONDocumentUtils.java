@@ -42,14 +42,23 @@ public class APIJSONDocumentUtils {
      * ID 查询接口
      */
     public static Document getById(String aliasTableName, List<SysTableColumn> fieldList){
-        String requestAndApijson = """
+        // 前端 请求接口格式
+        String request = """
                 {
-                    "%s":{
-                        "id":"id"
-                    }
+                    "%s:data.id":"1"
                 }
                 """.formatted(aliasTableName);
-        return builderDocument(CommonConstant.GET_BY_ID_MSG,CommonConstant.GET,aliasTableName,CommonConstant.GET_BY_ID, requestAndApijson, requestAndApijson,null);
+        // 内部接口 格式
+        String apijson = """
+                {
+                    "id@":"%s:data.id",
+                    "%s:data":{
+                
+                    },
+                    "format":true
+                }
+                """.formatted(aliasTableName,aliasTableName);
+        return builderDocument(CommonConstant.GET_BY_ID_MSG,CommonConstant.GET,aliasTableName,CommonConstant.GET_BY_ID, request, apijson,null);
     }
 
     /**

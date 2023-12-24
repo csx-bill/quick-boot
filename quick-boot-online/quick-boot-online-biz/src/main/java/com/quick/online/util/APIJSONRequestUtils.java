@@ -54,12 +54,10 @@ public class APIJSONRequestUtils {
         //  只允许传 id 字段查询
         String structure = """
                 {
-                    "%s":{
-                        "MUST": "id",
-                        "REFUSE": "!id,!"
-                    }
+                    "MUST":"%s:data.id",
+                    "REFUSE": "!%s:data.id,!"
                 }
-                """.formatted(aliasTableName);
+                """.formatted(aliasTableName,aliasTableName);
         return builderRequest(CommonConstant.GET_BY_ID_MSG,RequestMethod.GET.name(),aliasTableName, CommonConstant.GET_BY_ID,structure);
     }
 

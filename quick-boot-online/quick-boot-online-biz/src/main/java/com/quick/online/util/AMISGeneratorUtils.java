@@ -166,13 +166,11 @@ public class AMISGeneratorUtils {
      */
     private String getByIdRequestAdaptor(String aliasTableName) {
         return """
-           api.data={
-             "%s": {
-             "id": context.id
-             },
-           };
-           return api;
-           """.formatted(aliasTableName);
+                api.data={
+                    "%s:data.id":context.id
+                }
+                return api;
+                """.formatted(aliasTableName);
     }
 
 
@@ -187,9 +185,9 @@ public class AMISGeneratorUtils {
            return {
                "status": payload.status,
                "msg": payload.msg,
-               "data": payload.data.%s
+               "data": payload.data
            };
-           """.formatted(aliasTableName);
+           """;
     }
 
 

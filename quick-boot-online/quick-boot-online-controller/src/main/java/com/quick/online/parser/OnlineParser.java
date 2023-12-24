@@ -48,7 +48,13 @@ public class OnlineParser extends APIJSONParser<String> {
     @Override
     public JSONObject parseResponse(JSONObject request) {
         JSONObject result = super.parseResponse(request);
-        result.put(CommonConstant.SUCCESS_KEY,result.getIntValue(JSONResponse.KEY_CODE));
+
+        if (result.getIntValue(JSONResponse.KEY_CODE) == JSONResponse.CODE_SUCCESS) {
+            result.put(CommonConstant.SUCCESS_KEY,CommonConstant.SUCCESS_CODE);
+        } else {
+            result.put(CommonConstant.SUCCESS_KEY,result.getIntValue(JSONResponse.KEY_CODE));
+        }
+
         Tracer tracer = SpringBeanUtils.getBean(Tracer.class);
         if(tracer.currentSpan()!=null){
             result.put(CommonConstant.TRACE_ID, tracer.currentSpan().context().traceId());
