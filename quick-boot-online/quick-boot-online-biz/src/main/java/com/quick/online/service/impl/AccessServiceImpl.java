@@ -154,6 +154,7 @@ public class AccessServiceImpl extends ServiceImpl<AccessMapper, Access> impleme
         crudTag.add(FormatToAPIJSONUtils.getTag(pascalCase, CommonConstant.UPDATE_BATCH_BY_ID));
         crudTag.add(FormatToAPIJSONUtils.getTag(pascalCase, CommonConstant.REMOVE_BY_ID));
         crudTag.add(FormatToAPIJSONUtils.getTag(pascalCase, CommonConstant.REMOVE_BATCH_BY_IDS));
+        crudTag.add(FormatToAPIJSONUtils.getTag(pascalCase, CommonConstant.GET_BY_ID));
 
         requestService.remove(new LambdaQueryWrapper<Request>().in(Request::getTag,crudTag));
 
@@ -165,6 +166,7 @@ public class AccessServiceImpl extends ServiceImpl<AccessMapper, Access> impleme
         crudUrl.add(FormatToAPIJSONUtils.getUrl(pascalCase, CommonConstant.PUT,CommonConstant.UPDATE_BATCH_BY_ID));
         crudUrl.add(FormatToAPIJSONUtils.getUrl(pascalCase, CommonConstant.DELETE,CommonConstant.REMOVE_BY_ID));
         crudUrl.add(FormatToAPIJSONUtils.getUrl(pascalCase, CommonConstant.DELETE,CommonConstant.REMOVE_BATCH_BY_IDS));
+        crudUrl.add(FormatToAPIJSONUtils.getUrl(pascalCase, CommonConstant.GET,CommonConstant.GET_BY_ID));
 
         documentService.remove(new LambdaQueryWrapper<Document>().in(Document::getUrl,crudUrl));
 
