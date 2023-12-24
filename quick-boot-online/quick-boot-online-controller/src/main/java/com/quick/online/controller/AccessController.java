@@ -64,9 +64,9 @@ public class AccessController extends SuperController<IAccessService, Access, St
 
     @GetMapping(value = "/generatorAmisJson")
     @Operation(summary = "构建AMIS schema", description = "构建AMIS schema")
-    public JSONObject generatorAmisJson(@RequestParam(value = "id") String id) throws IOException {
+    public Result<JSONObject> generatorAmisJson(@RequestParam(value = "id") String id) throws IOException {
         AccessVO entity = baseService.getAccessColumnsById(id);
-        return amisGeneratorUtils.crud(entity.getAlias(),entity.getColumns());
+        return Result.success(amisGeneratorUtils.crud(entity.getAlias(),entity.getColumns()));
     }
 
     @PutMapping(value = "/refactoringCRUDById")

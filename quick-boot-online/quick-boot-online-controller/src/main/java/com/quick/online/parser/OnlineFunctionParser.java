@@ -10,6 +10,7 @@ import com.quick.common.vo.Result;
 import com.quick.system.api.ISysDictApi;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.StringUtils;
 
 /**可远程调用的函数类，用于自定义业务逻辑处理
  * 具体见 https://github.com/Tencent/APIJSON/issues/101
@@ -42,9 +43,12 @@ public class OnlineFunctionParser extends APIJSONFunctionParser {
     public String translateDict(@NotNull JSONObject current,@NotNull String dictCode, String dictValueKey) {
         try {
             ISysDictApi sysDictApi = SpringBeanUtils.getBean(ISysDictApi.class);
-            Result<String> result = sysDictApi.translateDict(dictCode, current.getString(dictValueKey));
-            String textValue = result.getData();
-            current.put(dictValueKey + CommonConstant.DICT_TEXT_SUFFIX, textValue);
+            String dictValue = current.getString(dictValueKey);
+            if(StringUtils.hasText(dictValue)){
+                Result<String> result = sysDictApi.translateDict(dictCode, dictValue);
+                String textValue = result.getData();
+                current.put(dictValueKey + CommonConstant.DICT_TEXT_SUFFIX, textValue);
+            }
             // 此处如果不返回  current.getString(dictValueKey)   dictValueKey 的字段会丢失
             return current.getString(dictValueKey);
         }catch (Exception e){

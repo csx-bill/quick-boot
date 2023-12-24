@@ -11,6 +11,7 @@ import com.quick.system.service.ISysDataRuleApiService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -43,10 +44,11 @@ public class SysDataRuleApiServiceImpl  implements ISysDataRuleApiService {
             );
 
             List<String> menuIds = sysMenus.stream().map(BaseEntity::getId).collect(Collectors.toList());
-
-            return sysDataRuleMapper.selectList(new LambdaQueryWrapper<SysDataRule>()
-                    .in(SysDataRule::getMenuId,menuIds)
-                    .eq(SysDataRule::getStatus, CommonConstant.A));
+            if(!CollectionUtils.isEmpty(menuIds)){
+                return sysDataRuleMapper.selectList(new LambdaQueryWrapper<SysDataRule>()
+                        .in(SysDataRule::getMenuId,menuIds)
+                        .eq(SysDataRule::getStatus, CommonConstant.A));
+            }
         }
         return null;
     }

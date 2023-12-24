@@ -155,7 +155,7 @@ public class APIJSONDocumentUtils {
         JSONObject dictObj = new JSONObject();
         dictFieldList.forEach(field -> {
             String key = field.getDbFieldName() + "()";
-            String value = String.format("translateDict(%s, %s)", field.getDictCode(), field.getDbFieldName());
+            String value = String.format("translateDict(%s,%s)", field.getDictCode(), field.getDbFieldName());
             dictObj.put(key, value);
         });
         // 添加排序 字段 否则 软删除 不生效
