@@ -109,7 +109,7 @@ public class AccessServiceImpl extends ServiceImpl<AccessMapper, Access> impleme
         AccessVO accessVO = new AccessVO();
         BeanUtils.copyProperties(access,accessVO);
         // 获取字段信息
-        List<SysTableColumn> columns = sysTableColumnService.list(new LambdaQueryWrapper<SysTableColumn>().eq(SysTableColumn::getAccessId, id));
+        List<SysTableColumn> columns = sysTableColumnService.list(new LambdaQueryWrapper<SysTableColumn>().eq(SysTableColumn::getAccessId, id).orderByAsc(SysTableColumn::getSort));
 
         // 字典信息
         Result<List<SysDictDataApiDTO>> queryTypeResult = sysDictApi.queryDictDataByDictCode(CommonConstant.COLUMN_QUERY_TYPE);
