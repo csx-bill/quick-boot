@@ -5,6 +5,8 @@ public interface CommonConstant {
     Integer SC_INTERNAL_SERVER_ERROR_500 = 500;
     /** {@code 200 OK} (HTTP/1.0 - RFC 1945) */
     Integer SUCCESS_CODE = 0;
+    String SUCCESS_KEY = "status";
+    String TRACE_ID = "traceId";
 
     Integer FORBIDDEN = 403;
     String SUCCESS_MSG = "success";

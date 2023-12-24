@@ -48,7 +48,7 @@ public class OnlineApiController extends APIJSONRouterController<String> {
     @PostMapping("/{method}/{tag}")
     @Override
     public String router(@PathVariable("method") String method, @PathVariable("tag") String tag,@RequestParam(value = "params",required = false) Map<String, String> params,@RequestBody String request, HttpSession session) {
-        return processResponse(super.router(method, tag, params, request, session));
+        return super.router(method, tag, params, request, session);
     }
 
     @SneakyThrows
@@ -100,20 +100,5 @@ public class OnlineApiController extends APIJSONRouterController<String> {
         }
 
         return JSON.parseObject(Result.success(result));
-    }
-
-    /**
-     * 统一响应 格式
-     *
-     * @param res
-     * @return
-     */
-    private String processResponse(String res) {
-        JSONObject result = JSON.parseObject(res);
-        if (result.getIntValue(JSONResponse.KEY_CODE) == JSONResponse.CODE_SUCCESS) {
-            return JSON.toJSONString(Result.success(result));
-        } else {
-            return JSON.toJSONString(Result.fail(result.getIntValue(JSONResponse.KEY_CODE), result.getString(JSONResponse.KEY_MSG)));
-        }
     }
 }

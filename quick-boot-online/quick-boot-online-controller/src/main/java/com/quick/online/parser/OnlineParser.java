@@ -1,10 +1,14 @@
 package com.quick.online.parser;
 
+import apijson.JSONResponse;
 import apijson.RequestMethod;
 import apijson.framework.APIJSONObjectParser;
 import apijson.framework.APIJSONParser;
 import apijson.orm.SQLConfig;
 import com.alibaba.fastjson.JSONObject;
+import com.quick.common.constant.CommonConstant;
+import com.quick.common.util.SpringBeanUtils;
+import io.micrometer.tracing.Tracer;
 
 public class OnlineParser extends APIJSONParser<String> {
     public OnlineParser() {
@@ -41,8 +45,14 @@ public class OnlineParser extends APIJSONParser<String> {
      * @param request
      * @return
      */
-//    @Override
-//    public JSONObject parseResponse(JSONObject request) {
-//        return super.parseResponse(request);
-//    }
+    @Override
+    public JSONObject parseResponse(JSONObject request) {
+        JSONObject result = super.parseResponse(request);
+        result.put(CommonConstant.SUCCESS_KEY,result.getIntValue(JSONResponse.KEY_CODE));
+        Tracer tracer = SpringBeanUtils.getBean(Tracer.class);
+        if(tracer.currentSpan()!=null){
+            result.put(CommonConstant.TRACE_ID, tracer.currentSpan().context().traceId());
+        }
+        return result;
+    }
 }
