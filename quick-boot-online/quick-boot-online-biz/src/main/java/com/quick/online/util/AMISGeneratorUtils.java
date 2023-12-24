@@ -151,8 +151,8 @@ public class AMISGeneratorUtils {
                     "status": payload.status,
                     "msg": payload.msg,
                     "data": {
-                        "items": payload.data.rowsList : [],
-                        "total": payload.data.total : 0
+                        "items": payload.data.rowsList,
+                        "total": payload.data.total
                     }
                 };
                 """.formatted(StrUtil.lowerFirst(aliasTableName),StrUtil.lowerFirst(aliasTableName),StrUtil.lowerFirst(aliasTableName));
