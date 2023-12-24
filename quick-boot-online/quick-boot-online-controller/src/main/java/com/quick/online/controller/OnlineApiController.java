@@ -3,11 +3,14 @@ package com.quick.online.controller;
 import apijson.JSON;
 import apijson.JSONResponse;
 import apijson.RequestMethod;
+import apijson.StringUtil;
 import apijson.orm.Parser;
 import apijson.router.APIJSONRouterController;
 import com.alibaba.fastjson.JSONObject;
 import com.quick.common.vo.Result;
-import com.quick.online.util.ApijsonInitUtil;
+import com.quick.online.parser.OnlineFunctionParser;
+import com.quick.online.parser.OnlineParser;
+import com.quick.online.parser.OnlineVerifier;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpSession;
@@ -16,7 +19,11 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.rmi.ServerException;
 import java.util.Map;
+
+import static apijson.framework.APIJSONConstant.*;
+import static apijson.framework.APIJSONConstant.REQUEST_;
 
 @Slf4j
 @RestController
@@ -24,6 +31,11 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Tag(name = "增删改查统一接口")
 public class OnlineApiController extends APIJSONRouterController<String> {
+
+    public static final String VERIFY = "verify";
+
+    public static final String TYPE = "type";
+    public static final String VALUE = "value";
 
     @Override
     public Parser<String> newParser(HttpSession session, RequestMethod method) {
@@ -43,9 +55,51 @@ public class OnlineApiController extends APIJSONRouterController<String> {
     @Operation(summary = "重新加载 APIJSON配置", description = "重新加载 APIJSON配置")
     @PostMapping("reload")
     @Override
-    public JSONObject reload(String type) {
-        ApijsonInitUtil.init();
-        return JSON.parseObject(Result.success());
+    public JSONObject reload(@RequestBody String request) {
+        JSONObject requestObject = null;
+        String type;
+        JSONObject value;
+        try {
+            requestObject = OnlineParser.parseRequest(request);
+            type = requestObject.getString(TYPE);
+            value = requestObject.getJSONObject(VALUE);
+        } catch (Exception e) {
+            return JSON.parseObject(Result.fail(e.getMessage()));
+        }
+
+
+        JSONObject result = OnlineParser.newSuccessResult();
+
+        boolean reloadAll = StringUtil.isEmpty(type, true) || "ALL".equals(type);
+
+        if (reloadAll || "ACCESS".equals(type)) {
+            try {
+                result.put(ACCESS_, OnlineVerifier.initAccess(false, null, value));
+            } catch (ServerException e) {
+                e.printStackTrace();
+                result.put(ACCESS_, OnlineParser.newErrorResult(e));
+            }
+        }
+
+        if (reloadAll || "FUNCTION".equals(type)) {
+            try {
+                result.put(FUNCTION_, OnlineFunctionParser.init(false, null, value));
+            } catch (ServerException e) {
+                e.printStackTrace();
+                result.put(FUNCTION_, OnlineParser.newErrorResult(e));
+            }
+        }
+
+        if (reloadAll || "REQUEST".equals(type)) {
+            try {
+                result.put(REQUEST_, OnlineVerifier.initRequest(false, null, value));
+            } catch (ServerException e) {
+                e.printStackTrace();
+                result.put(REQUEST_, OnlineParser.newErrorResult(e));
+            }
+        }
+
+        return JSON.parseObject(Result.success(result));
     }
 
     /**
