@@ -194,7 +194,7 @@ public class APIJSONRequestUtils {
      */
     private static Request builderRequest(String detail, String method, String aliasTableName, String tag, String structure){
         Request request = Request.builder()
-                .tag("%s%s".formatted(StrUtil.lowerFirst(aliasTableName),tag))
+                .tag(FormatToAPIJSONUtils.getTag(aliasTableName,tag))
                 .structure(structure)
                 .method(method)
                 .detail(detail)

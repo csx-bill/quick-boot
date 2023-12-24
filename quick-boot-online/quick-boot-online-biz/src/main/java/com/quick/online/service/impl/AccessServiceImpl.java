@@ -19,6 +19,7 @@ import com.quick.online.service.ISysTableColumnService;
 import com.quick.online.util.APIJSONDocumentUtils;
 import com.quick.online.util.APIJSONRequestUtils;
 import com.quick.online.util.DictDataToAMISJSONUtils;
+import com.quick.online.util.FormatToAPIJSONUtils;
 import com.quick.system.api.ISysDictApi;
 import com.quick.system.api.dto.SysDictDataApiDTO;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +34,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Slf4j
 @Service
@@ -138,6 +138,40 @@ public class AccessServiceImpl extends ServiceImpl<AccessMapper, Access> impleme
         //更新字段信息
         List<SysTableColumn> columns = entity.getColumns();
         sysTableColumnService.saveOrUpdateBatch(columns);
+        // 更新 APIJSON 接口
+        access = getById(entity.getId());
+        // 转换为小驼峰命名法
+        String camelCase = StrUtil.toCamelCase(access.getName());
+        // 将第一个字母大写，得到大驼峰命名法
+        String pascalCase = StrUtil.upperFirst(camelCase);
+
+        // 删除旧接口 crud 一个版本 好维护
+        ArrayList<String> crudTag = new ArrayList<>();
+
+        crudTag.add(FormatToAPIJSONUtils.getTag(pascalCase, CommonConstant.PAGE));
+        crudTag.add(FormatToAPIJSONUtils.getTag(pascalCase, CommonConstant.SAVE));
+        crudTag.add(FormatToAPIJSONUtils.getTag(pascalCase, CommonConstant.UPDATE_BY_ID));
+        crudTag.add(FormatToAPIJSONUtils.getTag(pascalCase, CommonConstant.UPDATE_BATCH_BY_ID));
+        crudTag.add(FormatToAPIJSONUtils.getTag(pascalCase, CommonConstant.REMOVE_BY_ID));
+        crudTag.add(FormatToAPIJSONUtils.getTag(pascalCase, CommonConstant.REMOVE_BATCH_BY_IDS));
+
+        requestService.remove(new LambdaQueryWrapper<Request>().in(Request::getTag,crudTag));
+
+        ArrayList<String> crudUrl = new ArrayList<>();
+
+        crudUrl.add(FormatToAPIJSONUtils.getUrl(pascalCase, CommonConstant.GET,CommonConstant.PAGE));
+        crudUrl.add(FormatToAPIJSONUtils.getUrl(pascalCase, CommonConstant.POST,CommonConstant.SAVE));
+        crudUrl.add(FormatToAPIJSONUtils.getUrl(pascalCase, CommonConstant.PUT,CommonConstant.UPDATE_BY_ID));
+        crudUrl.add(FormatToAPIJSONUtils.getUrl(pascalCase, CommonConstant.PUT,CommonConstant.UPDATE_BATCH_BY_ID));
+        crudUrl.add(FormatToAPIJSONUtils.getUrl(pascalCase, CommonConstant.DELETE,CommonConstant.REMOVE_BY_ID));
+        crudUrl.add(FormatToAPIJSONUtils.getUrl(pascalCase, CommonConstant.DELETE,CommonConstant.REMOVE_BATCH_BY_IDS));
+
+        documentService.remove(new LambdaQueryWrapper<Document>().in(Document::getUrl,crudUrl));
+
+        // 批量新增
+        requestService.saveBatch(APIJSONRequestUtils.builderCRUDRequest(pascalCase, columns));
+        documentService.saveBatch(APIJSONDocumentUtils.builderCRUDDocument(pascalCase, columns));
+
         return true;
     }
 }

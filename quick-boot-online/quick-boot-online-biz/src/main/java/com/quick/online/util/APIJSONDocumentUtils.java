@@ -202,7 +202,7 @@ public class APIJSONDocumentUtils {
                .version(0)
                .name(name)
                .type("JSON")
-               .url("%s/crud/%s/%s%s".formatted(CommonConstant.ONLINE_PREFIX_API,method, StrUtil.lowerFirst(aliasTableName),tag))
+               .url(FormatToAPIJSONUtils.getUrl(aliasTableName,method,tag))
                .request(request)
                .apijson(apijson)
                .date(LocalDateTime.now())

@@ -31,4 +31,27 @@ public class FormatToAPIJSONUtils {
         }
         return key;
     }
+
+    /**
+     * tag 构建
+     * @param aliasTableName
+     * @param tag
+     * @return
+     */
+    public static String getTag(String aliasTableName, String tag){
+        return "%s%s".formatted(StrUtil.lowerFirst(aliasTableName),tag);
+    }
+
+    /**
+     * url 构建
+     * @param aliasTableName
+     * @param method
+     * @param tag
+     * @return
+     */
+    public static String getUrl(String aliasTableName,String method, String tag){
+        return "%s/crud/%s/%s%s".formatted(CommonConstant.ONLINE_PREFIX_API,method, StrUtil.lowerFirst(aliasTableName),tag);
+    }
+
+
 }
