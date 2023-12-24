@@ -1,9 +1,6 @@
 package com.quick.online.util;
 
-import cn.hutool.core.util.StrUtil;
-import com.alibaba.fastjson2.JSON;
 import com.quick.common.constant.CommonConstant;
-import com.quick.online.entity.Document;
 import com.quick.online.entity.Request;
 import com.quick.online.entity.SysTableColumn;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -11,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import java.time.LocalDateTime;
 import java.util.*;
 
-import static apijson.orm.AbstractVerifier.UNKNOWN;
 
 /**
  * APIJSON 接口请求构建工具类
@@ -26,21 +22,21 @@ public class APIJSONRequestUtils {
     public static Request save(String aliasTableName, List<SysTableColumn> fieldList){
         List<String> fields = new ArrayList<>();
 
-        for (SysTableColumn sysTableColumn : fieldList) {
-            if(!shouldIgnoreField(sysTableColumn)
-                    && !CommonConstant.Y.equals(sysTableColumn.getDbIsKey())){
-                fields.add("!"+sysTableColumn.getDbFieldName());
+        fieldList.forEach(field->{
+            if(!shouldIgnoreField(field)
+                    && !CommonConstant.Y.equals(field.getDbIsKey())){
+                String formKey = FormatToAPIJSONUtils.formKey(aliasTableName,field.getDbFieldName());
+                fields.add("!"+formKey);
             }
-        }
+        });
+
         fields.add("!");
 
         String refuse = String.join(",", fields);
 
         String structure = """
                 {
-                    "%s":{
-                        "REFUSE":"%s"
-                    }
+                    "REFUSE": %s
                 }
                 """.formatted(aliasTableName,refuse);
 

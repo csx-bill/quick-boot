@@ -24,18 +24,29 @@ public class APIJSONDocumentUtils {
      * 保存接口
      */
     public static Document save(String aliasTableName, List<SysTableColumn> fieldList){
-        Map<String, String> columnValues = new HashMap<>();
-        for (SysTableColumn sysTableColumn : fieldList) {
-            if(!shouldIgnoreField(sysTableColumn) && !CommonConstant.Y.equals(sysTableColumn.getDbIsKey())){
-                columnValues.put(sysTableColumn.getDbFieldName(),sysTableColumn.getDbFieldTxt());
-            }
-        }
-        String requestAndApijson = """
+        String apijson = """
                 {
-                    "%s":%s
+                    "%s":{
+                
+                    },
+                    "format":true
                 }
-                """.formatted(aliasTableName, JSON.toJSON(columnValues));
-        return builderDocument(CommonConstant.SAVE_MSG,CommonConstant.POST,aliasTableName,CommonConstant.SAVE, requestAndApijson, requestAndApijson,CommonConstant.ADD);
+                """.formatted(aliasTableName);
+        JSONObject apijsonObj = JSON.parseObject(apijson);
+
+        Map<String, String> columnValues = new HashMap<>();
+        fieldList.forEach(field->{
+            if(!shouldIgnoreField(field) && !CommonConstant.Y.equals(field.getDbIsKey())){
+                String formKey = FormatToAPIJSONUtils.formKey(aliasTableName,field.getDbFieldName());
+                columnValues.put(formKey,field.getDbFieldTxt());
+                apijsonObj.put(StrUtil.toCamelCase(field.getDbFieldName())+"@",formKey);
+            }
+        });
+
+        // 前端请求参数格式
+        String request = JSON.toJSONString(columnValues);
+
+        return builderDocument(CommonConstant.SAVE_MSG,CommonConstant.POST,aliasTableName,CommonConstant.SAVE, request, apijsonObj.toString(),CommonConstant.ADD);
     }
 
     /**

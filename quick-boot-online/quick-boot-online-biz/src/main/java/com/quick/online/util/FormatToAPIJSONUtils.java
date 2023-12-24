@@ -9,7 +9,7 @@ import com.quick.common.constant.CommonConstant;
 public class FormatToAPIJSONUtils {
 
     /**
-     *
+     * 分页 的 key
      * @param aliasTableName 表别名
      * @param dbFieldName 字段名
      * @return
@@ -53,5 +53,14 @@ public class FormatToAPIJSONUtils {
         return "%s/crud/%s/%s%s".formatted(CommonConstant.ONLINE_PREFIX_API,method, StrUtil.lowerFirst(aliasTableName),tag);
     }
 
+    /**
+     *  表单字段 key
+     * @param aliasTableName
+     * @param fieldName
+     * @return
+     */
+    public static String formKey(String aliasTableName,String fieldName){
+        return "%s.%s".formatted(aliasTableName, StrUtil.toCamelCase(fieldName));
+    }
 
 }

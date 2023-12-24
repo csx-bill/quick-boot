@@ -99,6 +99,15 @@ public class OnlineApiController extends APIJSONRouterController<String> {
             }
         }
 
+        if (reloadAll || "DOCUMENT".equals(type)) {
+            try {
+                result.put(DOCUMENT_, OnlineVerifier.initDocument(false, null, value));
+            } catch (ServerException e) {
+                e.printStackTrace();
+                result.put(DOCUMENT_, OnlineParser.newErrorResult(e));
+            }
+        }
+
         return JSON.parseObject(Result.success(result));
     }
 }
