@@ -151,11 +151,11 @@ public class AMISGeneratorUtils {
                     "status": payload.status,
                     "msg": payload.msg,
                     "data": {
-                        "items": payload.data.rowsList,
-                        "total": payload.data.total
+                        "items": payload.rowsList,
+                        "total": payload.total
                     }
                 };
-                """.formatted(StrUtil.lowerFirst(aliasTableName),StrUtil.lowerFirst(aliasTableName),StrUtil.lowerFirst(aliasTableName));
+                """;
     }
 
 
@@ -196,13 +196,28 @@ public class AMISGeneratorUtils {
      * UpdateById 请求适配器
      * api->requestAdaptor
      */
-    private String updateByIdRequestAdaptor(String aliasTableName) {
+    private String updateByIdRequestAdaptor(String aliasTableName,List<SysTableColumn> fieldList) {
+
+        StringBuilder keysStringBuilder = new StringBuilder();
+        fieldList.forEach(field->{
+            if(!shouldIgnoreField(field)){
+                String key = FormatToAPIJSONUtils.formKey(aliasTableName, field.getDbFieldName());
+                String formKey = "api.data.%s".formatted(StrUtil.toCamelCase(field.getDbFieldName()));
+                keysStringBuilder.append(",\"%s\": %s".formatted(key, formKey));
+            }
+        });
+
+        // 删除第一个逗号
+        if (keysStringBuilder.length() > 0) {
+            keysStringBuilder.deleteCharAt(0);
+        }
+
         return """
            api.data={
-             "%s": api.data
+             %s
            };
            return api;
-           """.formatted(aliasTableName);
+           """.formatted(keysStringBuilder);
     }
 
     /**
@@ -210,15 +225,34 @@ public class AMISGeneratorUtils {
      * UpdateBatchById 请求适配器
      * api->requestAdaptor
      */
-    private String updateBatchByIdRequestAdaptor(String aliasTableName) {
+    private String updateBatchByIdRequestAdaptor(String aliasTableName,List<SysTableColumn> fieldList) {
+
+        StringBuilder keysStringBuilder = new StringBuilder();
+        fieldList.forEach(field->{
+            if(!shouldIgnoreField(field)){
+                if(CommonConstant.Y.equals(field.getDbIsKey())){
+                    String key = FormatToAPIJSONUtils.formKey(aliasTableName, field.getDbFieldName());
+                    String formKey = "api.data.ids.split(\",\")".formatted(StrUtil.toCamelCase(field.getDbFieldName()));
+                    keysStringBuilder.append(",\"%s\": %s".formatted(key+CommonConstant.APIJSON_IN, formKey));
+                }else {
+                    String key = FormatToAPIJSONUtils.formKey(aliasTableName, field.getDbFieldName());
+                    String formKey = "api.data.%s".formatted(StrUtil.toCamelCase(field.getDbFieldName()));
+                    keysStringBuilder.append(",\"%s\": %s".formatted(key, formKey));
+                }
+            }
+        });
+
+        // 删除第一个逗号
+        if (keysStringBuilder.length() > 0) {
+            keysStringBuilder.deleteCharAt(0);
+        }
+
         return """
-           // 添加新属性
-           api.data['id{}'] = api.data.ids.split(",");
            api.data={
-             "%s": api.data
+             %s
            };
            return api;
-           """.formatted(aliasTableName);
+           """.formatted(keysStringBuilder);
     }
 
     /**
@@ -229,9 +263,7 @@ public class AMISGeneratorUtils {
     private String removeByIdRequestAdaptor(String aliasTableName) {
         return """
            api.data={
-             "%s": {
-                "id": context.id
-             }
+             "%s.id": context.id
            };
            return api;
            """.formatted(aliasTableName);
@@ -246,9 +278,7 @@ public class AMISGeneratorUtils {
     private String removeBatchByIdsRequestAdaptor(String aliasTableName) {
         return """
            api.data={
-             "%s": {
-                "id{}": context.ids.split(",")
-             }
+             "%s.id{}": context.ids.split(",")
            };
            return api;
            """.formatted(aliasTableName);
@@ -263,13 +293,28 @@ public class AMISGeneratorUtils {
      * Save 请求适配器
      * api->requestAdaptor
      */
-    public static String saveRequestAdaptor(String aliasTableName) {
+    public static String saveRequestAdaptor(String aliasTableName,List<SysTableColumn> fieldList) {
+
+        StringBuilder keysStringBuilder = new StringBuilder();
+        fieldList.forEach(field->{
+            if(!shouldIgnoreField(field) && !CommonConstant.Y.equals(field.getDbIsKey())){
+                String key = FormatToAPIJSONUtils.formKey(aliasTableName, field.getDbFieldName());
+                String formKey = "api.data.%s".formatted(StrUtil.toCamelCase(field.getDbFieldName()));
+                keysStringBuilder.append(",\"%s\": %s".formatted(key, formKey));
+            }
+        });
+
+        // 删除第一个逗号
+        if (keysStringBuilder.length() > 0) {
+            keysStringBuilder.deleteCharAt(0);
+        }
+
         return """
            api.data={
-             "%s": api.data
+             %s
            };
            return api;
-           """.formatted(aliasTableName);
+           """.formatted(keysStringBuilder);
     }
 
 
@@ -411,7 +456,7 @@ public class AMISGeneratorUtils {
 
         // 更新接口
         JSONObject api = createApi(aliasTableName, CommonConstant.PUT,
-                CommonConstant.UPDATE_BY_ID, updateByIdRequestAdaptor(aliasTableName),"");
+                CommonConstant.UPDATE_BY_ID, updateByIdRequestAdaptor(aliasTableName,fieldList),"");
 
         firstDrawerBody.put("api",api);
 
@@ -518,7 +563,7 @@ public class AMISGeneratorUtils {
 
         // 批量更新接口
         JSONObject api = createApi(aliasTableName, CommonConstant.PUT,
-                CommonConstant.UPDATE_BATCH_BY_ID, updateBatchByIdRequestAdaptor(aliasTableName), "");
+                CommonConstant.UPDATE_BATCH_BY_ID, updateBatchByIdRequestAdaptor(aliasTableName,fieldList), "");
 
         firstDrawerBody.put("api",api);
 
@@ -613,7 +658,7 @@ public class AMISGeneratorUtils {
 
         // 添加 接口
         JSONObject api = createApi(aliasTableName, CommonConstant.POST,
-                CommonConstant.SAVE, saveRequestAdaptor(aliasTableName), "");
+                CommonConstant.SAVE, saveRequestAdaptor(aliasTableName,fieldList), "");
 
         firstDrawerBody.put("api",api);
 
@@ -750,7 +795,7 @@ public class AMISGeneratorUtils {
      * @param fieldDetail
      * @return
      */
-    private boolean shouldIgnoreField(SysTableColumn fieldDetail) {
+    private static boolean shouldIgnoreField(SysTableColumn fieldDetail) {
         String dbFieldName = fieldDetail.getDbFieldName();
         return CommonConstant.DEL_FLAG.equals(dbFieldName)
                 || CommonConstant.CREATE_TIME.equals(dbFieldName)

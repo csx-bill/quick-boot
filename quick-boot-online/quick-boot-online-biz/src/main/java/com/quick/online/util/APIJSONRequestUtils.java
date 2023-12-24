@@ -64,23 +64,24 @@ public class APIJSONRequestUtils {
     public static Request updateById(String aliasTableName, List<SysTableColumn> fieldList){
         List<String> fields = new ArrayList<>();
 
-        for (SysTableColumn sysTableColumn : fieldList) {
-            if(!shouldIgnoreField(sysTableColumn)){
-                fields.add("!"+sysTableColumn.getDbFieldName());
+        fieldList.forEach(field->{
+            if(!shouldIgnoreField(field)){
+                String formKey = FormatToAPIJSONUtils.formKey(aliasTableName,field.getDbFieldName());
+                fields.add("!"+formKey);
             }
-        }
+        });
+
         fields.add("!");
 
         String refuse = String.join(",", fields);
 
         String structure = """
                 {
-                    "%s":{
-                        "MUST":"id",
-                        "REFUSE":"%s"
-                    }
+                    "MUST":"%s.id",
+                    "REFUSE": "%s"
                 }
                 """.formatted(aliasTableName,refuse);
+
         return builderRequest(CommonConstant.UPDATE_BY_ID_MSG,RequestMethod.PUT.name(),aliasTableName, CommonConstant.UPDATE_BY_ID,structure);
     }
 
@@ -90,23 +91,26 @@ public class APIJSONRequestUtils {
     public static Request updateBatchById(String aliasTableName, List<SysTableColumn> fieldList){
         List<String> fields = new ArrayList<>();
 
-        for (SysTableColumn sysTableColumn : fieldList) {
-            if(!shouldIgnoreField(sysTableColumn)
-                    && !CommonConstant.Y.equals(sysTableColumn.getDbIsKey())){
-                fields.add("!"+sysTableColumn.getDbFieldName());
+        fieldList.forEach(field->{
+            if(!shouldIgnoreField(field)){
+                String formKey = FormatToAPIJSONUtils.formKey(aliasTableName,field.getDbFieldName());
+                if(CommonConstant.Y.equals(field.getDbIsKey())){
+                    formKey = formKey+CommonConstant.APIJSON_IN;
+                    fields.add("!"+formKey);
+                }else {
+                    fields.add("!"+formKey);
+                }
             }
-        }
-        fields.add("!id{}");
+        });
+
         fields.add("!");
 
         String refuse = String.join(",", fields);
 
         String structure = """
                 {
-                    "%s":{
-                        "MUST":"id{}",
-                        "REFUSE":"%s"
-                    }
+                   "MUST":"%s.id{}",
+                   "REFUSE":"%s"
                 }
                 """.formatted(aliasTableName,refuse);
         return builderRequest(CommonConstant.UPDATE_BATCH_BY_ID_MSG,RequestMethod.PUT.name(),aliasTableName, CommonConstant.UPDATE_BATCH_BY_ID,structure);
@@ -153,12 +157,10 @@ public class APIJSONRequestUtils {
     public static Request removeById(String aliasTableName){
         String structure = """
                 {
-                    "%s":{
-                        "MUST":"id",
-                        "REFUSE":"!id,!"
-                    }
+                    "MUST":"%s.id",
+                    "REFUSE":"!%s.id,!"
                 }
-                """.formatted(aliasTableName);
+                """.formatted(aliasTableName,aliasTableName);
         return builderRequest(CommonConstant.REMOVE_BY_ID_MSG,RequestMethod.DELETE.name(),aliasTableName, CommonConstant.REMOVE_BY_ID,structure);
     }
 
@@ -168,12 +170,10 @@ public class APIJSONRequestUtils {
     public static Request removeBatchByIds(String aliasTableName){
         String structure = """
                 {
-                    "%s":{
-                        "MUST":"id{}",
-                        "REFUSE":"!id{},!"
-                    }
+                    "MUST":"%s.id{}",
+                    "REFUSE":"!%s.id{},!"
                 }
-                """.formatted(aliasTableName);
+                """.formatted(aliasTableName,aliasTableName);
         return builderRequest(CommonConstant.REMOVE_BATCH_BY_IDS_MSG,RequestMethod.DELETE.name(),aliasTableName, CommonConstant.REMOVE_BATCH_BY_IDS,structure);
     }
 

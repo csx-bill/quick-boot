@@ -56,7 +56,7 @@ public class APIJSONDocumentUtils {
         // 前端 请求接口格式
         String request = """
                 {
-                    "%s:data.id":"1"
+                    "%s:data.id":"id"
                 }
                 """.formatted(aliasTableName);
         // 内部接口 格式
@@ -77,39 +77,65 @@ public class APIJSONDocumentUtils {
      */
     public static Document updateById(String aliasTableName, List<SysTableColumn> fieldList){
 
-        Map<String, String> columnValues = new HashMap<>();
-        for (SysTableColumn sysTableColumn : fieldList) {
-            if(!shouldIgnoreField(sysTableColumn)){
-                columnValues.put(sysTableColumn.getDbFieldName(),sysTableColumn.getDbFieldTxt());
-            }
-        }
-        String requestAndApijson = """
+        String apijson = """
                 {
-                    "%s":%s
+                    "%s":{
+                
+                    },
+                    "format":true
                 }
-                """.formatted(aliasTableName, JSON.toJSON(columnValues));
+                """.formatted(aliasTableName);
+        JSONObject apijsonObj = JSON.parseObject(apijson);
 
-        return builderDocument(CommonConstant.UPDATE_BY_ID_MSG,CommonConstant.PUT,aliasTableName,CommonConstant.UPDATE_BY_ID, requestAndApijson, requestAndApijson,CommonConstant.UPDATE);
+        Map<String, String> columnValues = new HashMap<>();
+        fieldList.forEach(field->{
+            if(!shouldIgnoreField(field)){
+                String formKey = FormatToAPIJSONUtils.formKey(aliasTableName,field.getDbFieldName());
+                columnValues.put(formKey,field.getDbFieldTxt());
+                apijsonObj.put(StrUtil.toCamelCase(field.getDbFieldName())+"@",formKey);
+            }
+        });
+
+        // 前端请求参数格式
+        String request = JSON.toJSONString(columnValues);
+
+        return builderDocument(CommonConstant.UPDATE_BY_ID_MSG,CommonConstant.PUT,aliasTableName,CommonConstant.UPDATE_BY_ID, request, apijsonObj.toString(),CommonConstant.UPDATE);
     }
 
     /**
      * 批量更新接口
      */
     public static Document updateBatchById(String aliasTableName, List<SysTableColumn> fieldList){
-        Map<String, Object> columnValues = new HashMap<>();
-        for (SysTableColumn sysTableColumn : fieldList) {
-            if(!shouldIgnoreField(sysTableColumn) && !CommonConstant.Y.equals(sysTableColumn.getDbIsKey())){
-                columnValues.put(sysTableColumn.getDbFieldName(),sysTableColumn.getDbFieldTxt());
-            }
-        }
-        columnValues.put("id{}",new ArrayList<>());
-        String requestAndApijson = """
-                {
-                    "%s":%s
-                }
-                """.formatted(aliasTableName,JSON.toJSON(columnValues));
 
-        return builderDocument(CommonConstant.UPDATE_BATCH_BY_ID_MSG,CommonConstant.PUT,aliasTableName,CommonConstant.UPDATE_BATCH_BY_ID, requestAndApijson, requestAndApijson,CommonConstant.BATCHUPDATE);
+        String apijson = """
+                {
+                    "%s":{
+                
+                    },
+                    "format":true
+                }
+                """.formatted(aliasTableName);
+        JSONObject apijsonObj = JSON.parseObject(apijson);
+
+        Map<String, Object> columnValues = new HashMap<>();
+        fieldList.forEach(field->{
+            if(!shouldIgnoreField(field)){
+                String formKey = FormatToAPIJSONUtils.formKey(aliasTableName,field.getDbFieldName());
+                if(CommonConstant.Y.equals(field.getDbIsKey())){
+                    formKey = formKey+CommonConstant.APIJSON_IN;
+                    columnValues.put(formKey,new ArrayList<>());
+                    apijsonObj.put(StrUtil.toCamelCase(field.getDbFieldName())+"@",formKey);
+                }else {
+                    columnValues.put(formKey,field.getDbFieldTxt());
+                    apijsonObj.put(StrUtil.toCamelCase(field.getDbFieldName())+"@",formKey);
+                }
+            }
+        });
+
+        // 前端请求参数格式
+        String request = JSON.toJSONString(columnValues);
+
+        return builderDocument(CommonConstant.UPDATE_BATCH_BY_ID_MSG,CommonConstant.PUT,aliasTableName,CommonConstant.UPDATE_BATCH_BY_ID, request, apijsonObj.toString(),CommonConstant.BATCHUPDATE);
     }
 
 
@@ -132,6 +158,8 @@ public class APIJSONDocumentUtils {
             String value = String.format("translateDict(%s, %s)", field.getDictCode(), field.getDbFieldName());
             dictObj.put(key, value);
         });
+        // 添加排序 字段 否则 软删除 不生效
+        dictObj.put("@order", "id");
 
 
         // 接口 (前端请求) 请求参数格式
@@ -178,30 +206,48 @@ public class APIJSONDocumentUtils {
      * 删除接口
      */
     public static Document removeById(String aliasTableName){
-        String requestAndApijson = """
+        // 前端 请求接口格式
+        String request = """
                 {
-                    "%s":{
-                    	"id": ""
-                    }
+                    "%s.id":"id"
                 }
                 """.formatted(aliasTableName);
+        // 内部接口 格式
+        String apijson = """
+                {
+                    "id@":"%s.id",
+                    "%s":{
+                
+                    },
+                    "format":true
+                }
+                """.formatted(aliasTableName,aliasTableName);
 
-        return builderDocument(CommonConstant.REMOVE_BY_ID_MSG,CommonConstant.DELETE,aliasTableName,CommonConstant.REMOVE_BY_ID, requestAndApijson, requestAndApijson,CommonConstant.DELETE);
+        return builderDocument(CommonConstant.REMOVE_BY_ID_MSG,CommonConstant.DELETE,aliasTableName,CommonConstant.REMOVE_BY_ID, request, apijson,CommonConstant.DELETE);
     }
 
     /**
      * 批量删除接口
      */
     public static Document removeBatchByIds(String aliasTableName){
-        String requestAndApijson = """
+        // 前端 请求接口格式
+        String request = """
                 {
-                    "%s":{
-                    	"id{}": []
-                    }
+                    "%s.id{}":%s
                 }
-                """.formatted(aliasTableName);
+                """.formatted(aliasTableName,new ArrayList<>());
+        // 内部接口 格式
+        String apijson = """
+                {
+                    "id@":"%s.id{}",
+                    "%s":{
+                
+                    },
+                    "format":true
+                }
+                """.formatted(aliasTableName,aliasTableName);
 
-        return builderDocument(CommonConstant.REMOVE_BATCH_BY_IDS_MSG,CommonConstant.DELETE,aliasTableName,CommonConstant.REMOVE_BATCH_BY_IDS, requestAndApijson, requestAndApijson,CommonConstant.BATCHDELETE);
+        return builderDocument(CommonConstant.REMOVE_BATCH_BY_IDS_MSG,CommonConstant.DELETE,aliasTableName,CommonConstant.REMOVE_BATCH_BY_IDS, request, apijson,CommonConstant.BATCHDELETE);
     }
 
     /**

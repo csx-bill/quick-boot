@@ -177,6 +177,7 @@ public class AccessServiceImpl extends ServiceImpl<AccessMapper, Access> impleme
         return true;
     }
 
+    @Transactional
     @Override
     public boolean refactoringCRUDById(String id) {
         Access access = getById(id);
