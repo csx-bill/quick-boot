@@ -732,7 +732,7 @@ public class AMISGeneratorUtils {
                 column.put("id", getUuid());
                 column.put("type", "input-text");
                 column.put("required", CommonConstant.Y.equals(fieldDetail.getIsRequired()));
-                column.put("name", fieldDetail.getDbFieldName());
+                column.put("name", StrUtil.toCamelCase(fieldDetail.getDbFieldName()));
                 column.put("label", fieldDetail.getDbFieldTxt());
 
                 if (CommonConstant.Y.equals(fieldDetail.getDbIsKey())) {
