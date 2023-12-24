@@ -69,4 +69,10 @@ public class AccessController extends SuperController<IAccessService, Access, St
         return amisGeneratorUtils.crud(entity.getAlias(),entity.getColumns());
     }
 
+    @PutMapping(value = "/refactoringCRUDById")
+    @Operation(summary = "重构CRUD接口")
+    public Result<Boolean> refactoringCRUDById(@RequestParam(value = "id") String id) {
+        return Result.success(baseService.refactoringCRUDById(id));
+    }
+
 }

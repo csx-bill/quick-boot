@@ -36,9 +36,9 @@ public class APIJSONRequestUtils {
 
         String structure = """
                 {
-                    "REFUSE": %s
+                    "REFUSE": "%s"
                 }
-                """.formatted(aliasTableName,refuse);
+                """.formatted(refuse);
 
         return builderRequest(CommonConstant.SAVE_MSG,RequestMethod.POST.name(),aliasTableName, CommonConstant.SAVE,structure);
     }

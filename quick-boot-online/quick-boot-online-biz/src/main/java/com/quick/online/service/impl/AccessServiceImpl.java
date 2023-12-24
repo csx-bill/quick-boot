@@ -176,4 +176,45 @@ public class AccessServiceImpl extends ServiceImpl<AccessMapper, Access> impleme
 
         return true;
     }
+
+    @Override
+    public boolean refactoringCRUDById(String id) {
+        Access access = getById(id);
+        List<SysTableColumn> columns = sysTableColumnService.list(new LambdaQueryWrapper<SysTableColumn>()
+                .eq(SysTableColumn::getAccessId, access.getId()));
+        // 转换为小驼峰命名法
+        String camelCase = StrUtil.toCamelCase(access.getName());
+        // 将第一个字母大写，得到大驼峰命名法
+        String pascalCase = StrUtil.upperFirst(camelCase);
+
+        // 删除旧接口 crud 一个版本 好维护
+        ArrayList<String> crudTag = new ArrayList<>();
+
+        crudTag.add(FormatToAPIJSONUtils.getTag(pascalCase, CommonConstant.PAGE));
+        crudTag.add(FormatToAPIJSONUtils.getTag(pascalCase, CommonConstant.SAVE));
+        crudTag.add(FormatToAPIJSONUtils.getTag(pascalCase, CommonConstant.UPDATE_BY_ID));
+        crudTag.add(FormatToAPIJSONUtils.getTag(pascalCase, CommonConstant.UPDATE_BATCH_BY_ID));
+        crudTag.add(FormatToAPIJSONUtils.getTag(pascalCase, CommonConstant.REMOVE_BY_ID));
+        crudTag.add(FormatToAPIJSONUtils.getTag(pascalCase, CommonConstant.REMOVE_BATCH_BY_IDS));
+        crudTag.add(FormatToAPIJSONUtils.getTag(pascalCase, CommonConstant.GET_BY_ID));
+
+        requestService.remove(new LambdaQueryWrapper<Request>().in(Request::getTag,crudTag));
+
+        ArrayList<String> crudUrl = new ArrayList<>();
+
+        crudUrl.add(FormatToAPIJSONUtils.getUrl(pascalCase, CommonConstant.GET,CommonConstant.PAGE));
+        crudUrl.add(FormatToAPIJSONUtils.getUrl(pascalCase, CommonConstant.POST,CommonConstant.SAVE));
+        crudUrl.add(FormatToAPIJSONUtils.getUrl(pascalCase, CommonConstant.PUT,CommonConstant.UPDATE_BY_ID));
+        crudUrl.add(FormatToAPIJSONUtils.getUrl(pascalCase, CommonConstant.PUT,CommonConstant.UPDATE_BATCH_BY_ID));
+        crudUrl.add(FormatToAPIJSONUtils.getUrl(pascalCase, CommonConstant.DELETE,CommonConstant.REMOVE_BY_ID));
+        crudUrl.add(FormatToAPIJSONUtils.getUrl(pascalCase, CommonConstant.DELETE,CommonConstant.REMOVE_BATCH_BY_IDS));
+        crudUrl.add(FormatToAPIJSONUtils.getUrl(pascalCase, CommonConstant.GET,CommonConstant.GET_BY_ID));
+
+        documentService.remove(new LambdaQueryWrapper<Document>().in(Document::getUrl,crudUrl));
+
+        // 批量新增
+        requestService.saveBatch(APIJSONRequestUtils.builderCRUDRequest(pascalCase, columns));
+        documentService.saveBatch(APIJSONDocumentUtils.builderCRUDDocument(pascalCase, columns));
+        return true;
+    }
 }

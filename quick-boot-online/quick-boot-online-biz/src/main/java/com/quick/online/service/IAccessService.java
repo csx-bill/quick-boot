@@ -14,4 +14,5 @@ public interface IAccessService extends IService<Access> {
 
     AccessVO getAccessColumnsById(String id);
     boolean updateAccessColumnsById(AccessVO entity);
+    boolean refactoringCRUDById(String id);
 }
