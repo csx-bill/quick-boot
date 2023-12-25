@@ -54,6 +54,7 @@ public class SysMenu extends BaseEntity implements Serializable {
     /**
      * 是否隐藏菜单: N否,Y是
      */
+    @Dict(dictCode = "YES_NO")
     @Schema(description = "是否隐藏菜单")
     private String hideInMenu;
 
