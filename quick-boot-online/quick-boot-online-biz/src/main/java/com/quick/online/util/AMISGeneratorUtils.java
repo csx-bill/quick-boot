@@ -151,7 +151,7 @@ public class AMISGeneratorUtils {
                     "status": payload.status,
                     "msg": payload.msg,
                     "data": {
-                        "items": payload.rowsList,
+                        "items": payload?.rowsList ?? [],
                         "total": payload.total
                     }
                 };
