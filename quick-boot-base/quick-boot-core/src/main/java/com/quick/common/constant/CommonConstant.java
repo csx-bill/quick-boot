@@ -1,5 +1,7 @@
 package com.quick.common.constant;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 public interface CommonConstant {
 	/** {@code 500 Server Error} (HTTP/1.0 - RFC 1945) */
     Integer SC_INTERNAL_SERVER_ERROR_500 = 500;
@@ -144,5 +146,10 @@ public interface CommonConstant {
      * 数据权限 当前用户上下文变量
      */
     String LOGIN_USER_ID = "login_user_id";
+
+    /**
+     * 时间格式格式
+     */
+    String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
 }

@@ -154,8 +154,9 @@ public class APIJSONDocumentUtils {
         // 字典字段
         JSONObject dictObj = new JSONObject();
         dictFieldList.forEach(field -> {
-            String key = field.getDbFieldName() + "()";
-            String value = String.format("translateDict(%s,%s)", field.getDictCode(), field.getDbFieldName());
+            String dbFieldName = StrUtil.toCamelCase(field.getDbFieldName());
+            String key = dbFieldName + "()";
+            String value = String.format("translateDict(%s,%s)", field.getDictCode(), dbFieldName);
             dictObj.put(key, value);
         });
         // 添加排序 字段 否则 软删除 不生效
