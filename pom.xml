@@ -17,15 +17,14 @@
         <maven.compiler.target>21</maven.compiler.target>
         <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
         <quick.version>1.0.1</quick.version>
-        <spring-boot.version>3.2.0</spring-boot.version>
+        <spring-boot.version>3.2.1</spring-boot.version>
         <spring-cloud.version>2023.0.0</spring-cloud.version>
         <micrometer.version>1.11.5</micrometer.version>
         <spring-cloud-alibaba.version>2022.0.0.0</spring-cloud-alibaba.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <mysql.version>8.0.31</mysql.version>
         <native-maven-plugin.version>0.9.28</native-maven-plugin.version>
-        <mybatis-plus.version>3.5.4.1</mybatis-plus.version>
-        <mybatis-spring.version>3.0.3</mybatis-spring.version>
+        <mybatis-plus.version>3.5.5</mybatis-plus.version>
         <dynamic-datasource.version>4.2.0</dynamic-datasource.version>
         <p6spy.version>3.9.1</p6spy.version>
         <spring-boot-admin.version>3.1.8</spring-boot-admin.version>
@@ -194,14 +193,8 @@
 
             <dependency>
                 <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
                 <version>${mybatis-plus.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.mybatis</groupId>
-                <artifactId>mybatis-spring</artifactId>
-                <version>${mybatis-spring.version}</version>
             </dependency>
 
             <!--监控服务端-->
