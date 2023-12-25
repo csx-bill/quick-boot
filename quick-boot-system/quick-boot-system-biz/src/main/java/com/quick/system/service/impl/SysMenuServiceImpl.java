@@ -4,6 +4,7 @@ import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.quick.common.constant.CommonConstant;
+import com.quick.common.entity.BaseEntity;
 import com.quick.common.util.SuperAdminUtils;
 import com.quick.system.entity.SysMenu;
 import com.quick.system.mapper.SysMenuMapper;
@@ -25,8 +26,8 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
 
     @Override
     public List<SysMenuTreeVO> getRoutes() {
-        List<SysMenu> sysMenus = baseMapper.selectList(new LambdaQueryWrapper<SysMenu>()
-                .ne(SysMenu::getMenuType, CommonConstant.BUTTON));
+        List<SysMenu> sysMenus = list(new LambdaQueryWrapper<SysMenu>().eq(SysMenu::getStatus,CommonConstant.A).in(SysMenu::getMenuType,CommonConstant.MENU,CommonConstant.DIR)
+                .select(BaseEntity::getId,SysMenu::getParentId,SysMenu::getMenuType,SysMenu::getName,SysMenu::getPath,SysMenu::getPerms,SysMenu::getHideInMenu,SysMenu::getStatus));
         // 组装菜单树
         return this.getSysMenuTree(sysMenus);
     }
@@ -106,7 +107,8 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
         List<SysMenu> sysMenus = new ArrayList<>();
         // 超级管理员拥有所有权限
         if (SuperAdminUtils.isSuperAdmin(userId)) {
-           sysMenus = list();
+           sysMenus = list(new LambdaQueryWrapper<SysMenu>().eq(SysMenu::getStatus,CommonConstant.A)
+                   .select(BaseEntity::getId,SysMenu::getParentId,SysMenu::getMenuType,SysMenu::getName,SysMenu::getPath,SysMenu::getPerms,SysMenu::getHideInMenu,SysMenu::getStatus));
         } else {
             sysMenus = this.queryByUser(userId);
         }

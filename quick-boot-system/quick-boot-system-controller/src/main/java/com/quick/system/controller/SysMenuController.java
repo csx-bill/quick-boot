@@ -1,7 +1,11 @@
 package com.quick.system.controller;
 
 import cn.dev33.satoken.stp.StpUtil;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.quick.common.aspect.annotation.PreAuth;
+import com.quick.common.constant.CommonConstant;
 import com.quick.common.controller.SuperController;
 import com.quick.common.vo.Result;
 import com.quick.system.entity.SysMenu;
@@ -70,4 +74,16 @@ public class SysMenuController extends SuperController<ISysMenuService, SysMenu,
         return Result.success(baseService.updateById(sysMenu));
     }
 
+    @GetMapping(value = "/getSchemaByPath")
+    @Operation(summary = "根据path获取Schema")
+    @Parameter(name = "path",required = true)
+    public Result<JSONObject> getSchemaByPath(@RequestParam("path") String path) {
+        SysMenu sysMenu = baseService.getOne(new LambdaQueryWrapper<SysMenu>()
+                .eq(SysMenu::getPath,path)
+                .eq(SysMenu::getStatus, CommonConstant.A));
+        if(sysMenu!=null){
+            return Result.success(JSON.parseObject(sysMenu.getSchema()));
+        }
+        return Result.success(JSON.parseObject("{}"));
+    }
 }

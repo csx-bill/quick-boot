@@ -13,8 +13,7 @@
                      p.order_no,
                      p.icon,
                      p.hide_in_menu,
-                     p.`status`,
-                     p.`schema`
+                     p.`status`
               FROM sys_menu p
               WHERE (
                   EXISTS(
