@@ -1,8 +1,7 @@
 package com.quick.online.controller;
 
-import com.alibaba.fastjson2.JSON;
+
 import com.alibaba.fastjson2.JSONObject;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.quick.common.aspect.annotation.PreAuth;
 import com.quick.common.controller.SuperController;
 import com.quick.common.vo.Result;
@@ -10,10 +9,7 @@ import com.quick.common.vo.Result;
 import com.quick.online.dto.AccessVO;
 import com.quick.online.dto.SyncDTO;
 import com.quick.online.entity.Access;
-import com.quick.online.entity.AccessSchema;
-import com.quick.online.service.IAccessSchemaService;
 import com.quick.online.service.IAccessService;
-import com.quick.online.util.AMISGeneratorUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -33,9 +29,6 @@ import java.util.Map;
 @PreAuth(replace = "online:access:")
 public class AccessController extends SuperController<IAccessService, Access, String> {
 
-    private final AMISGeneratorUtils amisGeneratorUtils;
-
-    private final IAccessSchemaService accessSchemaService;
 
     @GetMapping(value = "/list")
     @Operation(summary = "获取list", description = "获取list")
