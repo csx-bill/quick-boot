@@ -1,6 +1,8 @@
 package com.quick.online.controller;
 
+import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.quick.common.aspect.annotation.PreAuth;
 import com.quick.common.controller.SuperController;
 import com.quick.common.vo.Result;
@@ -8,6 +10,8 @@ import com.quick.common.vo.Result;
 import com.quick.online.dto.AccessVO;
 import com.quick.online.dto.SyncDTO;
 import com.quick.online.entity.Access;
+import com.quick.online.entity.AccessSchema;
+import com.quick.online.service.IAccessSchemaService;
 import com.quick.online.service.IAccessService;
 import com.quick.online.util.AMISGeneratorUtils;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,6 +35,8 @@ public class AccessController extends SuperController<IAccessService, Access, St
 
     private final AMISGeneratorUtils amisGeneratorUtils;
 
+    private final IAccessSchemaService accessSchemaService;
+
     @GetMapping(value = "/list")
     @Operation(summary = "获取list", description = "获取list")
     public Result<List<Access>> list() {
@@ -39,7 +45,7 @@ public class AccessController extends SuperController<IAccessService, Access, St
 
     @Operation(summary = "同步数据库表信息", description = "同步数据库表信息")
     @PostMapping(value = "/sync")
-    public Result<Boolean> sync(@RequestBody SyncDTO syncDTO) {
+    public Result<Boolean> sync(@RequestBody SyncDTO syncDTO) throws IOException {
         return Result.success(baseService.sync(Arrays.asList(syncDTO.getTableNames().split(","))));
     }
 
@@ -57,16 +63,15 @@ public class AccessController extends SuperController<IAccessService, Access, St
 
     @PutMapping(value = "/updateAccessColumnsById")
     @Operation(summary = "更新Access字段信息", description = "更新Access字段信息")
-    public Result<Boolean> updateAccessColumnsById(@RequestBody AccessVO entity) {
+    public Result<Boolean> updateAccessColumnsById(@RequestBody AccessVO entity) throws IOException {
         return Result.success(baseService.updateAccessColumnsById(entity));
     }
 
 
-    @GetMapping(value = "/generatorAmisJson")
-    @Operation(summary = "构建AMIS schema", description = "构建AMIS schema")
-    public Result<JSONObject> generatorAmisJson(@RequestParam(value = "id") String id) throws IOException {
-        AccessVO entity = baseService.getAccessColumnsById(id);
-        return Result.success(amisGeneratorUtils.crud(entity.getAlias(),entity.getColumns()));
+    @GetMapping(value = "/getAccessSchemaById")
+    @Operation(summary = "根据ID查询表单schema", description = "根据ID查询表单schema")
+    public Result<JSONObject> getAccessSchemaById(@RequestParam(value = "id") String id){
+        return Result.success(baseService.getAccessSchemaById(id));
     }
 
     @PutMapping(value = "/refactoringCRUDById")

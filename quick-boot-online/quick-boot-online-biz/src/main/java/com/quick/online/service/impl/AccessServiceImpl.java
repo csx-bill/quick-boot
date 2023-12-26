@@ -1,25 +1,18 @@
 package com.quick.online.service.impl;
 
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.quick.common.constant.CommonConstant;
 import com.quick.common.vo.Result;
 import com.quick.online.dto.AccessVO;
 import com.quick.online.dto.OptionsVO;
-import com.quick.online.entity.Access;
-import com.quick.online.entity.Document;
-import com.quick.online.entity.Request;
-import com.quick.online.entity.SysTableColumn;
+import com.quick.online.entity.*;
 import com.quick.online.mapper.AccessMapper;
-import com.quick.online.service.IAccessService;
-import com.quick.online.service.IDocumentService;
-import com.quick.online.service.IRequestService;
-import com.quick.online.service.ISysTableColumnService;
-import com.quick.online.util.APIJSONDocumentUtils;
-import com.quick.online.util.APIJSONRequestUtils;
-import com.quick.online.util.DictDataToAMISJSONUtils;
-import com.quick.online.util.FormatToAPIJSONUtils;
+import com.quick.online.service.*;
+import com.quick.online.util.*;
 import com.quick.system.api.ISysDictApi;
 import com.quick.system.api.dto.SysDictDataApiDTO;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +42,11 @@ public class AccessServiceImpl extends ServiceImpl<AccessMapper, Access> impleme
 
     private final IDocumentService documentService;
 
+    private final IAccessSchemaService accessSchemaService;
+
+    private final AMISGeneratorUtils amisGeneratorUtils;
+
+
     @Override
     public List<Map<String, String>> listByTableName(List<String> tableNames,String tableName) {
         return baseMapper.listByTableName(tableNames,tableName);
@@ -55,7 +54,7 @@ public class AccessServiceImpl extends ServiceImpl<AccessMapper, Access> impleme
 
     @Transactional
     @Override
-    public boolean sync(List<String> tableNames) {
+    public boolean sync(List<String> tableNames) throws IOException {
         List<Map<String, String>> tableMaps = listByTableName(tableNames,null);
         for (Map<String, String> tableMap : tableMaps) {
              String tableName = tableMap.get("tableName");
@@ -99,6 +98,11 @@ public class AccessServiceImpl extends ServiceImpl<AccessMapper, Access> impleme
             // 构建APISJON crud 接口
             requestService.saveBatch(APIJSONRequestUtils.builderCRUDRequest(pascalCase, fieldList));
             documentService.saveBatch(APIJSONDocumentUtils.builderCRUDDocument(pascalCase, fieldList));
+
+            // 新增 amis Schema
+            JSONObject schema = amisGeneratorUtils.crud(pascalCase, list);
+            accessSchemaService.save(AccessSchema.builder().accessId(access.getId()).schema(schema.toString()).build());
+
         }
         return true;
     }
@@ -126,7 +130,7 @@ public class AccessServiceImpl extends ServiceImpl<AccessMapper, Access> impleme
 
     @Transactional
     @Override
-    public boolean updateAccessColumnsById(AccessVO entity) {
+    public boolean updateAccessColumnsById(AccessVO entity) throws IOException {
         Access access = new Access();
         access.setId(entity.getId());
         access.setDebug(entity.getDebug());
@@ -174,6 +178,11 @@ public class AccessServiceImpl extends ServiceImpl<AccessMapper, Access> impleme
         requestService.saveBatch(APIJSONRequestUtils.builderCRUDRequest(pascalCase, columns));
         documentService.saveBatch(APIJSONDocumentUtils.builderCRUDDocument(pascalCase, columns));
 
+        // 更新 amis Schema
+        JSONObject schema = amisGeneratorUtils.crud(entity.getAlias(), entity.getColumns());
+        accessSchemaService.update(AccessSchema.builder().schema(schema.toString()).build(),
+                new LambdaQueryWrapper<AccessSchema>().eq(AccessSchema::getAccessId,access.getId()));
+
         return true;
     }
 
@@ -217,5 +226,14 @@ public class AccessServiceImpl extends ServiceImpl<AccessMapper, Access> impleme
         requestService.saveBatch(APIJSONRequestUtils.builderCRUDRequest(pascalCase, columns));
         documentService.saveBatch(APIJSONDocumentUtils.builderCRUDDocument(pascalCase, columns));
         return true;
+    }
+
+    @Override
+    public JSONObject getAccessSchemaById(String id) {
+        AccessSchema accessSchema = accessSchemaService.getOne(new LambdaQueryWrapper<AccessSchema>().eq(AccessSchema::getAccessId, id));
+        if(accessSchema!=null){
+            return JSON.parseObject(accessSchema.getSchema());
+        }
+        return null;
     }
 }

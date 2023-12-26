@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Schema(name = "表权限配置")
+@Schema(name = "表单管理")
 public class Access implements Serializable {
     private static final long serialVersionUID = 1L;
 
