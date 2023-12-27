@@ -26,7 +26,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
 
     @Override
     public List<SysMenuTreeVO> getRoutes() {
-        List<SysMenu> sysMenus = list(new LambdaQueryWrapper<SysMenu>().eq(SysMenu::getStatus,CommonConstant.A).in(SysMenu::getMenuType,CommonConstant.MENU,CommonConstant.DIR)
+        List<SysMenu> sysMenus = list(new LambdaQueryWrapper<SysMenu>().eq(SysMenu::getStatus,CommonConstant.A).in(SysMenu::getMenuType,CommonConstant.MENU,CommonConstant.DIR,CommonConstant.ONLINE_FORM)
                 .select(BaseEntity::getId,SysMenu::getParentId,SysMenu::getMenuType,SysMenu::getName,SysMenu::getPath,SysMenu::getPerms,SysMenu::getHideInMenu,SysMenu::getStatus));
         // 组装菜单树
         return this.getSysMenuTree(sysMenus);

@@ -37,6 +37,8 @@ public interface CommonConstant {
     String BUTTON = "BUTTON";
     // 数据权限
     String DATA_RULE = "DATA_RULE";
+    // online表单
+    String ONLINE_FORM = "ONLINE_FORM";
 
 
     /**
