@@ -702,7 +702,7 @@ public class AMISGeneratorUtils {
             column.put("id", getUuid());
             column.put("type", "input-text");
             column.put("size", "full");
-            column.put("name", fieldDetail.getDbFieldName());
+            column.put("name", StrUtil.toCamelCase(dbFieldName));
             column.put("label", fieldDetail.getDbFieldTxt());
             body.add(column);
         }
