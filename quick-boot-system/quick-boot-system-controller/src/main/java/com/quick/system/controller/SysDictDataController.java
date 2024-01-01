@@ -23,7 +23,8 @@ import java.util.List;
 @RequestMapping("/dictData")
 @RequiredArgsConstructor
 @Tag(name = "字典数据信息")
-@PreAuth(replace = "system:sys_dict_data:")
+//@PreAuth(replace = "system:sys_dict_data:")
+@PreAuth(replace = "system:sys_dict:")
 public class SysDictDataController extends SuperController<ISysDictDataService, SysDictData, String> {
     @GetMapping(value = "/queryDictDataByDictCode")
     @Operation(summary = "通过字典code获取字典数据", description = "通过字典code获取字典数据")
