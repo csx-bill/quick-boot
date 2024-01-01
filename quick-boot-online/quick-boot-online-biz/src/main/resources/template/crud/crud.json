@@ -23,7 +23,8 @@
       "primaryField": "id",
       "syncLocation": true,
       "footerToolbar": [],
-      "headerToolbar": []
+      "headerToolbar": [],
+      "showHeader": true
     }
   ],
   "style": {
