@@ -3,7 +3,7 @@ package com.quick.system.entity;
 import com.baomidou.mybatisplus.annotation.SqlCondition;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.quick.common.aspect.annotation.Dict;
-import com.quick.common.entity.BaseEntity;
+import com.quick.common.entity.TreeEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,11 +16,9 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Schema(name = "菜单信息")
-public class SysMenu extends BaseEntity implements Serializable {
+public class SysMenu extends TreeEntity<SysMenu,String> implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    @Schema(description = "父id")
-    private String parentId;
 
     @TableField(condition = SqlCondition.LIKE)
     @Schema(description = "菜单名称")

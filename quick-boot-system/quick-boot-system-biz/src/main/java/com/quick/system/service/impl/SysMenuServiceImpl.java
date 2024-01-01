@@ -1,6 +1,5 @@
 package com.quick.system.service.impl;
 
-import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.quick.common.constant.CommonConstant;
@@ -9,7 +8,6 @@ import com.quick.common.util.SuperAdminUtils;
 import com.quick.system.entity.SysMenu;
 import com.quick.system.mapper.SysMenuMapper;
 import com.quick.system.service.ISysMenuService;
-import com.quick.system.vo.SysMenuTreeVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -25,7 +23,7 @@ import java.util.stream.Collectors;
 public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> implements ISysMenuService {
 
     @Override
-    public List<SysMenuTreeVO> getRoutes() {
+    public List<SysMenu> getRoutes() {
         List<SysMenu> sysMenus = list(new LambdaQueryWrapper<SysMenu>().eq(SysMenu::getStatus,CommonConstant.A).in(SysMenu::getMenuType,CommonConstant.MENU,CommonConstant.DIR,CommonConstant.ONLINE_FORM)
                 .select(BaseEntity::getId,SysMenu::getParentId,SysMenu::getMenuType,SysMenu::getName,SysMenu::getPath,SysMenu::getPerms,SysMenu::getHideInMenu,SysMenu::getStatus));
         // 组装菜单树
@@ -44,7 +42,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
      * @return
      */
     @Override
-    public List<SysMenuTreeVO> getUserMenuTree(String userId) {
+    public List<SysMenu> getUserMenuTree(String userId) {
         List<SysMenu> sysMenus = getUserMenu(userId);
         // 组装菜单树
         return this.getSysMenuTree(sysMenus);
@@ -62,14 +60,11 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
      * @return
      */
     @Override
-    public List<SysMenuTreeVO> getSysMenuTree(List<SysMenu> sysMenuList) {
-        //集合拷贝
-        List<SysMenuTreeVO> list = JSON.parseArray(JSON.toJSONString(sysMenuList), SysMenuTreeVO.class);
-
+    public List<SysMenu> getSysMenuTree(List<SysMenu> sysMenuList) {
         //获取父节点
-        List<SysMenuTreeVO> treeVOList = list.stream().filter(m -> CommonConstant.PARENTID.equals(m.getParentId())).map(
+        List<SysMenu> treeVOList = sysMenuList.stream().filter(m -> CommonConstant.PARENTID.equals(m.getParentId())).map(
                 (m) -> {
-                    m.setChildren(getChildren(m, list));
+                    m.setChildren(getChildren(m, sysMenuList));
                     return m;
                 }
         ).collect(Collectors.toList());
@@ -85,8 +80,8 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
      * @return 根节点信息
      */
     @Override
-    public List<SysMenuTreeVO> getChildren(SysMenuTreeVO root, List<SysMenuTreeVO> sysMenuList) {
-        List<SysMenuTreeVO> children = sysMenuList.stream().filter(m -> {
+    public List<SysMenu> getChildren(SysMenu root, List<SysMenu> sysMenuList) {
+        List<SysMenu> children = sysMenuList.stream().filter(m -> {
             return Objects.equals(m.getParentId(), root.getId());
         }).map(
                 (m) -> {

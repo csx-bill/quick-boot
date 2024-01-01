@@ -11,7 +11,6 @@ import com.quick.common.vo.Result;
 import com.quick.system.entity.SysMenu;
 import com.quick.system.service.ISysMenuService;
 import com.quick.system.vo.MenuSchemaVO;
-import com.quick.system.vo.SysMenuTreeVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -31,29 +30,29 @@ public class SysMenuController extends SuperController<ISysMenuService, SysMenu,
 
     @GetMapping(value = "/getRoutes")
     @Operation(summary = "查询所有路由", description = "查询所有路由")
-    public Result<List<SysMenuTreeVO>> getRoutes() {
+    public Result<List<SysMenu>> getRoutes() {
         return Result.success(baseService.getRoutes());
     }
 
     @GetMapping(value = "/getUserMenuTree")
     @Operation(summary = "查询当前登录用户拥有的菜单树和按钮权限", description = "查询当前登录用户拥有的菜单树和按钮权限")
-    public Result<List<SysMenuTreeVO>> getUserMenuTree() {
+    public Result<List<SysMenu>> getUserMenuTree() {
         String userId = StpUtil.getLoginId().toString();
         return Result.success(baseService.getUserMenuTree(userId));
     }
 
     @PostMapping(value = "/getSysMenuTreeSearch")
     @Operation(summary = "条件获取系统菜单树和按钮权限", description = "条件获取系统菜单树和按钮权限")
-    public Result<List<SysMenuTreeVO>> getSysMenuTreeSearch(@RequestBody SysMenu entity) {
+    public Result<List<SysMenu>> getSysMenuTreeSearch(@RequestBody SysMenu entity) {
         List<SysMenu> sysMenuList = baseService.getSysMenu(entity);
-        List<SysMenuTreeVO> sysMenuTree = baseService.getSysMenuTree(sysMenuList);
+        List<SysMenu> sysMenuTree = baseService.getSysMenuTree(sysMenuList);
         return Result.success(sysMenuTree);
     }
 
     @GetMapping(value = "/getSysMenuTree")
     @Operation(summary = "获取系统菜单树和按钮权限", description = "获取系统菜单树和按钮权限")
-    public Result<List<SysMenuTreeVO>> getSysMenuTree() {
-        List<SysMenuTreeVO> sysMenuTree = baseService.getSysMenuTree(baseService.list());
+    public Result<List<SysMenu>> getSysMenuTree() {
+        List<SysMenu> sysMenuTree = baseService.getSysMenuTree(baseService.list());
         return Result.success(sysMenuTree);
     }
 

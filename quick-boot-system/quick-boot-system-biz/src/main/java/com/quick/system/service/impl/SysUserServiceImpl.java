@@ -8,12 +8,12 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.quick.common.constant.CommonConstant;
 import com.quick.common.exception.BizException;
 import com.quick.common.util.SuperAdminUtils;
+import com.quick.system.entity.SysMenu;
 import com.quick.system.entity.SysUser;
 import com.quick.system.mapper.SysUserMapper;
 import com.quick.system.req.AuthorizedUserPageParam;
 import com.quick.system.service.ISysMenuService;
 import com.quick.system.service.ISysUserService;
-import com.quick.system.vo.SysMenuTreeVO;
 import com.quick.system.vo.UserInfoVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -103,7 +103,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         // 按钮权限
         List<String> permsCode = sysMenuService.getUserButton(userId);
         userInfoVO.setPermsCode(permsCode);
-        List<SysMenuTreeVO> userMenuTree = sysMenuService.getUserMenuTree(userId);
+        List<SysMenu> userMenuTree = sysMenuService.getUserMenuTree(userId);
         userInfoVO.setUserMenuTree(userMenuTree);
         return userInfoVO;
     }

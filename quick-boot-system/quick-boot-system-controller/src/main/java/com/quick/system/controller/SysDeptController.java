@@ -6,7 +6,6 @@ import com.quick.common.controller.SuperController;
 import com.quick.common.vo.Result;
 import com.quick.system.entity.SysDept;
 import com.quick.system.service.ISysDeptService;
-import com.quick.system.vo.SysDeptTreeVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -26,13 +25,13 @@ public class SysDeptController extends SuperController<ISysDeptService, SysDept,
 
     @GetMapping(value = "/getDeptTree")
     @Operation(summary = "查询部门树", description = "查询部门树")
-    public Result<List<SysDeptTreeVO>> getDeptTree() {
+    public Result<List<SysDept>> getDeptTree() {
         return Result.success(baseService.getDeptTree());
     }
 
     @PostMapping(value = "/getDeptTreeSearch")
     @Operation(summary = "条件获取部门树", description = "条件获取部门树")
-    public Result<List<SysDeptTreeVO>> getDeptTreeSearch(@RequestBody SysDept entity) {
+    public Result<List<SysDept>> getDeptTreeSearch(@RequestBody SysDept entity) {
         return Result.success(baseService.getSysDeptTree(
                 baseService.list(new LambdaQueryWrapper(entity))
         ));

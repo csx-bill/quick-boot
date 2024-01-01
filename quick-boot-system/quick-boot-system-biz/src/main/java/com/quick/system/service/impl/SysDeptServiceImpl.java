@@ -1,11 +1,9 @@
 package com.quick.system.service.impl;
 
-import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.quick.system.entity.SysDept;
 import com.quick.system.mapper.SysDeptMapper;
 import com.quick.system.service.ISysDeptService;
-import com.quick.system.vo.SysDeptTreeVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,20 +19,17 @@ import java.util.stream.Collectors;
 public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> implements ISysDeptService {
 
     @Override
-    public List<SysDeptTreeVO> getDeptTree() {
+    public List<SysDept> getDeptTree() {
         // 组装部门树
         return this.getSysDeptTree(super.list());
     }
 
     @Override
-    public List<SysDeptTreeVO> getSysDeptTree(List<SysDept> sysDeptList) {
-        //集合拷贝
-        List<SysDeptTreeVO> list = JSON.parseArray(JSON.toJSONString(sysDeptList), SysDeptTreeVO.class);
-
+    public List<SysDept> getSysDeptTree(List<SysDept> sysDeptList) {
         //获取父节点
-        List<SysDeptTreeVO> treeVOList = list.stream().filter(m -> "0".equals(m.getParentId())).map(
+        List<SysDept> treeVOList = sysDeptList.stream().filter(m -> "0".equals(m.getParentId())).map(
                 (m) -> {
-                    m.setChildren(getChildren(m, list));
+                    m.setChildren(getChildren(m, sysDeptList));
                     return m;
                 }
         ).collect(Collectors.toList());
@@ -43,8 +38,8 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> impl
     }
 
     @Override
-    public List<SysDeptTreeVO> getChildren(SysDeptTreeVO root, List<SysDeptTreeVO> sysDeptList) {
-        List<SysDeptTreeVO> children = sysDeptList.stream().filter(m -> {
+    public List<SysDept> getChildren(SysDept root, List<SysDept> sysDeptList) {
+        List<SysDept> children = sysDeptList.stream().filter(m -> {
             return Objects.equals(m.getParentId(), root.getId());
         }).map(
                 (m) -> {
