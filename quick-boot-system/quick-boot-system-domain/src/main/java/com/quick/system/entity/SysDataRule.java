@@ -26,6 +26,7 @@ public class SysDataRule extends BaseEntity implements Serializable {
     @Schema(description = "字段")
     private String ruleColumn;
 
+    @Dict(dictCode = "sys_data_rule_conditions")
     @Schema(description = "条件")
     private String ruleConditions;
 
