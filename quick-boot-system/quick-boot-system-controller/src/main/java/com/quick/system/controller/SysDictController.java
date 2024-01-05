@@ -3,6 +3,9 @@ package com.quick.system.controller;
 
 import com.quick.common.aspect.annotation.PreAuth;
 import com.quick.common.controller.SuperController;
+import com.quick.system.dto.SysDictPageQuery;
+import com.quick.system.dto.SysDictSaveDTO;
+import com.quick.system.dto.SysDictUpdateDTO;
 import com.quick.system.entity.SysDict;
 import com.quick.system.service.ISysDictService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -18,6 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @Tag(name = "字典信息")
 @PreAuth(replace = "system:sys_dict:")
-public class SysDictController extends SuperController<ISysDictService, SysDict, String> {
+public class SysDictController extends SuperController<ISysDictService, String, SysDict, SysDictPageQuery, SysDictSaveDTO, SysDictUpdateDTO> {
 
 }

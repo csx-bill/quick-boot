@@ -6,8 +6,7 @@ import com.quick.common.aspect.annotation.PreAuth;
 import com.quick.common.controller.SuperController;
 import com.quick.common.vo.Result;
 
-import com.quick.online.dto.AccessVO;
-import com.quick.online.dto.SyncDTO;
+import com.quick.online.dto.*;
 import com.quick.online.entity.Access;
 import com.quick.online.service.IAccessService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,7 +26,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Tag(name = "权限配置")
 @PreAuth(replace = "online:access:")
-public class AccessController extends SuperController<IAccessService, Access, String> {
+public class AccessController extends SuperController<IAccessService, String, Access, AccessPageQuery, AccessSaveDTO, AccessUpdateDTO> {
 
 
     @GetMapping(value = "/list")

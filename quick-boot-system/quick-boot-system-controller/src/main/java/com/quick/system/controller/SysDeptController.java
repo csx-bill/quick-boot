@@ -4,6 +4,9 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.quick.common.aspect.annotation.PreAuth;
 import com.quick.common.controller.SuperController;
 import com.quick.common.vo.Result;
+import com.quick.system.dto.SysDeptPageQuery;
+import com.quick.system.dto.SysDeptSaveDTO;
+import com.quick.system.dto.SysDeptUpdateDTO;
 import com.quick.system.entity.SysDept;
 import com.quick.system.service.ISysDeptService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,7 +24,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Tag(name = "部门信息")
 @PreAuth(replace = "system:sys_dept:")
-public class SysDeptController extends SuperController<ISysDeptService, SysDept, String> {
+public class SysDeptController extends SuperController<ISysDeptService, String, SysDept, SysDeptPageQuery, SysDeptSaveDTO, SysDeptUpdateDTO> {
 
     @GetMapping(value = "/getDeptTree")
     @Operation(summary = "查询部门树", description = "查询部门树")

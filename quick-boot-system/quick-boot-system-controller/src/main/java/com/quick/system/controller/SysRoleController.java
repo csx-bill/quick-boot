@@ -7,6 +7,9 @@ import com.quick.common.aspect.annotation.PreAuth;
 import com.quick.common.constant.CacheConstant;
 import com.quick.common.controller.SuperController;
 import com.quick.common.vo.Result;
+import com.quick.system.dto.SysRolePageQuery;
+import com.quick.system.dto.SysRoleSaveDTO;
+import com.quick.system.dto.SysRoleUpdateDTO;
 import com.quick.system.entity.SysRole;
 import com.quick.system.entity.SysUser;
 import com.quick.system.entity.SysUserRole;
@@ -33,7 +36,7 @@ import java.util.Arrays;
 @RequiredArgsConstructor
 @Tag(name = "角色信息")
 @PreAuth(replace = "system:sys_role:")
-public class SysRoleController extends SuperController<ISysRoleService, SysRole,String> {
+public class SysRoleController extends SuperController<ISysRoleService, String, SysRole, SysRolePageQuery, SysRoleSaveDTO, SysRoleUpdateDTO> {
 
     private final ISysUserService sysUserService;
     private final ISysUserRoleService sysUserRoleService;

@@ -2,6 +2,7 @@ package com.quick.online.controller;
 
 import com.quick.common.aspect.annotation.PreAuth;
 import com.quick.common.controller.SuperController;
+import com.quick.online.dto.*;
 import com.quick.online.entity.Function;
 import com.quick.online.service.IFunctionService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -17,6 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @Tag(name = "远程函数")
 @PreAuth(replace = "online:function:")
-public class FunctionController extends SuperController<IFunctionService, Function, String> {
+public class FunctionController extends SuperController<IFunctionService, String, Function, FunctionPageQuery, FunctionSaveDTO, FunctionUpdateDTO> {
 
 }

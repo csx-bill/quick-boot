@@ -8,6 +8,9 @@ import com.quick.common.aspect.annotation.PreAuth;
 import com.quick.common.constant.CommonConstant;
 import com.quick.common.controller.SuperController;
 import com.quick.common.vo.Result;
+import com.quick.system.dto.SysMenuPageQuery;
+import com.quick.system.dto.SysMenuSaveDTO;
+import com.quick.system.dto.SysMenuUpdateDTO;
 import com.quick.system.entity.SysMenu;
 import com.quick.system.service.ISysMenuService;
 import com.quick.system.vo.MenuSchemaVO;
@@ -26,7 +29,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Tag(name = "菜单信息")
 @PreAuth(replace = "system:sys_menu:")
-public class SysMenuController extends SuperController<ISysMenuService, SysMenu, String> {
+public class SysMenuController extends SuperController<ISysMenuService, String, SysMenu, SysMenuPageQuery, SysMenuSaveDTO, SysMenuUpdateDTO> {
 
     @GetMapping(value = "/getRoutes")
     @Operation(summary = "查询所有路由", description = "查询所有路由")

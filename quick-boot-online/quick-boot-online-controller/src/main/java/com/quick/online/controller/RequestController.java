@@ -2,6 +2,7 @@ package com.quick.online.controller;
 
 import com.quick.common.aspect.annotation.PreAuth;
 import com.quick.common.controller.SuperController;
+import com.quick.online.dto.*;
 import com.quick.online.entity.Request;
 import com.quick.online.service.IRequestService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -16,6 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @Tag(name = "请求参数校验配置")
 @PreAuth(replace = "online:request:")
-public class RequestController extends SuperController<IRequestService, Request, String> {
+public class RequestController extends SuperController<IRequestService, String, Request, RequestPageQuery, RequestSaveDTO, RequestUpdateDTO> {
 
 }

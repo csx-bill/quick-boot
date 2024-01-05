@@ -4,6 +4,9 @@ import cn.dev33.satoken.stp.StpUtil;
 import com.quick.common.aspect.annotation.PreAuth;
 import com.quick.common.controller.SuperController;
 import com.quick.common.vo.Result;
+import com.quick.system.dto.SysUserPageQuery;
+import com.quick.system.dto.SysUserSaveDTO;
+import com.quick.system.dto.SysUserUpdateDTO;
 import com.quick.system.entity.SysUser;
 import com.quick.system.service.ISysUserService;
 import com.quick.system.vo.UserInfoVO;
@@ -22,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @Tag(name = "用户信息")
 @PreAuth(replace = "system:sys_user:")
-public class SysUserController extends SuperController<ISysUserService, SysUser, String> {
+public class SysUserController extends SuperController<ISysUserService, String, SysUser, SysUserPageQuery, SysUserSaveDTO, SysUserUpdateDTO> {
 
     @GetMapping(value = "/getUserInfo")
     @Operation(summary = "获取当前用户信息", description = "获取当前用户信息")
