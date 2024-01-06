@@ -8,10 +8,12 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.quick.common.constant.CommonConstant;
 import com.quick.common.exception.BizException;
 import com.quick.common.util.SuperAdminUtils;
+import com.quick.system.entity.SysDept;
 import com.quick.system.entity.SysMenu;
 import com.quick.system.entity.SysUser;
 import com.quick.system.mapper.SysUserMapper;
 import com.quick.system.req.AuthorizedUserPageParam;
+import com.quick.system.service.ISysDeptService;
 import com.quick.system.service.ISysMenuService;
 import com.quick.system.service.ISysUserService;
 import com.quick.system.vo.UserInfoVO;
@@ -32,6 +34,7 @@ import java.util.List;
 public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> implements ISysUserService {
 
     final ISysMenuService sysMenuService;
+    final ISysDeptService sysDeptService;
 
     @Override
     public IPage<SysUser> authorizedUserPage(Page<SysUser> page, AuthorizedUserPageParam param) {
@@ -46,7 +49,17 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     @Override
     public <E extends IPage<SysUser>> E page(E page, Wrapper<SysUser> queryWrapper) {
         E pageVo = super.page(page, queryWrapper);
-        pageVo.getRecords().stream().forEach(record -> record.setPassword(null)); // 将每个对象的密码设置为null
+        pageVo.getRecords().stream().forEach(record -> {
+            // 将每个对象的密码设置为null
+            record.setPassword(null);
+            // 赋值部门名称
+            if(StringUtils.hasText(record.getDeptId())){
+                SysDept sysDept = sysDeptService.getById(record.getDeptId());
+                if(sysDept!=null){
+                    record.setDeptName(sysDept.getName());
+                }
+            }
+        });
         return pageVo;
     }
 

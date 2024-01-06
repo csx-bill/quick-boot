@@ -1,5 +1,7 @@
 package com.quick.system.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.quick.common.aspect.annotation.Dict;
 import com.quick.common.entity.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -34,5 +36,12 @@ public class SysUser extends BaseEntity implements Serializable {
     @Dict(dictCode = "sys_user_status")
     @Schema(description = "状态")
     private String status;
+
+    @Schema(description = "部门ID")
+    private String deptId;
+
+    @Schema(description = "部门名称")
+    @TableField(exist = false)
+    private String deptName;
 
 }

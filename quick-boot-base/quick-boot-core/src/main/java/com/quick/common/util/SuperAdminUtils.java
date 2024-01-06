@@ -12,4 +12,14 @@ public class SuperAdminUtils {
     public static boolean isSuperAdmin(String userId){
         return userId.equals("1");
     }
+
+    /**
+     * 超级租户
+     * @param tenantId
+     * @return
+     */
+    public static boolean isSuperTenant(String tenantId){
+        return tenantId.equals("1");
+    }
+
 }
