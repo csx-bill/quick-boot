@@ -19,13 +19,13 @@ public class SysUserApiFallback implements ISysUserApi {
     }
 
     @Override
-    public Result<List<String>> getUserRole(String userId) {
+    public Result<List<Long>> getUserRole(Long userId) {
         log.error("请求失败 {}", cause);
         return null;
     }
 
     @Override
-    public Result<List<String>> getUserRolePermission(String roleId) {
+    public Result<List<Long>> getUserRolePermission(Long roleId) {
         log.error("请求失败 {}", cause);
         return null;
     }

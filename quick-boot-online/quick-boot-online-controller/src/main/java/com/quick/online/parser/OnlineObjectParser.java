@@ -29,7 +29,7 @@ import java.util.List;
 /**
  * 统一处理 创建人 创建时间 更新人 更新时间 自动填充
  */
-public class OnlineObjectParser extends APIJSONObjectParser<String> {
+public class OnlineObjectParser extends APIJSONObjectParser<Long> {
     public OnlineObjectParser(HttpSession session, JSONObject request, String parentPath, SQLConfig arrayConfig, boolean isSubquery, boolean isTable, boolean isArrayMainTable) throws Exception {
         super(session, request, parentPath, arrayConfig, isSubquery, isTable, isArrayMainTable);
     }
@@ -42,11 +42,11 @@ public class OnlineObjectParser extends APIJSONObjectParser<String> {
 
         if (request != null && method == RequestMethod.POST) {
             request.put(CommonConstant.CREATE_TIME, LocalDateTime.now());
-            request.put(CommonConstant.CREATE_BY, StpUtil.getLoginIdAsString());
+            request.put(CommonConstant.CREATE_BY, StpUtil.getLoginIdAsLong());
         }
         if(request != null && method == RequestMethod.PUT){
             request.put(CommonConstant.UPDATE_TIME, LocalDateTime.now());
-            request.put(CommonConstant.UPDATE_BY, StpUtil.getLoginIdAsString());
+            request.put(CommonConstant.UPDATE_BY, StpUtil.getLoginIdAsLong());
         }
 
         if(request != null && method == RequestMethod.GET){

@@ -16,7 +16,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Schema(name = "菜单信息")
-public class SysMenu extends TreeEntity<SysMenu,String> implements Serializable {
+public class SysMenu extends TreeEntity<SysMenu,Long> implements Serializable {
     private static final long serialVersionUID = 1L;
 
 

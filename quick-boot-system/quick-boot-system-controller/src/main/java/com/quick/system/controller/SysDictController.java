@@ -21,6 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @Tag(name = "字典信息")
 @PreAuth(replace = "system:sys_dict:")
-public class SysDictController extends SuperController<ISysDictService, String, SysDict, SysDictPageQuery, SysDictSaveDTO, SysDictUpdateDTO> {
+public class SysDictController extends SuperController<ISysDictService, Long, SysDict, SysDictPageQuery, SysDictSaveDTO, SysDictUpdateDTO> {
 
 }

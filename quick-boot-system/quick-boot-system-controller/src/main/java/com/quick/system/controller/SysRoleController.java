@@ -36,7 +36,7 @@ import java.util.Arrays;
 @RequiredArgsConstructor
 @Tag(name = "角色信息")
 @PreAuth(replace = "system:sys_role:")
-public class SysRoleController extends SuperController<ISysRoleService, String, SysRole, SysRolePageQuery, SysRoleSaveDTO, SysRoleUpdateDTO> {
+public class SysRoleController extends SuperController<ISysRoleService, Long, SysRole, SysRolePageQuery, SysRoleSaveDTO, SysRoleUpdateDTO> {
 
     private final ISysUserService sysUserService;
     private final ISysUserRoleService sysUserRoleService;
@@ -45,7 +45,7 @@ public class SysRoleController extends SuperController<ISysRoleService, String, 
     @GetMapping(value = "/getRolePermissions")
     @Operation(summary = "查询角色权限", description = "查询角色权限")
     @Parameter(name = "id",required = true,description = "角色ID")
-    public Result<RolePermissionsVO> getRolePermissions(@RequestParam("id") String id) {
+    public Result<RolePermissionsVO> getRolePermissions(@RequestParam("id") Long id) {
         return Result.success(baseService.getRolePermissions(id));
     }
 
@@ -112,7 +112,7 @@ public class SysRoleController extends SuperController<ISysRoleService, String, 
                     @Parameter(name = "userIds",required = true,description = "用户ID 多个逗号拼接")
             }
     )
-    public Result<Boolean> batchAuthorizedUser(@RequestParam("roleId") String roleId,@RequestParam("userIds")String userIds) {
+    public Result<Boolean> batchAuthorizedUser(@RequestParam("roleId") Long roleId,@RequestParam("userIds")String userIds) {
         return Result.success(sysUserRoleService.batchAuthorizedUser(roleId,userIds));
     }
 }

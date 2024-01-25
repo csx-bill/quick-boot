@@ -35,7 +35,7 @@ public class SysDataRuleApiServiceImpl  implements ISysDataRuleApiService {
         // 查询当前访问菜单id
         SysMenu sysMenu = sysMenuMapper.selectOne(new LambdaQueryWrapper<SysMenu>().eq(SysMenu::getPath, menuPath));
         if(sysMenu!=null){
-            String parentId = sysMenu.getId();
+            Long parentId = sysMenu.getId();
             // 查询当前菜单下 为 数据权限 并且 接口地址为 apiPath
             List<SysMenu> sysMenus = sysMenuMapper.selectList(new LambdaQueryWrapper<SysMenu>()
                     .eq(SysMenu::getMenuType, CommonConstant.DATA_RULE)
@@ -43,7 +43,7 @@ public class SysDataRuleApiServiceImpl  implements ISysDataRuleApiService {
                     .eq(SysMenu::getPath,apiPath)
             );
 
-            List<String> menuIds = sysMenus.stream().map(BaseEntity::getId).collect(Collectors.toList());
+            List<Long> menuIds = sysMenus.stream().map(BaseEntity::getId).collect(Collectors.toList());
             if(!CollectionUtils.isEmpty(menuIds)){
                 return sysDataRuleMapper.selectList(new LambdaQueryWrapper<SysDataRule>()
                         .in(SysDataRule::getMenuId,menuIds)

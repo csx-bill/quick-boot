@@ -20,9 +20,9 @@ public interface ISysUserApi extends ISysUserBaseApi {
 
     @GetMapping("/user/api/getUserRole")
     @Override
-    Result<List<String>> getUserRole(@RequestParam(value = "userId") String userId);
+    Result<List<Long>> getUserRole(@RequestParam(value = "userId") Long userId);
 
     @GetMapping("/user/api/getUserRolePermission")
     @Override
-    Result<List<String>> getUserRolePermission(@RequestParam(value = "roleId") String roleId);
+    Result<List<Long>> getUserRolePermission(@RequestParam(value = "roleId") Long roleId);
 }

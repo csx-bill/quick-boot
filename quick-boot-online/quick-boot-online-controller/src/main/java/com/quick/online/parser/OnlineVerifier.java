@@ -9,7 +9,7 @@ import com.alibaba.fastjson.JSONObject;
 /**
  * 权限校验器
  */
-public class OnlineVerifier extends APIJSONRouterVerifier<String> {
+public class OnlineVerifier extends APIJSONRouterVerifier<Long> {
     public static final String TAG = "OnlineVerifier";
 
 

@@ -15,5 +15,5 @@ public class RolePermissionsVO {
     @Schema(description = "权限ID")
     private String permissions;
     @Schema(description = "角色ID")
-    private String roleId;
+    private Long roleId;
 }

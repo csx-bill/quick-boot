@@ -10,7 +10,7 @@ import com.quick.common.constant.CommonConstant;
 import com.quick.common.util.SpringBeanUtils;
 import io.micrometer.tracing.Tracer;
 
-public class OnlineParser extends APIJSONParser<String> {
+public class OnlineParser extends APIJSONParser<Long> {
     public OnlineParser() {
         super();
     }
@@ -30,7 +30,7 @@ public class OnlineParser extends APIJSONParser<String> {
     }
 
     @Override
-    public APIJSONObjectParser<String> createObjectParser(JSONObject request, String parentPath, SQLConfig arrayConfig, boolean isSubquery, boolean isTable, boolean isArrayMainTable) throws Exception {
+    public APIJSONObjectParser<Long> createObjectParser(JSONObject request, String parentPath, SQLConfig arrayConfig, boolean isSubquery, boolean isTable, boolean isArrayMainTable) throws Exception {
         return new OnlineObjectParser(getSession(),request, parentPath, arrayConfig, isSubquery, isTable, isArrayMainTable).setMethod(getMethod()).setParser(this);
     }
 

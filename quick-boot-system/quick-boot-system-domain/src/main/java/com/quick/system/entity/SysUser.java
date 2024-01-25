@@ -38,7 +38,7 @@ public class SysUser extends BaseEntity implements Serializable {
     private String status;
 
     @Schema(description = "部门ID")
-    private String deptId;
+    private Long deptId;
 
     @Schema(description = "部门名称")
     @TableField(exist = false)

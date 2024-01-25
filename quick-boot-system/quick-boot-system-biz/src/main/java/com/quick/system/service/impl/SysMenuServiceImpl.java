@@ -31,7 +31,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
     }
 
     @Override
-    public List<SysMenu> queryByUser(String userId) {
+    public List<SysMenu> queryByUser(Long userId) {
         return baseMapper.queryByUser(userId);
     }
 
@@ -42,7 +42,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
      * @return
      */
     @Override
-    public List<SysMenu> getUserMenuTree(String userId) {
+    public List<SysMenu> getUserMenuTree(Long userId) {
         List<SysMenu> sysMenus = getUserMenu(userId);
         // 组装菜单树
         return this.getSysMenuTree(sysMenus);
@@ -98,7 +98,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
      * @return
      */
     @Override
-    public List<SysMenu> getUserMenu(String userId) {
+    public List<SysMenu> getUserMenu(Long userId) {
         List<SysMenu> sysMenus = new ArrayList<>();
         // 超级管理员拥有所有权限
         if (SuperAdminUtils.isSuperAdmin(userId)) {
@@ -116,7 +116,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
      * @return
      */
     @Override
-    public List<String> getUserButton(String userId) {
+    public List<String> getUserButton(Long userId) {
         List<SysMenu> sysMenus = getUserMenu(userId);
         //按钮权限
         List<String> permsCode = sysMenus.stream().filter(m -> m.getMenuType().equals(CommonConstant.BUTTON)).map(

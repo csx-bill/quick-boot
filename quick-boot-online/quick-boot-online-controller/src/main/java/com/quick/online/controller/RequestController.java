@@ -17,6 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @Tag(name = "请求参数校验配置")
 @PreAuth(replace = "online:request:")
-public class RequestController extends SuperController<IRequestService, String, Request, RequestPageQuery, RequestSaveDTO, RequestUpdateDTO> {
+public class RequestController extends SuperController<IRequestService, Long, Request, RequestPageQuery, RequestSaveDTO, RequestUpdateDTO> {
 
 }

@@ -28,7 +28,7 @@ import java.util.List;
 @Tag(name = "字典数据信息")
 //@PreAuth(replace = "system:sys_dict_data:")
 @PreAuth(replace = "system:sys_dict:")
-public class SysDictDataController extends SuperController<ISysDictDataService, String, SysDictData, SysDictDataPageQuery, SysDictDataSaveDTO, SysDictDataUpdateDTO> {
+public class SysDictDataController extends SuperController<ISysDictDataService, Long, SysDictData, SysDictDataPageQuery, SysDictDataSaveDTO, SysDictDataUpdateDTO> {
     @GetMapping(value = "/queryDictDataByDictCode")
     @Operation(summary = "通过字典code获取字典数据", description = "通过字典code获取字典数据")
     public Result<List<SysDictData>> queryDictDataByDictCode(@RequestParam("dictCode") String dictCode) {

@@ -25,12 +25,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @Tag(name = "用户信息")
 @PreAuth(replace = "system:sys_user:")
-public class SysUserController extends SuperController<ISysUserService, String, SysUser, SysUserPageQuery, SysUserSaveDTO, SysUserUpdateDTO> {
+public class SysUserController extends SuperController<ISysUserService, Long, SysUser, SysUserPageQuery, SysUserSaveDTO, SysUserUpdateDTO> {
 
     @GetMapping(value = "/getUserInfo")
     @Operation(summary = "获取当前用户信息", description = "获取当前用户信息")
     public Result<UserInfoVO> getUserInfo() {
-        String userId = StpUtil.getLoginId().toString();
-        return Result.success(baseService.getUserInfo(userId));
+        return Result.success(baseService.getUserInfo(StpUtil.getLoginIdAsLong()));
     }
 }

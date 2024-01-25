@@ -3,6 +3,10 @@ package com.quick.online.config;
 import apijson.JSONRequest;
 import apijson.RequestMethod;
 import apijson.framework.APIJSONSQLConfig;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.quick.common.util.SpringBeanUtils;
+import com.quick.online.entity.Access;
+import com.quick.online.service.IAccessService;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,7 +15,7 @@ import java.util.Map;
 
 @Slf4j
 @Component
-public class OnlineSQLConfig extends APIJSONSQLConfig<String> {
+public class OnlineSQLConfig extends APIJSONSQLConfig<Long> {
     public OnlineSQLConfig() {
         super();
     }
@@ -25,6 +29,12 @@ public class OnlineSQLConfig extends APIJSONSQLConfig<String> {
     private static String defaultSchema;
 
     private static String dbVersion;
+
+    private static String dbUri;
+
+    private static String dbAccount;
+
+    private static String dbPassword;
 
     @Value("${mysql-server.default-database}")
     public void setDefaultDatabase(String defaultDatabase) {
@@ -41,11 +51,41 @@ public class OnlineSQLConfig extends APIJSONSQLConfig<String> {
         OnlineSQLConfig.dbVersion = dbVersion;
     }
 
+    @Value("${mysql-server.address}")
+    public void setDBUri(String dbUri) {
+        this.dbUri = dbUri;
+    }
+
+    @Value("${mysql-server.username}")
+    public void setDBAccount(String dbAccount) {
+        this.dbAccount = dbAccount;
+    }
+
+    @Value("${mysql-server.password}")
+    public void setDBPassword(String dbPassword) {
+        this.dbPassword = dbPassword;
+    }
+
 
     @PostConstruct
     public void init() {
         DEFAULT_DATABASE = defaultDatabase;  // TODO 默认数据库类型
         DEFAULT_SCHEMA = defaultSchema;  // TODO 默认数据库名
+    }
+
+    @Override
+    public String getDBUri() {
+        return dbUri;
+    }
+
+    @Override
+    public String getDBAccount() {
+        return dbAccount;
+    }
+
+    @Override
+    public String getDBPassword() {
+        return dbPassword;
     }
 
     /**
@@ -85,5 +125,26 @@ public class OnlineSQLConfig extends APIJSONSQLConfig<String> {
         String t = super.getSQLTable();
         return isInfluxDB() ? t.toLowerCase() : JSONRequest.recoverUnderline(t, false);
     }
+
+    /**
+     * 实现跨库查询
+     * @return
+     */
+    @Override
+    public String getSQLSchema() {
+        // 查找表的数据库
+        IAccessService accessService = SpringBeanUtils.getBean(IAccessService.class);
+        Access access = accessService.getOne(new LambdaQueryWrapper<Access>().eq(Access::getAlias, this.getTable()));
+        String schema = access.getSchema();
+        return schema;
+    }
+
+
+    // 取消注释后，默认的数据库类型会由 MySQL 改为 PostgreSQL
+    	@Override
+    	public String getDatabase() {
+    		String db = super.getDatabase();
+    		return db == null ? DATABASE_MYSQL : db;
+    	}
 
 }

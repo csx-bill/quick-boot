@@ -18,6 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @Tag(name = "租户信息")
 @PreAuth(replace = "system:sys_tenant:")
-public class SysTenantController extends SuperController<ISysTenantService, String, SysTenant, SysTenantPageQuery, SysTenantSaveDTO, SysTenantUpdateDTO> {
+public class SysTenantController extends SuperController<ISysTenantService, Long, SysTenant, SysTenantPageQuery, SysTenantSaveDTO, SysTenantUpdateDTO> {
 
 }

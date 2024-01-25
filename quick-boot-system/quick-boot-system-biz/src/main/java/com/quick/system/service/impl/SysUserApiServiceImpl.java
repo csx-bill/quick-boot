@@ -34,14 +34,14 @@ public class SysUserApiServiceImpl implements ISysUserApiService {
 
     @Cacheable(value = CacheConstant.SYS_USER_ROLE_CACHE,key = "#p0", unless = "#result == null ")
     @Override
-    public List<String> getUserRole(String userId) {
+    public List<Long> getUserRole(Long userId) {
         List<SysUserRole> sysUserRoles = sysUserRoleMapper.selectList(new LambdaQueryWrapper<SysUserRole>().eq(SysUserRole::getUserId, userId));
         return sysUserRoles.stream().map(SysUserRole::getRoleId).collect(Collectors.toList());
     }
 
     @Cacheable(value = CacheConstant.SYS_ROLE_PERMISSION_CACHE,key = "#p0", unless = "#result == null ")
     @Override
-    public List<String> getUserRolePermission(String roleId) {
+    public List<String> getUserRolePermission(Long roleId) {
         List<SysMenu> sysRoleMenus = new ArrayList<>();
         // 超级管理员角色拥有所有权限
         if(SuperAdminUtils.isSuperAdmin(roleId)){

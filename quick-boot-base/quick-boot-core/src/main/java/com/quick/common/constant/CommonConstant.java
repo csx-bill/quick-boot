@@ -44,7 +44,7 @@ public interface CommonConstant {
     /**
      * 树结构顶级ID
      */
-    String PARENTID = "0";
+    Long PARENTID = 0L;
 
     /**
      * 在线API前缀

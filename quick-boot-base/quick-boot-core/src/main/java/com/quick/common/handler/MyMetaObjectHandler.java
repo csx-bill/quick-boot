@@ -16,12 +16,12 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
     @Override
     public void insertFill(MetaObject metaObject) {
         this.strictInsertFill(metaObject, CommonConstant.CREATETIME, () -> LocalDateTime.now(), LocalDateTime.class);
-        this.strictInsertFill(metaObject, CommonConstant.CREATEBY, () -> StpUtil.getLoginIdAsString(), String.class);
+        this.strictInsertFill(metaObject, CommonConstant.CREATEBY, () -> StpUtil.getLoginIdAsLong(), Long.class);
     }
 
     @Override
     public void updateFill(MetaObject metaObject) {
         this.strictUpdateFill(metaObject, CommonConstant.UPDATETIME, () -> LocalDateTime.now(), LocalDateTime.class);
-        this.strictUpdateFill(metaObject, CommonConstant.UPDATEBY, () -> StpUtil.getLoginIdAsString(), String.class);
+        this.strictUpdateFill(metaObject, CommonConstant.UPDATEBY, () -> StpUtil.getLoginIdAsLong(), Long.class);
     }
 }

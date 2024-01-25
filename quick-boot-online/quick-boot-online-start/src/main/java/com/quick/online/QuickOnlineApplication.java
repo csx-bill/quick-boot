@@ -50,14 +50,14 @@ public class QuickOnlineApplication {
 
     static {
         // 使用本项目的自定义处理类
-        APIJSONApplication.DEFAULT_APIJSON_CREATOR = new APIJSONCreator<String>() {
+        APIJSONApplication.DEFAULT_APIJSON_CREATOR = new APIJSONCreator<Long>() {
             @Override
             public FunctionParser createFunctionParser() {
                 return new OnlineFunctionParser();
             }
 
             @Override
-            public Parser<String> createParser() {
+            public Parser<Long> createParser() {
                 return new OnlineParser();
             }
 
@@ -72,7 +72,7 @@ public class QuickOnlineApplication {
             }
 
             @Override
-            public Verifier<String> createVerifier() {
+            public Verifier<Long> createVerifier() {
                 return new OnlineVerifier();
             }
         };

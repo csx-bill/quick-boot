@@ -18,6 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @Tag(name = "远程函数")
 @PreAuth(replace = "online:function:")
-public class FunctionController extends SuperController<IFunctionService, String, Function, FunctionPageQuery, FunctionSaveDTO, FunctionUpdateDTO> {
+public class FunctionController extends SuperController<IFunctionService, Long, Function, FunctionPageQuery, FunctionSaveDTO, FunctionUpdateDTO> {
 
 }

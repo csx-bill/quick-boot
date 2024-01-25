@@ -22,7 +22,7 @@ public class Document implements Serializable {
 
     @TableId(type = IdType.AUTO)
     @Schema(description = "ID")
-    private String id;
+    private Long id;
 
     @Schema(description = "是否为 DEBUG: 0-否，1-是。")
     private Integer debug;

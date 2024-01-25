@@ -17,7 +17,7 @@ public class MenuSchemaVO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Schema(description = "ID")
-    private String id;
+    private Long id;
     @Schema(description = "schema")
     private String schema;
 }

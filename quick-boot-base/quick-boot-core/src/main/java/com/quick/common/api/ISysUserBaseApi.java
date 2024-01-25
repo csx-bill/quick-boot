@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 public interface ISysUserBaseApi {
-    Result<List<String>> getUserRole(@RequestParam(value = "userId") String userId);
+    Result<List<Long>> getUserRole(@RequestParam(value = "userId") Long userId);
 
-    Result<List<String>> getUserRolePermission(@RequestParam(value = "roleId") String roleId);
+    Result<List<Long>> getUserRolePermission(@RequestParam(value = "roleId") Long roleId);
 }

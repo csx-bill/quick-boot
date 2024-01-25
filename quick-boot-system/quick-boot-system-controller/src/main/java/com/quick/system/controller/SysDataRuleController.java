@@ -20,6 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @Tag(name = "数据权限")
 @PreAuth(replace = "system:sys_data_rule:")
-public class SysDataRuleController extends SuperController<ISysDataRuleService, String, SysDataRule, SysDataRulePageQuery, SysDataRuleSaveDTO, SysDataRuleUpdateDTO> {
+public class SysDataRuleController extends SuperController<ISysDataRuleService, Long, SysDataRule, SysDataRulePageQuery, SysDataRuleSaveDTO, SysDataRuleUpdateDTO> {
 
 }

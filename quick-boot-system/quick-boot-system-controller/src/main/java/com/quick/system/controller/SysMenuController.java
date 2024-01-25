@@ -29,7 +29,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Tag(name = "菜单信息")
 @PreAuth(replace = "system:sys_menu:")
-public class SysMenuController extends SuperController<ISysMenuService, String, SysMenu, SysMenuPageQuery, SysMenuSaveDTO, SysMenuUpdateDTO> {
+public class SysMenuController extends SuperController<ISysMenuService, Long, SysMenu, SysMenuPageQuery, SysMenuSaveDTO, SysMenuUpdateDTO> {
 
     @GetMapping(value = "/getRoutes")
     @Operation(summary = "查询所有路由", description = "查询所有路由")
@@ -40,8 +40,7 @@ public class SysMenuController extends SuperController<ISysMenuService, String, 
     @GetMapping(value = "/getUserMenuTree")
     @Operation(summary = "查询当前登录用户拥有的菜单树和按钮权限", description = "查询当前登录用户拥有的菜单树和按钮权限")
     public Result<List<SysMenu>> getUserMenuTree() {
-        String userId = StpUtil.getLoginId().toString();
-        return Result.success(baseService.getUserMenuTree(userId));
+        return Result.success(baseService.getUserMenuTree(StpUtil.getLoginIdAsLong()));
     }
 
     @PostMapping(value = "/getSysMenuTreeSearch")
@@ -62,7 +61,7 @@ public class SysMenuController extends SuperController<ISysMenuService, String, 
     @GetMapping(value = "/getSchemaById")
     @Operation(summary = "根据ID获取Schema")
     @Parameter(name = "id",required = true)
-    public Result<MenuSchemaVO> getSchemaById(@RequestParam("id") String id) {
+    public Result<MenuSchemaVO> getSchemaById(@RequestParam("id") Long id) {
         SysMenu sysMenu = baseService.getById(id);
         return Result.success(MenuSchemaVO.builder().id(id).schema(sysMenu.getSchema()).build());
     }

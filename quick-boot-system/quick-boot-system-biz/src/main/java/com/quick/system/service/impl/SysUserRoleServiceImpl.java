@@ -16,12 +16,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SysUserRoleServiceImpl extends ServiceImpl<SysUserRoleMapper, SysUserRole> implements ISysUserRoleService {
     @Override
-    public Boolean batchAuthorizedUser(String roleId, String userIds) {
+    public Boolean batchAuthorizedUser(Long roleId, String userIds) {
         String[] idArray = userIds.split(",");
         List<SysUserRole> userRoleList = new ArrayList<>();
         for (String userId : idArray) {
             SysUserRole sysUserRole = new SysUserRole();
-            sysUserRole.setUserId(userId);
+            sysUserRole.setUserId(Long.parseLong(userId));
             sysUserRole.setRoleId(roleId);
             userRoleList.add(sysUserRole);
         }

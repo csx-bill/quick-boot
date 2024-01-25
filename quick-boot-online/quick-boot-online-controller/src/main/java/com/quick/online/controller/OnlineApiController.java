@@ -30,7 +30,7 @@ import static apijson.framework.APIJSONConstant.REQUEST_;
 @RequestMapping("/crud")
 @RequiredArgsConstructor
 @Tag(name = "增删改查统一接口")
-public class OnlineApiController extends APIJSONRouterController<String> {
+public class OnlineApiController extends APIJSONRouterController<Long> {
 
     public static final String VERIFY = "verify";
 
@@ -38,7 +38,7 @@ public class OnlineApiController extends APIJSONRouterController<String> {
     public static final String VALUE = "value";
 
     @Override
-    public Parser<String> newParser(HttpSession session, RequestMethod method) {
+    public Parser<Long> newParser(HttpSession session, RequestMethod method) {
         return super.newParser(session, method).setNeedVerify(false).setNeedVerifyLogin(false)
                 .setNeedVerifyContent(true);
     }

@@ -18,7 +18,7 @@ public class SysTableColumn extends BaseEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Schema(description = "表权限ID")
-    private String accessId;
+    private Long accessId;
 
     @Schema(description = "字段名字")
     private String dbFieldName;

@@ -21,11 +21,11 @@ public class SysRoleMenu implements Serializable {
 
     @TableId(type = IdType.ASSIGN_ID)
     @Schema(description = "ID")
-    private String id;
+    private Long id;
 
     @Schema(description = "角色id")
-    private String roleId;
+    private Long roleId;
 
     @Schema(description = "菜单id")
-    private String menuId;
+    private Long menuId;
 }

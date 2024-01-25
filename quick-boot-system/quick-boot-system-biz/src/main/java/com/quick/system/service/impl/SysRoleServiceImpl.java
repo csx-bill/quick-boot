@@ -35,7 +35,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
     @CacheEvict(value={CacheConstant.SYS_ROLE_PERMISSION_CACHE}, allEntries=true)
     @Override
     public boolean removeById(Serializable id) {
-        checkRoleAllowed(id.toString());
+        checkRoleAllowed((Long) id);
         return super.removeById(id);
     }
 
@@ -43,7 +43,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
     @Override
     public boolean removeByIds(Collection<?> list) {
         for (Object id : list) {
-            checkRoleAllowed(id.toString());
+            checkRoleAllowed((Long) id);
         }
         return super.removeByIds(list);
     }
@@ -55,18 +55,18 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
     }
 
     @Override
-    public RolePermissionsVO getRolePermissions(String id) {
+    public RolePermissionsVO getRolePermissions(Long id) {
         String permissions = "";
         // 超级管理员角色拥有所有权限
         if(SuperAdminUtils.isSuperAdmin(id)){
             List<SysMenu> list = sysMenuService.list();
             permissions = list.stream()
-                    .map(SysMenu::getId)
+                    .map(sysMenu-> String.valueOf(sysMenu.getId()))
                     .collect(Collectors.joining(","));
         }else {
             List<SysRoleMenu> list = sysRoleMenuService.list(new LambdaQueryWrapper<SysRoleMenu>().eq(SysRoleMenu::getRoleId, id));
             permissions = list.stream()
-                    .map(SysRoleMenu::getMenuId)
+                    .map(sysMenu-> String.valueOf(sysMenu.getId()))
                     .collect(Collectors.joining(","));
         }
         return RolePermissionsVO.builder().roleId(id).permissions(permissions).build();
@@ -81,7 +81,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
         String[] split = vo.getPermissions().split(",");
         List<SysRoleMenu> sysRoleMenus = new ArrayList<>();
         for (String menuId : split) {
-            sysRoleMenus.add(SysRoleMenu.builder().roleId(vo.getRoleId()).menuId(menuId).build());
+            sysRoleMenus.add(SysRoleMenu.builder().roleId(vo.getRoleId()).menuId(Long.parseLong(menuId)).build());
         }
         if(!sysRoleMenus.isEmpty()){
             sysRoleMenuService.saveBatch(sysRoleMenus);
@@ -90,7 +90,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
     }
 
     @Override
-    public void checkRoleAllowed(String roleId) {
+    public void checkRoleAllowed(Long roleId) {
         if (SuperAdminUtils.isSuperAdmin(roleId)) {
             throw new BizException(CommonConstant.SC_INTERNAL_SERVER_ERROR_500,"不允许操作超级管理员角色");
         }

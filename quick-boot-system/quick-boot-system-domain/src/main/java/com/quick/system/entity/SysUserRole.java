@@ -21,11 +21,11 @@ public class SysUserRole implements Serializable {
 
     @TableId(type = IdType.ASSIGN_ID)
     @Schema(description = "ID")
-    private String id;
+    private Long id;
 
     @Schema(description = "角色id")
-    private String roleId;
+    private Long roleId;
 
     @Schema(description = "用户id")
-    private String userId;
+    private Long userId;
 }

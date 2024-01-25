@@ -20,20 +20,20 @@ import java.util.Collection;
 public class SysTenantServiceImpl extends ServiceImpl<SysTenantMapper, SysTenant> implements ISysTenantService {
     @Override
     public boolean removeById(Serializable id) {
-        checkTenantAllowed(id.toString());
+        checkTenantAllowed((Long)id);
         return super.removeById(id);
     }
 
     @Override
     public boolean removeByIds(Collection<?> list) {
         for (Object id : list) {
-            checkTenantAllowed(id.toString());
+            checkTenantAllowed((Long)id);
         }
         return super.removeByIds(list);
     }
 
     @Override
-    public void checkTenantAllowed(String tenantId) {
+    public void checkTenantAllowed(Long tenantId) {
         if (SuperAdminUtils.isSuperAdmin(tenantId)) {
             throw new BizException(CommonConstant.SC_INTERNAL_SERVER_ERROR_500,"不允许操作内置租户");
         }

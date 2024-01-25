@@ -25,7 +25,7 @@ public class BaseEntity implements Serializable {
 
     @TableId(type = IdType.ASSIGN_ID)
     @Schema(description = "ID")
-    private String id;
+    private Long id;
 
     @Schema(description = "创建时间")
     @TableField(fill = FieldFill.INSERT)
@@ -35,7 +35,7 @@ public class BaseEntity implements Serializable {
 
     @Schema(description = "创建人")
     @TableField(fill = FieldFill.INSERT)
-    private String createBy;
+    private Long createBy;
 
     @Schema(description = "更新时间")
     @TableField(fill = FieldFill.UPDATE)
@@ -45,7 +45,7 @@ public class BaseEntity implements Serializable {
 
     @Schema(description = "更新人")
     @TableField(fill = FieldFill.UPDATE)
-    private String updateBy;
+    private Long updateBy;
 
     @JsonIgnore
     @Schema(description = "删除状态")

@@ -24,7 +24,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Tag(name = "部门信息")
 @PreAuth(replace = "system:sys_dept:")
-public class SysDeptController extends SuperController<ISysDeptService, String, SysDept, SysDeptPageQuery, SysDeptSaveDTO, SysDeptUpdateDTO> {
+public class SysDeptController extends SuperController<ISysDeptService, Long, SysDept, SysDeptPageQuery, SysDeptSaveDTO, SysDeptUpdateDTO> {
 
     @GetMapping(value = "/getDeptTree")
     @Operation(summary = "查询部门树", description = "查询部门树")

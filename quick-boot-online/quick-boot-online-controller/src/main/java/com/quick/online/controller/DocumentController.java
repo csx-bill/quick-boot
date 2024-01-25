@@ -17,6 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @Tag(name = "APIJSON接口文档")
 @PreAuth(replace = "online:document:")
-public class DocumentController extends SuperController<IDocumentService, String, Document, DocumentPageQuery, DocumentSaveDTO, DocumentUpdateDTO> {
+public class DocumentController extends SuperController<IDocumentService, Long, Document, DocumentPageQuery, DocumentSaveDTO, DocumentUpdateDTO> {
 
 }

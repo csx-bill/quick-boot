@@ -18,7 +18,7 @@ public class AccessSchema extends BaseEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Schema(description = "表单ID")
-    private String accessId;
+    private Long accessId;
 
     @Schema(description = "schema")
     private String schema;

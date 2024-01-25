@@ -26,6 +26,7 @@ import org.springframework.util.StringUtils;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 
 @Slf4j
@@ -53,9 +54,9 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             // 将每个对象的密码设置为null
             record.setPassword(null);
             // 赋值部门名称
-            if(StringUtils.hasText(record.getDeptId())){
+            if(Optional.ofNullable(record.getDeptId()).isPresent()){
                 SysDept sysDept = sysDeptService.getById(record.getDeptId());
-                if(sysDept!=null){
+                if(Optional.ofNullable(sysDept).isPresent()){
                     record.setDeptName(sysDept.getName());
                 }
             }
@@ -84,14 +85,14 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
     @Override
     public boolean removeById(Serializable id) {
-        checkUserAllowed(id.toString());
+        checkUserAllowed((Long)id);
         return super.removeById(id);
     }
 
     @Override
     public boolean removeByIds(Collection<?> list) {
         for (Object id : list) {
-            checkUserAllowed(id.toString());
+            checkUserAllowed((Long)id);
         }
         return super.removeByIds(list);
     }
@@ -101,14 +102,14 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
      *
      */
     @Override
-    public void checkUserAllowed(String userId) {
+    public void checkUserAllowed(Long userId) {
         if (SuperAdminUtils.isSuperAdmin(userId)) {
             throw new BizException(CommonConstant.SC_INTERNAL_SERVER_ERROR_500,"不允许操作超级管理员用户");
         }
     }
 
     @Override
-    public UserInfoVO getUserInfo(String userId) {
+    public UserInfoVO getUserInfo(Long userId) {
         SysUser sysUser = getById(userId);
         UserInfoVO userInfoVO = new UserInfoVO();
         BeanUtils.copyProperties(sysUser, userInfoVO);

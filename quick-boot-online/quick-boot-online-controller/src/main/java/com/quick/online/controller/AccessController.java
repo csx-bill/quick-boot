@@ -26,7 +26,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Tag(name = "权限配置")
 @PreAuth(replace = "online:access:")
-public class AccessController extends SuperController<IAccessService, String, Access, AccessPageQuery, AccessSaveDTO, AccessUpdateDTO> {
+public class AccessController extends SuperController<IAccessService, Long, Access, AccessPageQuery, AccessSaveDTO, AccessUpdateDTO> {
 
 
     @GetMapping(value = "/list")

@@ -9,8 +9,8 @@ public class SuperAdminUtils {
      * @param userId
      * @return
      */
-    public static boolean isSuperAdmin(String userId){
-        return userId.equals("1");
+    public static boolean isSuperAdmin(Long userId){
+        return userId.equals(1L);
     }
 
     /**
@@ -18,8 +18,8 @@ public class SuperAdminUtils {
      * @param tenantId
      * @return
      */
-    public static boolean isSuperTenant(String tenantId){
-        return tenantId.equals("1");
+    public static boolean isSuperTenant(Long tenantId){
+        return tenantId.equals(1L);
     }
 
 }

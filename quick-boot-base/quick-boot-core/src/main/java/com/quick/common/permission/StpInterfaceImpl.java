@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 用户权限
@@ -25,9 +26,11 @@ public class StpInterfaceImpl implements StpInterface {
         List<String> permissionList = new ArrayList<>();
         List<String> roleList = getRoleList(loginId, loginType);
         for (String roleId : roleList) {
-            Result<List<String>> result = sysUserBaseApi.getUserRolePermission(roleId);
-            List<String> list = result.getData();
-            permissionList.addAll(list);
+            Result<List<Long>> result = sysUserBaseApi.getUserRolePermission(Long.parseLong(roleId));
+            List<Long> list = result.getData();
+            permissionList.addAll(list.stream()
+                    .map(String::valueOf)
+                    .collect(Collectors.toList()));
         }
         return permissionList;
     }
@@ -35,8 +38,10 @@ public class StpInterfaceImpl implements StpInterface {
     @Override
     public List<String> getRoleList(Object loginId, String loginType) {
         // 返回此 loginId 拥有的角色列表
-        Result<List<String>> result = sysUserBaseApi.getUserRole(loginId.toString());
-        List<String> roleList = result.getData();
-        return roleList;
+        Result<List<Long>> result = sysUserBaseApi.getUserRole((Long) loginId);
+        List<Long> roleList = result.getData();
+        return roleList.stream()
+                .map(String::valueOf)
+                .collect(Collectors.toList());
     }
 }

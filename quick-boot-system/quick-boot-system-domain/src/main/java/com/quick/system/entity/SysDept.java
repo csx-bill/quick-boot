@@ -16,7 +16,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Schema(name = "部门信息")
-public class SysDept extends TreeEntity<SysDept,String> implements Serializable {
+public class SysDept extends TreeEntity<SysDept,Long> implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @TableField(condition = SqlCondition.LIKE)
