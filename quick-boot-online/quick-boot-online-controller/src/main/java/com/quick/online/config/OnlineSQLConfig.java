@@ -147,4 +147,12 @@ public class OnlineSQLConfig extends APIJSONSQLConfig<Long> {
     		return db == null ? DATABASE_MYSQL : db;
     	}
 
+    @Override
+    public String getDatasource() {
+        // 查找表的数据库
+        IAccessService accessService = SpringBeanUtils.getBean(IAccessService.class);
+        Access access = accessService.getOne(new LambdaQueryWrapper<Access>().eq(Access::getAlias, this.getTable()));
+        String schema = access.getSchema();
+        return schema;
+    }
 }

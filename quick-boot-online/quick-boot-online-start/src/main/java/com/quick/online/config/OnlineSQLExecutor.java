@@ -20,11 +20,13 @@ public class OnlineSQLExecutor extends APIJSONSQLExecutor<String> {
     @Override
     public Connection getConnection(SQLConfig config) throws Exception {
         String key = config.getDatasource() + "-" + config.getDatabase();
-        Connection c = (Connection) connectionMap.get(key);
+        Connection c = connectionMap.get(key);
         if (c == null || c.isClosed()) {
             DataSource dataSource = SpringBeanUtils.getBean(DataSource.class);
             DynamicRoutingDataSource datasource = (DynamicRoutingDataSource) dataSource;
-            DataSource ds = datasource.determineDataSource();
+
+            Map<String, DataSource> dataSources = datasource.getDataSources();
+            DataSource ds = dataSources.get(config.getDatasource());
             connectionMap.put(key, ds == null ? null : ds.getConnection());
         }
         return super.getConnection(config);
