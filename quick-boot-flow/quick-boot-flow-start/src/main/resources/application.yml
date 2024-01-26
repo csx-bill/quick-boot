@@ -22,6 +22,3 @@ spring:
       - optional:nacos:monitor.yml
       - optional:nacos:redis.yml
       - optional:nacos:sa-token.yml
-
-  main:
-    allow-circular-references: true
