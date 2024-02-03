@@ -9,5 +9,5 @@ import java.util.List;
 public interface ISysUserBaseApi {
     Result<List<Long>> getUserRole(@RequestParam(value = "userId") Long userId);
 
-    Result<List<Long>> getUserRolePermission(@RequestParam(value = "roleId") Long roleId);
+    Result<List<String>> getUserRolePermission(@RequestParam(value = "roleId") Long roleId);
 }

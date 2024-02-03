@@ -24,5 +24,5 @@ public interface ISysUserApi extends ISysUserBaseApi {
 
     @GetMapping("/user/api/getUserRolePermission")
     @Override
-    Result<List<Long>> getUserRolePermission(@RequestParam(value = "roleId") Long roleId);
+    Result<List<String>> getUserRolePermission(@RequestParam(value = "roleId") Long roleId);
 }

@@ -15,7 +15,7 @@ import java.io.Serializable;
 public class SysDataRuleApiDTO extends BaseEntity implements Serializable {
     private static final long serialVersionUID = 1L;
     @Schema(description = "菜单id")
-    private String menuId;
+    private Long menuId;
 
     @Schema(description = "规则名称")
     private String ruleName;

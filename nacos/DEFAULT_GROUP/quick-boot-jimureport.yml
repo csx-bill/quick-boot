@@ -1,0 +1,61 @@
+server:
+  port: 8085
+
+spring:
+  datasource:
+    dynamic:
+      primary: master #设置默认的数据源或者数据源组,默认值即为master
+      strict: false #严格匹配数据源,默认false. true未匹配到指定数据源时抛异常,false使用默认数据源
+      datasource:
+        master:
+          url: ${mysql-server.address}/quick-boot-jimureport
+          username: ${mysql-server.username}
+          password: ${mysql-server.password}
+          driver-class-name: ${mysql-server.driver-class-name}
+
+jeecg :
+  jmreport:
+    #多租户模式，默认值为空(created:按照创建人隔离、tenant:按照租户隔离) (v1.6.2+ 新增)
+    saasMode: tenant
+    # 平台上线安全配置(v1.6.2+ 新增)
+    firewall:
+      # 数据源安全 (开启后，不允许使用平台数据源、SQL解析加签并且不允许查询数据库)
+      dataSourceSafe: false
+      # 低代码开发模式（dev:开发模式，prod:发布模式—关闭在线报表设计功能，分配角色admin、lowdeveloper可以放开限制）
+      lowCodeMode: dev
+    #是否 禁用导出PDF和图片的按钮 默认为false
+    exportDisabled: false
+    #是否自动保存
+    autoSave: true
+    #自动保存间隔时间毫秒
+    interval: 20000
+    # 列数(设计页面展示多少列)
+    col: 100
+    #自定义项目前缀
+    #customPrePath:
+    # 自定义API接口的前缀 #{api_base_path}和#{domainURL}的值
+    #apiBasePath: http://localhost:8080/jeecg-boot
+    #预览分页自定义
+    pageSize:
+      - 10
+      - 20
+      - 30
+      - 40
+    #打印纸张自定义
+    printPaper:
+      - title: A5纸
+        size:
+          - 148
+          - 210
+      - title: B4纸
+        size:
+          - 250
+          - 353
+    #接口超时设置（毫秒）
+    connect-timeout: 300000
+    #Excel导出模式(fast/快、primary/精致模式，默认fast)
+    export-excel-pattern: fast
+    #Excel导出数据每个sheet的行数,每个sheet最大1048576行
+    page-size-number: 10000
+    #设计页面表格的线是否显示 默认true
+    line: true

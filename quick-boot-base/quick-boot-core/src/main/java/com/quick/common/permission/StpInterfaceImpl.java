@@ -26,11 +26,9 @@ public class StpInterfaceImpl implements StpInterface {
         List<String> permissionList = new ArrayList<>();
         List<String> roleList = getRoleList(loginId, loginType);
         for (String roleId : roleList) {
-            Result<List<Long>> result = sysUserBaseApi.getUserRolePermission(Long.parseLong(roleId));
-            List<Long> list = result.getData();
-            permissionList.addAll(list.stream()
-                    .map(String::valueOf)
-                    .collect(Collectors.toList()));
+            Result<List<String>> result = sysUserBaseApi.getUserRolePermission(Long.parseLong(roleId));
+            List<String> list = result.getData();
+            permissionList.addAll(list);
         }
         return permissionList;
     }
@@ -38,7 +36,7 @@ public class StpInterfaceImpl implements StpInterface {
     @Override
     public List<String> getRoleList(Object loginId, String loginType) {
         // 返回此 loginId 拥有的角色列表
-        Result<List<Long>> result = sysUserBaseApi.getUserRole((Long) loginId);
+        Result<List<Long>> result = sysUserBaseApi.getUserRole(Long.parseLong(loginId.toString()));
         List<Long> roleList = result.getData();
         return roleList.stream()
                 .map(String::valueOf)

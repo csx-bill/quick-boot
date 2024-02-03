@@ -23,6 +23,12 @@ spring:
             - Path=/api/online/**
           filters:
             - StripPrefix=2
+        - id: quick-boot-jimureport
+          uri: lb://quick-boot-jimureport
+          predicates:
+            - Path=/jmreport/**
+          #filters:
+          #  - StripPrefix=2
 
 knife4j:
   gateway:
@@ -52,3 +58,4 @@ ignore:
     - /api/system/menu/getRoutes
     - /api/auth/doLogin
     - /api/auth/oauth2/**
+    - /jmreport/**

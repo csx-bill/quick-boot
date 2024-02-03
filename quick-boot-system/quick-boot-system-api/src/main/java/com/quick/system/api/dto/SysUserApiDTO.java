@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class SysUserApiDTO implements Serializable {
     @Schema(description = "ID")
-    private String id;
+    private Long id;
 
     @Schema(description = "创建时间")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -25,7 +25,7 @@ public class SysUserApiDTO implements Serializable {
     private LocalDateTime createTime;
 
     @Schema(description = "创建人")
-    private String createBy;
+    private Long createBy;
 
     @Schema(description = "更新时间")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -33,7 +33,7 @@ public class SysUserApiDTO implements Serializable {
     private LocalDateTime updateTime;
 
     @Schema(description = "更新人")
-    private String updateBy;
+    private Long updateBy;
 
     @Schema(description = "账号")
     private String username;

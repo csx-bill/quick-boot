@@ -18,7 +18,7 @@ public class SysDictDataApiDTO extends BaseEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Schema(description = "字典ID")
-    private String dictId;
+    private Long dictId;
 
     @Schema(description = "字典文本")
     private String dictText;

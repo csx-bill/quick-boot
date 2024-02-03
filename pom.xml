@@ -46,6 +46,7 @@
         <module>quick-boot-monitor</module>
         <module>quick-boot-gateway</module>
         <module>quick-boot-flow</module>
+        <module>quick-boot-jimureport</module>
     </modules>
 
     <dependencies>
