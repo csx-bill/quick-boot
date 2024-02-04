@@ -6,14 +6,15 @@ import cn.dev33.satoken.router.SaHttpMethod;
 import cn.dev33.satoken.router.SaRouter;
 import cn.dev33.satoken.stp.StpUtil;
 import com.alibaba.fastjson2.JSON;
+import com.quick.common.gateway.IgnoreConfigProperties;
 import com.quick.common.vo.Result;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.List;
 
 
 /**
@@ -29,7 +30,8 @@ public class SaTokenConfigure {
      * 无需认证的地址
      * 从 nacos 读取 忽略url
      */
-    private List<String> url;
+    @Autowired
+    private IgnoreConfigProperties ignoreConfigProperties;
 
     // 注册 Sa-Token全局过滤器
     @Bean
@@ -38,7 +40,7 @@ public class SaTokenConfigure {
                 // 拦截地址
                 .addInclude("/**")    /* 拦截全部path */
                 // 开放地址
-                .addExclude(url.toArray(new String[0]))
+                .addExclude(ignoreConfigProperties.getUrl().toArray(new String[0]))
                 // 鉴权方法：每次访问进入
                 .setAuth(obj -> {
                     // 登录校验 -- 拦截所有路由

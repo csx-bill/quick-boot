@@ -59,3 +59,4 @@ ignore:
     - /api/auth/doLogin
     - /api/auth/oauth2/**
     - /jmreport/**
+    - /api/system/tenant/list

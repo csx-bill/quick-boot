@@ -1,12 +1,11 @@
 package com.quick.jimureport.config;
 
 import cn.dev33.satoken.stp.StpUtil;
+import com.quick.common.tenant.TenantContext;
 import jakarta.servlet.http.HttpServletRequest;
 import org.jeecg.modules.jmreport.api.JmReportTokenServiceI;
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 
-import java.util.Map;
 
 /**
  * 自定义积木报表鉴权(如果不进行自定义，则所有请求不做权限控制)
@@ -33,16 +32,7 @@ public class JimuReportTokenService implements JmReportTokenServiceI {
      */
     @Override
     public String getTenantId() {
-//        String headerTenantId = null;
-//        HttpServletRequest request = JimuSpringContextUtils.getHttpServletRequest();
-//        if (request != null) {
-//            headerTenantId = request.getHeader(JmConst.HEADER_TENANT_ID);
-//            if(OkConvertUtils.isEmpty(headerTenantId)){
-//                headerTenantId = request.getParameter(JmConst.TENANT_ID);
-//            }
-//        }
-//        return headerTenantId;
-        return "1";
+        return TenantContext.getTenantId().toString();
     }
 
 

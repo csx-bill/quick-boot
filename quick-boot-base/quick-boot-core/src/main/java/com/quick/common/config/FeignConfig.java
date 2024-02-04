@@ -1,5 +1,6 @@
 package com.quick.common.config;
 
+import com.quick.common.feign.FeignRequestInterceptor;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
@@ -14,5 +15,10 @@ public class FeignConfig {
     @ConditionalOnMissingBean
     public HttpMessageConverters messageConverters(ObjectProvider<HttpMessageConverter<?>> converters) {
         return new HttpMessageConverters(converters.orderedStream().collect(Collectors.toList()));
+    }
+
+    @Bean
+    public FeignRequestInterceptor feignRequestInterceptor(){
+        return new FeignRequestInterceptor();
     }
 }

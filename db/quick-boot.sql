@@ -11,7 +11,7 @@
  Target Server Version : 80031
  File Encoding         : 65001
 
- Date: 03/02/2024 14:49:39
+ Date: 05/02/2024 00:11:01
 */
 
 SET NAMES utf8mb4;
@@ -68,7 +68,7 @@ CREATE TABLE `sys_dept`  (
 -- ----------------------------
 -- Records of sys_dept
 -- ----------------------------
-INSERT INTO `sys_dept` VALUES (1, 'xx科技公司', 0, 0, 0, 'A', NULL, NULL, '2024-01-01 21:53:55', 1, NULL);
+INSERT INTO `sys_dept` VALUES (1, 'xx科技公司', 0, 0, 0, 'A', NULL, NULL, '2024-01-01 21:53:55', 1, 1);
 
 -- ----------------------------
 -- Table structure for sys_dict
@@ -179,7 +179,7 @@ INSERT INTO `sys_dict_data` VALUES (1742577928497111042, 1, '2024-01-04 00:05:28
 INSERT INTO `sys_dict_data` VALUES (1742578020780187649, 1, '2024-01-04 00:05:50', NULL, NULL, 0, 1742577122792284161, '小于', '<', NULL, 'A', 1);
 INSERT INTO `sys_dict_data` VALUES (1743544457501933569, 1, '2024-01-06 16:06:07', NULL, NULL, 0, 1743544196649779202, '正常', '0', NULL, 'A', 1);
 INSERT INTO `sys_dict_data` VALUES (1743544557619970050, 1, '2024-01-06 16:06:31', NULL, NULL, 0, 1743544196649779202, '停用', '1', NULL, 'A', 1);
-INSERT INTO `sys_dict_data` VALUES (1753670545582436353, 1, '2024-02-03 14:43:34', NULL, NULL, 0, 1647299324771737602, '链接', 'LINK', NULL, 'A', NULL);
+INSERT INTO `sys_dict_data` VALUES (1753670545582436353, 1, '2024-02-03 14:43:34', NULL, NULL, 0, 1647299324771737602, '链接', 'LINK', NULL, 'A', 1);
 
 -- ----------------------------
 -- Table structure for sys_menu
@@ -271,7 +271,7 @@ INSERT INTO `sys_menu` VALUES (1743538588043247618, 1743537710229946369, '编辑
 INSERT INTO `sys_menu` VALUES (1743538745149292546, 1743537710229946369, '删除', NULL, 'BUTTON', 'system:sys_tenant:delete', NULL, NULL, 'N', NULL, 1, '2024-01-06 15:43:25', NULL, NULL, 0, 'A', NULL, 1);
 INSERT INTO `sys_menu` VALUES (1743538933037334529, 1743537710229946369, '查看', NULL, 'BUTTON', 'system:sys_tenant:view', NULL, NULL, 'N', NULL, 1, '2024-01-06 15:44:10', NULL, NULL, 0, 'A', NULL, 1);
 INSERT INTO `sys_menu` VALUES (1743539084627869697, 1743537710229946369, '批量删除', NULL, 'BUTTON', 'system:sys_tenant:batchDelete', NULL, NULL, 'N', NULL, 1, '2024-01-06 15:44:46', NULL, NULL, 0, 'A', NULL, 1);
-INSERT INTO `sys_menu` VALUES (1753653668256698369, 8, '积木报表', 'http://localhost:9999/jmreport/list', 'LINK', NULL, NULL, NULL, 'N', NULL, 1, '2024-02-03 13:36:30', 1, '2024-02-03 14:43:56', 0, 'A', NULL, NULL);
+INSERT INTO `sys_menu` VALUES (1753653668256698369, 8, '积木报表', 'http://localhost:9999/jmreport/list', 'LINK', NULL, NULL, NULL, 'N', NULL, 1, '2024-02-03 13:36:30', 1, '2024-02-03 14:43:56', 0, 'A', NULL, 1);
 
 -- ----------------------------
 -- Table structure for sys_oauth_client
@@ -329,8 +329,8 @@ CREATE TABLE `sys_role`  (
 -- ----------------------------
 -- Records of sys_role
 -- ----------------------------
-INSERT INTO `sys_role` VALUES (1, NULL, NULL, 1, '2023-04-16 13:43:51', 0, '超级管理员', 'A', 'admin', NULL, NULL);
-INSERT INTO `sys_role` VALUES (1662841261003907074, 1, '2023-05-28 23:20:25', 1662841046100353026, '2023-05-29 22:27:23', 0, '测试', 'A', 'test', NULL, NULL);
+INSERT INTO `sys_role` VALUES (1, NULL, NULL, 1, '2023-04-16 13:43:51', 0, '超级管理员', 'A', 'admin', NULL, 1);
+INSERT INTO `sys_role` VALUES (1662841261003907074, 1, '2023-05-28 23:20:25', 1662841046100353026, '2023-05-29 22:27:23', 0, '测试', 'A', 'test', NULL, 1);
 
 -- ----------------------------
 -- Table structure for sys_role_menu
@@ -374,14 +374,13 @@ CREATE TABLE `sys_tenant`  (
   `start_time` datetime NULL DEFAULT NULL COMMENT '租户开始时间',
   `end_time` datetime NULL DEFAULT NULL COMMENT '租户结束时间',
   `menu_id` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '租户菜单ID',
-  PRIMARY KEY (`id`) USING BTREE,
-  UNIQUE INDEX `uidx_username`(`name` ASC) USING BTREE
+  PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '租户信息' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_tenant
 -- ----------------------------
-INSERT INTO `sys_tenant` VALUES (1, 1, NULL, 1, '2024-01-06 17:31:50', 0, '0', '内置租户', '0000', NULL, NULL, NULL, NULL, NULL, '2024-01-01 00:00:00', NULL, NULL);
+INSERT INTO `sys_tenant` VALUES (1, 1, NULL, 1, '2024-01-06 17:31:50', 0, '0', '蚂蚁集团', '0000', NULL, NULL, NULL, NULL, NULL, '2024-01-01 00:00:00', '2099-02-04 14:45:56', NULL);
 
 -- ----------------------------
 -- Table structure for sys_user
@@ -408,11 +407,11 @@ CREATE TABLE `sys_user`  (
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO `sys_user` VALUES (1, 1, NULL, 1, '2024-01-06 19:00:49', 0, '$2a$10$eZUwdb/w2.W2LGC0.jtZoOysJiexOGJcXXNC5CbxJne5KAmltFjZu', 'A', 'admin', '超级管理员', 'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png', 1664655577147588609, NULL);
-INSERT INTO `sys_user` VALUES (2, 1, '2023-09-08 17:50:05', 1, '2023-11-18 00:04:35', 0, '1', 'A', '00001', '99', NULL, NULL, NULL);
-INSERT INTO `sys_user` VALUES (1703399905833, NULL, '2023-12-24 14:38:26', 1, '2023-12-24 18:40:29', 0, '99', 'A', 'username@', '99', '99', NULL, NULL);
-INSERT INTO `sys_user` VALUES (1703400250161, NULL, '2023-12-24 14:44:10', NULL, NULL, 0, '111111', '状态', '账号', '真实姓名', '头像', NULL, NULL);
-INSERT INTO `sys_user` VALUES (1662841046100353026, 1, '2023-05-28 23:19:34', 1, '2023-05-29 23:29:09', 0, '$2a$10$WhqhOd5JyOJ6i./1JZ7emOWn5azNGKza2wwHK7AnfTgt2HYuXiux2', 'I', 'test', '测试', NULL, NULL, NULL);
+INSERT INTO `sys_user` VALUES (1, 1, NULL, 1, '2024-01-06 19:00:49', 0, '$2a$10$eZUwdb/w2.W2LGC0.jtZoOysJiexOGJcXXNC5CbxJne5KAmltFjZu', 'A', 'admin', '超级管理员', 'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png', 1664655577147588609, 1);
+INSERT INTO `sys_user` VALUES (2, 1, '2023-09-08 17:50:05', 1, '2023-11-18 00:04:35', 0, '1', 'A', '00001', '99', NULL, NULL, 1);
+INSERT INTO `sys_user` VALUES (1703399905833, NULL, '2023-12-24 14:38:26', 1, '2023-12-24 18:40:29', 0, '99', 'A', 'username@', '99', '99', NULL, 1);
+INSERT INTO `sys_user` VALUES (1703400250161, NULL, '2023-12-24 14:44:10', NULL, NULL, 0, '111111', '状态', '账号', '真实姓名', '头像', NULL, 1);
+INSERT INTO `sys_user` VALUES (1662841046100353026, 1, '2023-05-28 23:19:34', 1, '2023-05-29 23:29:09', 0, '$2a$10$WhqhOd5JyOJ6i./1JZ7emOWn5azNGKza2wwHK7AnfTgt2HYuXiux2', 'I', 'test', '测试', NULL, NULL, 1);
 
 -- ----------------------------
 -- Table structure for sys_user_role

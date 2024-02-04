@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.handler.TenantLineHandler;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.TenantLineInnerInterceptor;
 import com.quick.common.tenant.TenantConfigProperties;
+import com.quick.common.tenant.TenantContext;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.LongValue;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,19 +24,18 @@ public class MybatisPlusConfig {
         MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
 
         // 添加 租户插件
-//        interceptor.addInnerInterceptor(new TenantLineInnerInterceptor(new TenantLineHandler() {
-//            @Override
-//            public Expression getTenantId() {
-//                待完成多租户的设计
-//                return new LongValue(1);
-//            }
-//
-//            // 返回 false 表示需要拼多租户条件
-//            @Override
-//            public boolean ignoreTable(String tableName) {
-//                return !tenantConfigProperties.getTables().contains(tableName);
-//            }
-//        }));
+        interceptor.addInnerInterceptor(new TenantLineInnerInterceptor(new TenantLineHandler() {
+            @Override
+            public Expression getTenantId() {
+                return new LongValue(TenantContext.getTenantId());
+            }
+
+            // 返回 false 表示需要拼多租户条件
+            @Override
+            public boolean ignoreTable(String tableName) {
+                return !tenantConfigProperties.getTables().contains(tableName);
+            }
+        }));
 
         // 分页插件
         interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.MYSQL));

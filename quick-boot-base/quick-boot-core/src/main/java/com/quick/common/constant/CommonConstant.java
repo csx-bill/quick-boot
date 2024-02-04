@@ -13,6 +13,11 @@ public interface CommonConstant {
     Integer FORBIDDEN = 403;
     String SUCCESS_MSG = "success";
 
+    /**
+     * header 中租户ID
+     */
+    String TENANT_ID = "TENANT";
+
     String Y = "Y";
 
     String N = "N";
