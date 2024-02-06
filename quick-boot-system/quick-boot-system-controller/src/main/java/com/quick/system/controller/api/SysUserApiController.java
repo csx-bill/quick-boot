@@ -22,6 +22,14 @@ import java.util.List;
 @Tag(name = "用户信息API")
 public class SysUserApiController {
     private final ISysUserApiService sysUserApiService;
+
+
+    @GetMapping(value = "/findByUserId")
+    @Operation(summary = "查询用户", description = "根据用户ID查询用户")
+    public Result<SysUser> findByUserId(@RequestParam(value = "userId") Long userId) {
+        return Result.success(sysUserApiService.findByUserId(userId));
+    }
+
     @SaIgnore
     @GetMapping(value = "/findByUsername")
     @Operation(summary = "查询用户", description = "根据用户账号查询用户")
@@ -41,5 +49,11 @@ public class SysUserApiController {
     @Operation(summary = "查询用户角色权限", description = "查询用户角色权限")
     public Result<List<String>> getUserRolePermission(@RequestParam(value = "roleId",required = false) Long roleId) {
         return Result.success(sysUserApiService.getUserRolePermission(roleId));
+    }
+
+    @GetMapping(value = "/getUserRoleCode")
+    @Operation(summary = "查询用户角色编码", description = "根据用户ID查询用户角色编码")
+    public Result<List<String>> getUserRoleCode(@RequestParam(value = "userId") Long userId) {
+        return Result.success(sysUserApiService.getUserRoleCode(userId));
     }
 }

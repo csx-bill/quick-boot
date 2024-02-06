@@ -16,7 +16,9 @@ public interface CommonConstant {
     /**
      * header 中租户ID
      */
-    String TENANT_ID = "TENANT";
+    //String TENANT_ID = "TENANT";
+    String X_TENANT_ID = "X-Tenant-Id";
+    String X_ACCESS_TOKEN = "X-Access-Token";
 
     String Y = "Y";
 

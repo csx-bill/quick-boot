@@ -4,9 +4,11 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.quick.common.constant.CacheConstant;
 import com.quick.common.util.SuperAdminUtils;
 import com.quick.system.entity.SysMenu;
+import com.quick.system.entity.SysRole;
 import com.quick.system.entity.SysUser;
 import com.quick.system.entity.SysUserRole;
 import com.quick.system.mapper.SysMenuMapper;
+import com.quick.system.mapper.SysRoleMapper;
 import com.quick.system.mapper.SysUserMapper;
 import com.quick.system.mapper.SysUserRoleMapper;
 import com.quick.system.service.ISysUserApiService;
@@ -27,6 +29,13 @@ public class SysUserApiServiceImpl implements ISysUserApiService {
     private final SysUserMapper sysUserMapper;
     private final SysUserRoleMapper sysUserRoleMapper;
     private final SysMenuMapper sysMenuMapper;
+    private final SysRoleMapper sysRoleMapper;
+
+    @Override
+    public SysUser findByUserId(Long userId) {
+        return sysUserMapper.selectById(userId);
+    }
+
     @Override
     public SysUser findByUsername(String username) {
         return sysUserMapper.selectOne(new LambdaQueryWrapper<SysUser>().eq(SysUser::getUsername, username));
@@ -50,5 +59,20 @@ public class SysUserApiServiceImpl implements ISysUserApiService {
             sysRoleMenus = sysMenuMapper.getUserRolePermission(roleId);
         }
         return sysRoleMenus.stream().map(SysMenu::getPerms).collect(Collectors.toList());
+    }
+
+    /**
+     * 获取用户角色编码集合
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<String> getUserRoleCode(Long userId) {
+        List<SysUserRole> sysUserRoles = sysUserRoleMapper.selectList(new LambdaQueryWrapper<SysUserRole>()
+                .eq(SysUserRole::getUserId, userId));
+
+        List<SysRole> sysRoles = sysRoleMapper.selectBatchIds(sysUserRoles.stream().map(SysUserRole::getRoleId).collect(Collectors.toList()));
+
+        return sysRoles.stream().map(SysRole::getRoleCode).collect(Collectors.toList());
     }
 }

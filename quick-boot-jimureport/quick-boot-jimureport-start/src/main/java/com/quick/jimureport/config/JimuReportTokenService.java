@@ -1,10 +1,17 @@
 package com.quick.jimureport.config;
 
 import cn.dev33.satoken.stp.StpUtil;
-import com.quick.common.tenant.TenantContext;
+import com.quick.common.constant.CommonConstant;
+import com.quick.common.util.SpringBeanUtils;
+import com.quick.system.api.ISysUserApi;
+import com.quick.system.api.dto.SysUserApiDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import org.jeecg.modules.jmreport.api.JmReportTokenServiceI;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 
 /**
@@ -14,6 +21,8 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class JimuReportTokenService implements JmReportTokenServiceI {
+    @Autowired
+    private ISysUserApi sysUserApi;
 
     /**
      * 通过请求获取Token
@@ -22,7 +31,7 @@ public class JimuReportTokenService implements JmReportTokenServiceI {
      */
     @Override
     public String getToken(HttpServletRequest request) {
-        return StpUtil.getTokenValue();
+        return request.getHeader(CommonConstant.X_ACCESS_TOKEN);
     }
 
     /**
@@ -32,7 +41,8 @@ public class JimuReportTokenService implements JmReportTokenServiceI {
      */
     @Override
     public String getTenantId() {
-        return TenantContext.getTenantId().toString();
+        HttpServletRequest request = SpringBeanUtils.getHttpServletRequest();
+        return request.getHeader(CommonConstant.X_TENANT_ID);
     }
 
 
@@ -43,8 +53,9 @@ public class JimuReportTokenService implements JmReportTokenServiceI {
      */
     @Override
     public String getUsername(String token) {
-         //return StpUtil.getLoginIdByToken(token);;
-        return "admin";
+        Object userId = StpUtil.getLoginIdByToken(token);
+        SysUserApiDTO data = sysUserApi.findByUserId(Long.parseLong(userId.toString())).getData();
+        return data.getUsername();
     }
 
     /**
@@ -55,7 +66,9 @@ public class JimuReportTokenService implements JmReportTokenServiceI {
      */
     @Override
     public String[] getRoles(String token) {
-        return new String[]{"admin"};
+        Object userId = StpUtil.getLoginIdByToken(token);
+        List<String> userRoleCode = sysUserApi.getUserRoleCode(Long.parseLong(userId.toString())).getData();
+        return userRoleCode.toArray(new String[0]);
     }
 
     /**
@@ -65,8 +78,6 @@ public class JimuReportTokenService implements JmReportTokenServiceI {
      */
     @Override
     public Boolean verifyToken(String token) {
-        System.out.println("---------verify-----Token---------------");
-        //return TokenUtils.verifyToken(token, sysBaseAPI, redisUtil);
         return true;
     }
 
@@ -76,9 +87,11 @@ public class JimuReportTokenService implements JmReportTokenServiceI {
      */
 //    @Override
 //    public HttpHeaders customApiHeader() {
+//        HttpServletRequest request = SpringBeanUtils.getHttpServletRequest();
+//
 //        HttpHeaders header = new HttpHeaders();
-//        header.add("custom-header1", "Please set a custom value 1");
-//        header.add("token", "token value 2");
+//        header.add(CommonConstant.X_TENANT_ID, request.getHeader(CommonConstant.X_TENANT_ID));
+//        header.add(CommonConstant.X_ACCESS_TOKEN, request.getHeader(CommonConstant.X_ACCESS_TOKEN));
 //        return header;
 //    }
 }

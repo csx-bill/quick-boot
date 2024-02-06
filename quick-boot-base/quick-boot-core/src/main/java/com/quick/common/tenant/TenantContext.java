@@ -34,7 +34,7 @@ public class TenantContext implements ApplicationContextAware {
         Long headerTenantId = null;
         HttpServletRequest request = SpringBeanUtils.getHttpServletRequest();
         if (request != null) {
-            headerTenantId = Long.parseLong(request.getHeader(CommonConstant.TENANT_ID));
+            headerTenantId = Long.parseLong(request.getHeader(CommonConstant.X_TENANT_ID));
         }
         return headerTenantId;
     }

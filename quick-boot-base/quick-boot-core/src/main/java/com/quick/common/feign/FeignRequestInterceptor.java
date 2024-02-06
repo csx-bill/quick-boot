@@ -5,7 +5,6 @@ import com.quick.common.constant.CommonConstant;
 import com.quick.common.tenant.TenantContext;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
-import org.springframework.http.HttpHeaders;
 
 /**
  * feign拦截器功能, 解决header丢失问题
@@ -13,7 +12,7 @@ import org.springframework.http.HttpHeaders;
 public class FeignRequestInterceptor implements RequestInterceptor {
     @Override
     public void apply(RequestTemplate template) {
-        template.header(CommonConstant.TENANT_ID, TenantContext.getTenantId().toString());
-        template.header(HttpHeaders.AUTHORIZATION, StpUtil.getTokenValue());
+        template.header(CommonConstant.X_TENANT_ID, TenantContext.getTenantId().toString());
+        template.header(CommonConstant.X_ACCESS_TOKEN, StpUtil.getTokenValue());
     }
 }

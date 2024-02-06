@@ -35,6 +35,11 @@
             <artifactId>quick-boot-pom</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.quick</groupId>
+            <artifactId>quick-boot-system-api</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>

@@ -15,6 +15,10 @@ import java.util.List;
 @Component
 @FeignClient(contextId = "ISysUserApi", value = CommonConstant.SERVICE_SYSTEM, fallbackFactory = SysUserApiFactory.class)
 public interface ISysUserApi extends ISysUserBaseApi {
+
+    @GetMapping(value = "/user/api/findByUserId")
+    Result<SysUserApiDTO> findByUserId(@RequestParam(value = "userId") Long userId);
+
     @GetMapping("/user/api/findByUsername")
     Result<SysUserApiDTO> findByUsername(@RequestParam(value = "username") String username);
 
@@ -25,4 +29,8 @@ public interface ISysUserApi extends ISysUserBaseApi {
     @GetMapping("/user/api/getUserRolePermission")
     @Override
     Result<List<String>> getUserRolePermission(@RequestParam(value = "roleId") Long roleId);
+
+    @GetMapping("/user/api/getUserRoleCode")
+    Result<List<String>> getUserRoleCode(@RequestParam(value = "userId") Long userId);
+
 }

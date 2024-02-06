@@ -12,6 +12,13 @@ import java.util.List;
 public class SysUserApiFallback implements ISysUserApi {
     @Setter
     private Throwable cause;
+
+    @Override
+    public Result<SysUserApiDTO> findByUserId(Long userId) {
+        log.error("请求失败 {}", cause);
+        return null;
+    }
+
     @Override
     public Result<SysUserApiDTO> findByUsername(String username) {
         log.error("请求失败 {}", cause);
@@ -26,6 +33,12 @@ public class SysUserApiFallback implements ISysUserApi {
 
     @Override
     public Result<List<String>> getUserRolePermission(Long roleId) {
+        log.error("请求失败 {}", cause);
+        return null;
+    }
+
+    @Override
+    public Result<List<String>> getUserRoleCode(Long userId) {
         log.error("请求失败 {}", cause);
         return null;
     }
