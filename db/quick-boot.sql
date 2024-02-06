@@ -11,7 +11,7 @@
  Target Server Version : 80031
  File Encoding         : 65001
 
- Date: 05/02/2024 00:11:01
+ Date: 06/02/2024 19:51:55
 */
 
 SET NAMES utf8mb4;
@@ -259,7 +259,7 @@ INSERT INTO `sys_menu` VALUES (1741852089911635970, 4, '查看', NULL, 'BUTTON',
 INSERT INTO `sys_menu` VALUES (1741853543833563137, 1730917189658390529, '新增', NULL, 'BUTTON', 'online:function:add', NULL, NULL, 'N', NULL, 1, '2024-01-02 00:07:02', NULL, NULL, 0, 'A', NULL, 1);
 INSERT INTO `sys_menu` VALUES (1741853841897582593, 1730917189658390529, '查看', NULL, 'BUTTON', 'online:function:view', NULL, NULL, 'N', NULL, 1, '2024-01-02 00:08:13', NULL, NULL, 0, 'A', NULL, 1);
 INSERT INTO `sys_menu` VALUES (1741853959958851586, 1730917189658390529, '编辑', NULL, 'BUTTON', 'online:function:update', NULL, NULL, 'N', NULL, 1, '2024-01-02 00:08:41', 1, '2024-01-02 00:09:10', 0, 'A', NULL, 1);
-INSERT INTO `sys_menu` VALUES (1741857840214339586, 1730917189658390529, '删除', NULL, 'BUTTON', 'online:function:delete', NULL, NULL, 'N', NULL, 1, '2024-01-02 00:24:06', NULL, NULL, 0, 'A', NULL, 1);
+INSERT INTO `sys_menu` VALUES (1741857840214339586, 1730917189658390529, '删除', NULL, 'BUTTON', 'online:function:delete', NULL, NULL, 'N', NULL, 1, '2024-01-02 00:24:06', 1, '2024-02-05 16:06:10', 0, 'A', NULL, 1);
 INSERT INTO `sys_menu` VALUES (1741859586571530241, 1730917189658390529, '批量删除', NULL, 'BUTTON', 'online:function:batchDelete', NULL, NULL, 'N', NULL, 1, '2024-01-02 00:31:02', NULL, NULL, 0, 'A', NULL, 1);
 INSERT INTO `sys_menu` VALUES (1742570699706441730, 5, '新增-数据权限', NULL, 'BUTTON', 'system:sys_data_rule:add', NULL, NULL, 'N', NULL, 1, '2024-01-03 23:36:45', NULL, NULL, 0, 'A', NULL, 1);
 INSERT INTO `sys_menu` VALUES (1742570884037713921, 5, '查看-数据权限', NULL, 'BUTTON', 'system:sys_data_rule:view', NULL, NULL, 'N', NULL, 1, '2024-01-03 23:37:29', NULL, NULL, 0, 'A', NULL, 1);
@@ -271,7 +271,7 @@ INSERT INTO `sys_menu` VALUES (1743538588043247618, 1743537710229946369, '编辑
 INSERT INTO `sys_menu` VALUES (1743538745149292546, 1743537710229946369, '删除', NULL, 'BUTTON', 'system:sys_tenant:delete', NULL, NULL, 'N', NULL, 1, '2024-01-06 15:43:25', NULL, NULL, 0, 'A', NULL, 1);
 INSERT INTO `sys_menu` VALUES (1743538933037334529, 1743537710229946369, '查看', NULL, 'BUTTON', 'system:sys_tenant:view', NULL, NULL, 'N', NULL, 1, '2024-01-06 15:44:10', NULL, NULL, 0, 'A', NULL, 1);
 INSERT INTO `sys_menu` VALUES (1743539084627869697, 1743537710229946369, '批量删除', NULL, 'BUTTON', 'system:sys_tenant:batchDelete', NULL, NULL, 'N', NULL, 1, '2024-01-06 15:44:46', NULL, NULL, 0, 'A', NULL, 1);
-INSERT INTO `sys_menu` VALUES (1753653668256698369, 8, '积木报表', 'http://localhost:9999/jmreport/list', 'LINK', NULL, NULL, NULL, 'N', NULL, 1, '2024-02-03 13:36:30', 1, '2024-02-03 14:43:56', 0, 'A', NULL, 1);
+INSERT INTO `sys_menu` VALUES (1753653668256698369, 8, '报表设计', '/jmreport/list', 'MENU', NULL, NULL, NULL, 'N', NULL, 1, '2024-02-03 13:36:30', 1, '2024-02-06 19:22:46', 0, 'A', '{\"id\": \"u:7116e3a7cbba\", \"body\": [{\"id\": \"u:c54b6e3c7cb3\", \"src\": \"http://localhost:9999/jmreport/list?token=${ls:X_Access_Token}&tenantId=${ls:X_Tenant_Id}\", \"type\": \"iframe\", \"editorState\": \"default\", \"wrapperCustomStyle\": {}}], \"data\": {}, \"regions\": [\"body\"], \"editorState\": \"default\", \"pullRefresh\": {\"disabled\": true}, \"asideResizor\": false, \"wrapperCustomStyle\": {\"root\": {\"height\": \"77vh\"}}}', 1);
 
 -- ----------------------------
 -- Table structure for sys_oauth_client
