@@ -19,15 +19,15 @@
         <quick.version>1.0.1</quick.version>
         <spring-boot.version>3.2.2</spring-boot.version>
         <spring-cloud.version>2023.0.0</spring-cloud.version>
-        <micrometer.version>1.11.5</micrometer.version>
+        <micrometer.version>1.12.3</micrometer.version>
         <spring-cloud-alibaba.version>2022.0.0.0</spring-cloud-alibaba.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <mysql.version>8.0.31</mysql.version>
-        <native-maven-plugin.version>0.9.28</native-maven-plugin.version>
+        <native-maven-plugin.version>0.10.0</native-maven-plugin.version>
         <mybatis-plus.version>3.5.5</mybatis-plus.version>
         <dynamic-datasource.version>4.3.0</dynamic-datasource.version>
         <p6spy.version>3.9.1</p6spy.version>
-        <spring-boot-admin.version>3.1.8</spring-boot-admin.version>
+        <spring-boot-admin.version>3.2.2</spring-boot-admin.version>
         <swagger-annotations-jakarta.version>2.2.19</swagger-annotations-jakarta.version>
         <knife4j.version>4.5.0</knife4j.version>
         <fastjson2.version>2.0.43</fastjson2.version>
