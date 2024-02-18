@@ -31,7 +31,11 @@ public class JimuReportTokenService implements JmReportTokenServiceI {
      */
     @Override
     public String getToken(HttpServletRequest request) {
-        return request.getHeader(CommonConstant.X_ACCESS_TOKEN);
+        String token = request.getParameter("token");
+        if (token == null) {
+            token = request.getHeader(CommonConstant.X_ACCESS_TOKEN);
+        }
+        return token;
     }
 
     /**
@@ -78,7 +82,7 @@ public class JimuReportTokenService implements JmReportTokenServiceI {
      */
     @Override
     public Boolean verifyToken(String token) {
-        return true;
+        return StpUtil.getLoginIdByToken(token)==null?false:true;
     }
 
     /**
