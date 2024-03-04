@@ -4,12 +4,12 @@ import com.quick.flow.engine.common.Constants;
 import com.quick.flow.engine.common.ErrorEnum;
 import com.quick.flow.engine.common.FlowElementType;
 import com.quick.flow.engine.config.BusinessConfig;
-import com.quick.flow.engine.dao.FlowDefinitionDAO;
 import com.quick.flow.engine.entity.FlowDefinition;
 import com.quick.flow.engine.exception.DefinitionException;
 import com.quick.flow.engine.model.FlowElement;
 import com.quick.flow.engine.model.FlowModel;
 import com.quick.flow.engine.param.CommonParam;
+import com.quick.flow.engine.service.IFlowDefinitionService;
 import com.quick.flow.engine.util.FlowModelUtil;
 import com.google.common.collect.Maps;
 import jakarta.annotation.Resource;
@@ -30,7 +30,7 @@ public class CallActivityValidator extends ElementValidator {
     private BusinessConfig businessConfig;
 
     @Resource
-    private FlowDefinitionDAO flowDefinitionDAO;
+    private IFlowDefinitionService flowDefinitionService;
 
     @Override
     protected void validate(Map<String, FlowElement> flowElementMap, FlowElement flowElement, CommonParam commonParam) throws DefinitionException {
@@ -124,7 +124,7 @@ public class CallActivityValidator extends ElementValidator {
             flowModuleId2NestLevelCache.put(callActivityFlowModuleId, BusinessConfig.COMPUTING_FLOW_NESTED_LEVEL);
         }
 
-        FlowDefinition flowDefinition = flowDefinitionDAO.selectByModuleId(callActivityFlowModuleId);
+        FlowDefinition flowDefinition = flowDefinitionService.selectByModuleId(callActivityFlowModuleId);
         if (flowDefinition == null) {
             throwElementValidatorException(rootFlowElement, ErrorEnum.MODEL_UNKNOWN_ELEMENT_VALUE);
         }

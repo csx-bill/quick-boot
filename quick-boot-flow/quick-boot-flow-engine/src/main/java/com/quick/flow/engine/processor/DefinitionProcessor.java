@@ -5,7 +5,6 @@ import com.quick.flow.engine.common.ErrorEnum;
 import com.quick.flow.engine.common.FlowDefinitionStatus;
 import com.quick.flow.engine.common.FlowDeploymentStatus;
 import com.quick.flow.engine.common.FlowModuleEnum;
-import com.quick.flow.engine.dao.FlowDefinitionDAO;
 import com.quick.flow.engine.dao.FlowDeploymentDAO;
 import com.quick.flow.engine.entity.FlowDefinition;
 import com.quick.flow.engine.entity.FlowDeployment;
@@ -17,6 +16,7 @@ import com.quick.flow.engine.param.DeployFlowParam;
 import com.quick.flow.engine.param.GetFlowModuleParam;
 import com.quick.flow.engine.param.UpdateFlowParam;
 import com.quick.flow.engine.result.*;
+import com.quick.flow.engine.service.IFlowDefinitionService;
 import com.quick.flow.engine.util.IdGenerator;
 import com.quick.flow.engine.util.StrongUuidGenerator;
 import com.quick.flow.engine.validator.ModelValidator;
@@ -41,7 +41,7 @@ public class DefinitionProcessor {
     private ModelValidator modelValidator;
 
     @Resource
-    private FlowDefinitionDAO flowDefinitionDAO;
+    private IFlowDefinitionService flowDefinitionService;
 
     @Resource
     private FlowDeploymentDAO flowDeploymentDAO;
@@ -60,7 +60,7 @@ public class DefinitionProcessor {
             flowDefinition.setCreateTime(date);
             flowDefinition.setUpdateTime(date);
 
-            boolean rows = flowDefinitionDAO.save(flowDefinition);
+            boolean rows = flowDefinitionService.save(flowDefinition);
             if (!rows) {
                 LOGGER.warn("create flow failed: insert to db failed.||createFlowParam={}", createFlowParam);
                 throw new DefinitionException(ErrorEnum.DEFINITION_INSERT_INVALID);
@@ -84,8 +84,8 @@ public class DefinitionProcessor {
             flowDefinition.setStatus(FlowDefinitionStatus.EDITING);
             flowDefinition.setUpdateTime(LocalDateTime.now());
 
-            int rows = flowDefinitionDAO.updateByModuleId(flowDefinition);
-            if (rows != 1) {
+            boolean rows = flowDefinitionService.updateByModuleId(flowDefinition);
+            if (!rows) {
                 LOGGER.warn("update flow failed: update to db failed.||updateFlowParam={}", updateFlowParam);
                 throw new DefinitionException(ErrorEnum.DEFINITION_UPDATE_INVALID);
             }
@@ -101,7 +101,7 @@ public class DefinitionProcessor {
         try {
             ParamValidator.validate(deployFlowParam);
 
-            FlowDefinition flowDefinition = flowDefinitionDAO.selectByModuleId(deployFlowParam.getFlowModuleId());
+            FlowDefinition flowDefinition = flowDefinitionService.selectByModuleId(deployFlowParam.getFlowModuleId());
             if (null == flowDefinition) {
                 LOGGER.warn("deploy flow failed: flow is not exist.||deployFlowParam={}", deployFlowParam);
                 throw new DefinitionException(ErrorEnum.FLOW_NOT_EXIST);
@@ -155,7 +155,7 @@ public class DefinitionProcessor {
     }
 
     private FlowModuleResult getFlowModuleByFlowModuleId(String flowModuleId) throws ParamException {
-        FlowDefinition flowDefinition = flowDefinitionDAO.selectByModuleId(flowModuleId);
+        FlowDefinition flowDefinition = flowDefinitionService.selectByModuleId(flowModuleId);
         if (flowDefinition == null) {
             LOGGER.warn("getFlowModuleByFlowModuleId failed: can not find flowDefinitionPO.||flowModuleId={}", flowModuleId);
             throw new ParamException(ErrorEnum.PARAM_INVALID.getErrNo(), "flowDefinitionPO is not exist");
