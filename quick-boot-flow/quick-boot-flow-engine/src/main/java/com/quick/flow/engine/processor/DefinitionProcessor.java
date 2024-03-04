@@ -5,7 +5,6 @@ import com.quick.flow.engine.common.ErrorEnum;
 import com.quick.flow.engine.common.FlowDefinitionStatus;
 import com.quick.flow.engine.common.FlowDeploymentStatus;
 import com.quick.flow.engine.common.FlowModuleEnum;
-import com.quick.flow.engine.dao.FlowDeploymentDAO;
 import com.quick.flow.engine.entity.FlowDefinition;
 import com.quick.flow.engine.entity.FlowDeployment;
 import com.quick.flow.engine.exception.DefinitionException;
@@ -17,6 +16,7 @@ import com.quick.flow.engine.param.GetFlowModuleParam;
 import com.quick.flow.engine.param.UpdateFlowParam;
 import com.quick.flow.engine.result.*;
 import com.quick.flow.engine.service.IFlowDefinitionService;
+import com.quick.flow.engine.service.IFlowDeploymentService;
 import com.quick.flow.engine.util.IdGenerator;
 import com.quick.flow.engine.util.StrongUuidGenerator;
 import com.quick.flow.engine.validator.ModelValidator;
@@ -44,7 +44,7 @@ public class DefinitionProcessor {
     private IFlowDefinitionService flowDefinitionService;
 
     @Resource
-    private FlowDeploymentDAO flowDeploymentDAO;
+    private IFlowDeploymentService flowDeploymentService;
 
     public CreateFlowResult create(CreateFlowParam createFlowParam) {
         CreateFlowResult createFlowResult = new CreateFlowResult();
@@ -122,7 +122,7 @@ public class DefinitionProcessor {
             flowDeployment.setFlowDeployId(flowDeployId);
             flowDeployment.setStatus(FlowDeploymentStatus.DEPLOYED);
 
-            boolean rows = flowDeploymentDAO.save(flowDeployment);
+            boolean rows = flowDeploymentService.save(flowDeployment);
             if (!rows) {
                 LOGGER.warn("deploy flow failed: insert to db failed.||deployFlowParam={}", deployFlowParam);
                 throw new DefinitionException(ErrorEnum.DEFINITION_INSERT_INVALID);
@@ -169,7 +169,7 @@ public class DefinitionProcessor {
     }
 
     private FlowModuleResult getFlowModuleByFlowDeployId(String flowDeployId) throws ParamException {
-        FlowDeployment flowDeployment = flowDeploymentDAO.selectByDeployId(flowDeployId);
+        FlowDeployment flowDeployment = flowDeploymentService.selectByDeployId(flowDeployId);
         if (flowDeployment == null) {
             LOGGER.warn("getFlowModuleByFlowDeployId failed: can not find flowDefinitionPO.||flowDeployId={}", flowDeployId);
             throw new ParamException(ErrorEnum.PARAM_INVALID.getErrNo(), "flowDefinitionPO is not exist");

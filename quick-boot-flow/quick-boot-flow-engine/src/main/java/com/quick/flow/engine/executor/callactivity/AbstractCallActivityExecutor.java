@@ -7,13 +7,13 @@ import com.quick.flow.engine.common.ErrorEnum;
 import com.quick.flow.engine.common.InstanceDataType;
 import com.quick.flow.engine.common.RuntimeContext;
 import com.quick.flow.engine.config.BusinessConfig;
-import com.quick.flow.engine.dao.FlowDeploymentDAO;
 import com.quick.flow.engine.entity.FlowInstanceData;
 import com.quick.flow.engine.exception.ProcessException;
 import com.quick.flow.engine.executor.ElementExecutor;
 import com.quick.flow.engine.model.FlowElement;
 import com.quick.flow.engine.model.InstanceData;
 import com.quick.flow.engine.processor.RuntimeProcessor;
+import com.quick.flow.engine.service.IFlowDeploymentService;
 import com.quick.flow.engine.service.NodeInstanceService;
 import com.quick.flow.engine.util.InstanceDataUtil;
 import com.google.common.collect.Lists;
@@ -35,7 +35,7 @@ public abstract class AbstractCallActivityExecutor extends ElementExecutor {
     protected RuntimeProcessor runtimeProcessor;
 
     @Resource
-    protected FlowDeploymentDAO flowDeploymentDAO;
+    protected IFlowDeploymentService flowDeploymentService;
 
     @Resource
     protected NodeInstanceService nodeInstanceService;

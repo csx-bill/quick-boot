@@ -4,7 +4,6 @@ import com.alibaba.fastjson2.JSONObject;
 import com.alibaba.fastjson2.TypeReference;
 import com.quick.flow.engine.bo.*;
 import com.quick.flow.engine.common.*;
-import com.quick.flow.engine.dao.FlowDeploymentDAO;
 import com.quick.flow.engine.dao.FlowInstanceMappingDAO;
 import com.quick.flow.engine.dao.NodeInstanceDAO;
 import com.quick.flow.engine.dao.ProcessInstanceDAO;
@@ -20,6 +19,7 @@ import com.quick.flow.engine.param.RollbackTaskParam;
 import com.quick.flow.engine.param.StartProcessParam;
 import com.quick.flow.engine.result.*;
 import com.quick.flow.engine.service.FlowInstanceService;
+import com.quick.flow.engine.service.IFlowDeploymentService;
 import com.quick.flow.engine.service.InstanceDataService;
 import com.quick.flow.engine.service.NodeInstanceService;
 import com.quick.flow.engine.util.FlowModelUtil;
@@ -44,7 +44,7 @@ public class RuntimeProcessor {
     private static final Logger LOGGER = LoggerFactory.getLogger(RuntimeProcessor.class);
 
     @Resource
-    private FlowDeploymentDAO flowDeploymentDAO;
+    private IFlowDeploymentService flowDeploymentService;
 
     @Resource
     private ProcessInstanceDAO processInstanceDAO;
@@ -601,7 +601,7 @@ public class RuntimeProcessor {
 
     private FlowInfo getFlowInfoByFlowDeployId(String flowDeployId) throws ProcessException {
 
-        FlowDeployment flowDeployment = flowDeploymentDAO.selectByDeployId(flowDeployId);
+        FlowDeployment flowDeployment = flowDeploymentService.selectByDeployId(flowDeployId);
         if (flowDeployment == null) {
             LOGGER.warn("getFlowInfoByFlowDeployId failed.||flowDeployId={}", flowDeployId);
             throw new ProcessException(ErrorEnum.GET_FLOW_DEPLOYMENT_FAILED);
@@ -614,7 +614,7 @@ public class RuntimeProcessor {
 
     private FlowInfo getFlowInfoByFlowModuleId(String flowModuleId) throws ProcessException {
         //get from db directly
-        FlowDeployment flowDeployment = flowDeploymentDAO.selectRecentByFlowModuleId(flowModuleId);
+        FlowDeployment flowDeployment = flowDeploymentService.selectRecentByFlowModuleId(flowModuleId);
         if (flowDeployment == null) {
             LOGGER.warn("getFlowInfoByFlowModuleId failed.||flowModuleId={}", flowModuleId);
             throw new ProcessException(ErrorEnum.GET_FLOW_DEPLOYMENT_FAILED);

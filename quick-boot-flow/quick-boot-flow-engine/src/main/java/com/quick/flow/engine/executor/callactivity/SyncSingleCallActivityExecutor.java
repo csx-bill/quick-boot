@@ -184,7 +184,7 @@ public class SyncSingleCallActivityExecutor extends AbstractCallActivityExecutor
 
     private RuntimeResult getSubFlowInstanceFirstUserTask(String subFlowInstanceId) {
         FlowInstance subFlowInstance = processInstanceDAO.selectByFlowInstanceId(subFlowInstanceId);
-        FlowDeployment subFlowDeployment = flowDeploymentDAO.selectByDeployId(subFlowInstance.getFlowDeployId());
+        FlowDeployment subFlowDeployment = flowDeploymentService.selectByDeployId(subFlowInstance.getFlowDeployId());
         Map<String, FlowElement> subFlowElementMap = FlowModelUtil.getFlowElementMap(subFlowDeployment.getFlowModel());
 
         List<FlowNodeInstance> flowNodeInstanceList = nodeInstanceDAO.selectByFlowInstanceId(subFlowInstanceId);

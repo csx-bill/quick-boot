@@ -1,7 +1,6 @@
 package com.quick.flow.engine.service;
 
 import com.quick.flow.engine.common.FlowElementType;
-import com.quick.flow.engine.dao.FlowDeploymentDAO;
 import com.quick.flow.engine.dao.NodeInstanceDAO;
 import com.quick.flow.engine.dao.ProcessInstanceDAO;
 import com.quick.flow.engine.entity.FlowDeployment;
@@ -25,7 +24,7 @@ public class NodeInstanceService {
     private ProcessInstanceDAO processInstanceDAO;
 
     @Resource
-    private FlowDeploymentDAO flowDeploymentDAO;
+    private IFlowDeploymentService flowDeploymentService;
 
     @Resource
     private FlowInstanceService flowInstanceService;
@@ -44,7 +43,7 @@ public class NodeInstanceService {
 
     public FlowNodeInstance selectRecentEndNode(String flowInstanceId) {
         FlowInstance rootFlowInstance = processInstanceDAO.selectByFlowInstanceId(flowInstanceId);
-        FlowDeployment rootFlowDeployment = flowDeploymentDAO.selectByDeployId(rootFlowInstance.getFlowDeployId());
+        FlowDeployment rootFlowDeployment = flowDeploymentService.selectByDeployId(rootFlowInstance.getFlowDeployId());
         Map<String, FlowElement> rootFlowElementMap = FlowModelUtil.getFlowElementMap(rootFlowDeployment.getFlowModel());
 
         List<FlowNodeInstance> flowNodeInstanceList = nodeInstanceDAO.selectDescByFlowInstanceId(flowInstanceId);

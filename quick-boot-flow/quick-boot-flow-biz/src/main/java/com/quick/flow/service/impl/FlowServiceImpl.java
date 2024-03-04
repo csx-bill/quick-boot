@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.quick.flow.engine.common.FlowDeploymentStatus;
-import com.quick.flow.engine.dao.FlowDeploymentDAO;
 import com.quick.flow.engine.engine.ProcessEngine;
 import com.quick.flow.engine.entity.FlowDefinition;
 import com.quick.flow.engine.entity.FlowDeployment;
@@ -19,6 +18,7 @@ import com.quick.flow.engine.result.DeployFlowResult;
 import com.quick.flow.engine.result.FlowModuleResult;
 import com.quick.flow.engine.result.UpdateFlowResult;
 import com.quick.flow.engine.service.IFlowDefinitionService;
+import com.quick.flow.engine.service.IFlowDeploymentService;
 import com.quick.flow.enums.FlowModuleStatusEnum;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
@@ -38,7 +38,7 @@ public class FlowServiceImpl {
     private IFlowDefinitionService flowDefinitionService;
 
     @Resource
-    private FlowDeploymentDAO flowDeploymentDAO;
+    private IFlowDeploymentService flowDeploymentService;
 
     /**
      * 创建流程
@@ -83,7 +83,7 @@ public class FlowServiceImpl {
     public IPage<FlowDefinition> page(Page<FlowDefinition> page, Wrapper<FlowDefinition> queryWrapper){
         IPage<FlowDefinition> pageRes = flowDefinitionService.page(page, queryWrapper);
         for (FlowDefinition flowDefinition : pageRes.getRecords()) {
-            long count = flowDeploymentDAO.count(new LambdaQueryWrapper<FlowDeployment>()
+            long count = flowDeploymentService.count(new LambdaQueryWrapper<FlowDeployment>()
                     .eq(FlowDeployment::getFlowModuleId,flowDefinition.getFlowModuleId())
                     .eq(FlowDeployment::getStatus,FlowDeploymentStatus.DEPLOYED)
             );

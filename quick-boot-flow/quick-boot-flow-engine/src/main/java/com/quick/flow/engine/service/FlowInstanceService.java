@@ -1,7 +1,6 @@
 package com.quick.flow.engine.service;
 
 import com.quick.flow.engine.common.FlowElementType;
-import com.quick.flow.engine.dao.FlowDeploymentDAO;
 import com.quick.flow.engine.dao.FlowInstanceMappingDAO;
 import com.quick.flow.engine.dao.NodeInstanceDAO;
 import com.quick.flow.engine.dao.ProcessInstanceDAO;
@@ -35,7 +34,7 @@ public class FlowInstanceService {
     private ProcessInstanceDAO processInstanceDAO;
 
     @Resource
-    private FlowDeploymentDAO flowDeploymentDAO;
+    private IFlowDeploymentService flowDeploymentService;
 
     /**
      * According to rootFlowInstanceId and commitNodeInstanceId, build and return NodeInstance stack.
@@ -154,7 +153,7 @@ public class FlowInstanceService {
         flowInstanceTreeResult.setRootFlowInstancePOJO(flowInstance);
 
         FlowInstance rootFlowInstance = processInstanceDAO.selectByFlowInstanceId(rootFlowInstanceId);
-        FlowDeployment rootFlowDeployment = flowDeploymentDAO.selectByDeployId(rootFlowInstance.getFlowDeployId());
+        FlowDeployment rootFlowDeployment = flowDeploymentService.selectByDeployId(rootFlowInstance.getFlowDeployId());
         Map<String, FlowElement> rootFlowElementMap = FlowModelUtil.getFlowElementMap(rootFlowDeployment.getFlowModel());
 
         List<FlowNodeInstance> flowNodeInstanceList = nodeInstanceDAO.selectDescByFlowInstanceId(rootFlowInstanceId);

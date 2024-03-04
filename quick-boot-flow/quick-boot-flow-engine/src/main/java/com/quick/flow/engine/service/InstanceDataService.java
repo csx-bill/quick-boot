@@ -20,7 +20,7 @@ public class InstanceDataService {
     private ProcessInstanceDAO processInstanceDAO;
 
     @Resource
-    private FlowDeploymentDAO flowDeploymentDAO;
+    private IFlowDeploymentService flowDeploymentService;
 
     @Resource
     private NodeInstanceDAO nodeInstanceDAO;
@@ -49,7 +49,7 @@ public class InstanceDataService {
             return flowInstanceData;
         }
         FlowInstance flowInstance = processInstanceDAO.selectByFlowInstanceId(flowInstanceId);
-        FlowDeployment flowDeployment = flowDeploymentDAO.selectByDeployId(flowInstance.getFlowDeployId());
+        FlowDeployment flowDeployment = flowDeploymentService.selectByDeployId(flowInstance.getFlowDeployId());
         Map<String, FlowElement> flowElementMap = FlowModelUtil.getFlowElementMap(flowDeployment.getFlowModel());
 
         FlowNodeInstance flowNodeInstance = nodeInstanceDAO.selectRecentOne(flowInstanceId);
