@@ -23,18 +23,10 @@
             <groupId>com.quick</groupId>
             <artifactId>quick-boot-flow-domain</artifactId>
         </dependency>
-
-        <!-- flowable 核心依赖 -->
+        
         <dependency>
-            <groupId>org.flowable</groupId>
-            <artifactId>flowable-bpmn-layout</artifactId>
-            <version>${flowable.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.flowable</groupId>
-            <artifactId>flowable-spring-boot-starter-process</artifactId>
-            <version>${flowable.version}</version>
+            <groupId>com.quick</groupId>
+            <artifactId>quick-boot-flow-engine</artifactId>
         </dependency>
 
     </dependencies>

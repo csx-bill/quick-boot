@@ -22,3 +22,8 @@ spring:
       - optional:nacos:monitor.yml
       - optional:nacos:redis.yml
       - optional:nacos:sa-token.yml
+
+
+  #开启支持循环依赖
+  main:
+    allow-circular-references: true

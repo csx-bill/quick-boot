@@ -201,6 +201,12 @@
             </dependency>
 
             <dependency>
+                <groupId>com.quick</groupId>
+                <artifactId>quick-boot-flow-engine</artifactId>
+                <version>${quick.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-annotation</artifactId>
                 <version>${mybatis-plus.version}</version>

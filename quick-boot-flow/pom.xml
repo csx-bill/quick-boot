@@ -19,6 +19,7 @@
         <module>quick-boot-flow-biz</module>
         <module>quick-boot-flow-controller</module>
         <module>quick-boot-flow-start</module>
+        <module>quick-boot-flow-engine</module>
     </modules>
 
 </project>
