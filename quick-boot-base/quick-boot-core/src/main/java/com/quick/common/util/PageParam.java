@@ -33,6 +33,9 @@ public class PageParam<T> implements Serializable {
     @Schema(description = "每页显示数量")
     private Long count;
 
+    @Schema(description = "每页显示数量(适配amis)")
+    private Long perPage;
+
     @Schema(description = "排序的字段")
     private String orderBy;
 
@@ -46,7 +49,12 @@ public class PageParam<T> implements Serializable {
     public <E> Page<E> buildPage(){
         Page<E> page = new Page<>();
         page.setCurrent(this.getPage()==0?1:this.getPage());
-        page.setSize(this.getCount()==0?10:this.getCount());
+        if(this.getCount()!=null){
+            page.setSize(this.getCount()==0?10:this.getCount());
+        }
+        if(this.getPerPage()!=null){
+            page.setSize(this.getPerPage()==0?10:this.getPerPage());
+        }
         List<OrderItem> orders = new ArrayList<>();
         if(!StringUtils.isEmpty(this.orderBy)){
             OrderItem orderItem = new OrderItem();
