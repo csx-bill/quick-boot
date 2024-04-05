@@ -1,6 +1,5 @@
 package com.quick.flow;
 
-import com.quick.flow.engine.annotation.EnableFlowEngine;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -12,7 +11,6 @@ import org.springframework.core.env.Environment;
 import java.net.InetAddress;
 
 @Slf4j
-@EnableFlowEngine
 //@EnableFeignClients(value ={"com.quick.*"})
 @EnableDiscoveryClient
 @SpringBootApplication

@@ -35,7 +35,7 @@
         <redisson.version>3.25.0</redisson.version>
         <hutool-all.version>5.8.16</hutool-all.version>
         <lombok.version>1.18.30</lombok.version>
-        <flowable.version>7.0.1</flowable.version>
+        <flow.version>1.1.3</flow.version>
     </properties>
     <!-- 模块 -->
     <modules>
@@ -201,12 +201,6 @@
             </dependency>
 
             <dependency>
-                <groupId>com.quick</groupId>
-                <artifactId>quick-boot-flow-engine</artifactId>
-                <version>${quick.version}</version>
-            </dependency>
-
-            <dependency>
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-annotation</artifactId>
                 <version>${mybatis-plus.version}</version>
@@ -352,19 +346,12 @@
                 <version>1.8.0_jdk17</version>
             </dependency>
 
-            <!-- flowable 核心依赖 -->
+            <!-- flow 依赖 -->
             <dependency>
-                <groupId>org.flowable</groupId>
-                <artifactId>flowable-bpmn-layout</artifactId>
-                <version>${flowable.version}</version>
+                <groupId>io.github.minliuhua</groupId>
+                <artifactId>warm-flow-mybatis-sb-starter</artifactId>
+                <version>${flow.version}</version>
             </dependency>
-
-            <dependency>
-                <groupId>org.flowable</groupId>
-                <artifactId>flowable-spring-boot-starter-process</artifactId>
-                <version>${flowable.version}</version>
-            </dependency>
-
 
         </dependencies>
     </dependencyManagement>

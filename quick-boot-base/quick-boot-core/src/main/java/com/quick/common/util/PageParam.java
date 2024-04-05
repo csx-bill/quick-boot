@@ -28,10 +28,10 @@ public class PageParam<T> implements Serializable {
     private T model;
 
     @Schema(description = "当前页码")
-    private long page;
+    private Long page;
 
     @Schema(description = "每页显示数量")
-    private long count;
+    private Long count;
 
     @Schema(description = "排序的字段")
     private String orderBy;

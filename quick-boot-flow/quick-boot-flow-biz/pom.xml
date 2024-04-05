@@ -23,11 +23,12 @@
             <groupId>com.quick</groupId>
             <artifactId>quick-boot-flow-domain</artifactId>
         </dependency>
-        
+
         <dependency>
-            <groupId>com.quick</groupId>
-            <artifactId>quick-boot-flow-engine</artifactId>
+            <groupId>io.github.minliuhua</groupId>
+            <artifactId>warm-flow-mybatis-sb-starter</artifactId>
         </dependency>
+
 
     </dependencies>
 
