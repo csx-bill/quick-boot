@@ -57,9 +57,11 @@ public class ExecuteController {
     @PostMapping(value = "/toDoPage")
     @Operation(summary = "分页待办任务列表")
     public Result<IPage<Task>> toDoPage(@RequestBody PageParam<ToDoTaskPageQuery> pageParam) {
-        FlowTask flowTask = BeanUtil.toBean(pageParam.getModel(), FlowTask.class);
+        FlowTask flowTask = new FlowTask();
+        BeanUtil.copyProperties(pageParam.getModel(), flowTask);
         // flow组件自带分页功能
-        Page<Task> page = Page.pageOf(pageParam.getPage().intValue(), pageParam.getCount().intValue());
+        Page<Task> page = Page.pageOf(pageParam.getPage()==null?1:pageParam.getPage().intValue(), pageParam.getPerPage()==null?10:pageParam.getPerPage().intValue());
+        //flowTask.setPermissionList(new ArrayList<String>());
         page = taskService.toDoPage(flowTask, page);
 
         IPage<Task> pageVo = new com.baomidou.mybatisplus.extension.plugins.pagination.Page<>();
@@ -74,7 +76,7 @@ public class ExecuteController {
     public Result<IPage<HisTask>> donePage(@RequestBody PageParam<DoneTaskPageQuery> pageParam) {
         FlowHisTask flowHisTask = BeanUtil.toBean(pageParam.getModel(), FlowHisTask.class);
         // flow组件自带分页功能
-        Page<HisTask> page = Page.pageOf(pageParam.getPage().intValue(), pageParam.getCount().intValue());
+        Page<HisTask> page = Page.pageOf(pageParam.getPage()==null?1:pageParam.getPage().intValue(), pageParam.getPerPage()==null?10:pageParam.getPerPage().intValue());
         page = hisTaskService.donePage(flowHisTask, page);
 
         IPage<HisTask> pageVo = new com.baomidou.mybatisplus.extension.plugins.pagination.Page<>();
@@ -148,7 +150,7 @@ public class ExecuteController {
     @GetMapping("/doneList/{instanceId}")
     @Operation(summary = "查询已办任务历史记录")
     public Result<List<HisTask>> doneList(@PathVariable("instanceId") Long instanceId) {
-        List<HisTask> flowHisTasks = hisTaskService.getByInsIds(instanceId);
+        //List<HisTask> flowHisTasks = hisTaskService.getByInsIds(instanceId);
 //        flowHisTasks.forEach(hisTask -> {
 //            if (StringUtils.isNotBlank(hisTask.getApprover())) {
 //                SysUser sysUser = userService.selectUserById(Long.valueOf(hisTask.getApprover()));
@@ -158,7 +160,7 @@ public class ExecuteController {
 //                hisTask.setApprover(sysUser.getNickName());
 //            }
 //        });
-        return Result.success(flowHisTasks);
+        return null;
     }
 
     /**

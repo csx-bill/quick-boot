@@ -11,7 +11,7 @@
  Target Server Version : 80031
  File Encoding         : 65001
 
- Date: 05/04/2024 13:25:37
+ Date: 18/04/2024 21:13:38
 */
 
 SET NAMES utf8mb4;
@@ -36,6 +36,10 @@ CREATE TABLE `flow_definition`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '流程定义表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
+-- Records of flow_definition
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for flow_his_task
 -- ----------------------------
 DROP TABLE IF EXISTS `flow_his_task`;
@@ -46,7 +50,7 @@ CREATE TABLE `flow_his_task`  (
   `tenant_id` varchar(40) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '租户id',
   `node_code` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '开始节点编码',
   `node_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '开始节点名称',
-  `node_type` tinyint(1) NOT NULL COMMENT '开始节点类型（0开始节点 1中间节点 2结束节点 3互斥网关 4并行网关）',
+  `node_type` tinyint(1) NULL DEFAULT NULL COMMENT '开始节点类型（0开始节点 1中间节点 2结束节点 3互斥网关 4并行网关）',
   `target_node_code` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '目标节点编码',
   `target_node_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '结束节点名称',
   `approver` varchar(40) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '审批者',
@@ -57,6 +61,10 @@ CREATE TABLE `flow_his_task`  (
   `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '历史任务记录表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of flow_his_task
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for flow_instance
@@ -80,6 +88,10 @@ CREATE TABLE `flow_instance`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '流程实例表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
+-- Records of flow_instance
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for flow_node
 -- ----------------------------
 DROP TABLE IF EXISTS `flow_node`;
@@ -92,14 +104,18 @@ CREATE TABLE `flow_node`  (
   `permission_flag` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '权限标识（权限类型:权限标识，可以多个，如role:1,role:2)',
   `coordinate` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '坐标',
   `skip_any_node` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT 'N' COMMENT '是否可以退回任意节点（Y是 N否）',
-  `listener_type` varchar(40) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '监听器类型',
-  `listener_path` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '监听器路径',
+  `listener_type` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '监听器类型',
+  `listener_path` varchar(400) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '监听器路径',
   `version` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '版本',
   `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
   `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `info_id_code`(`definition_id` ASC, `node_code` ASC) USING BTREE COMMENT '保证一个流程中node_code是唯一的'
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '流程结点表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of flow_node
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for flow_skip
@@ -122,6 +138,10 @@ CREATE TABLE `flow_skip`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '结点跳转关联表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
+-- Records of flow_skip
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for flow_task
 -- ----------------------------
 DROP TABLE IF EXISTS `flow_task`;
@@ -141,5 +161,9 @@ CREATE TABLE `flow_task`  (
   `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '待办任务表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of flow_task
+-- ----------------------------
 
 SET FOREIGN_KEY_CHECKS = 1;

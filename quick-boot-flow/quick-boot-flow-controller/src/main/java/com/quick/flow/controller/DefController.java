@@ -26,7 +26,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 流程定义Controller
@@ -44,9 +46,10 @@ public class DefController  {
     @PostMapping(value = "/page")
     @Operation(summary = CommonConstant.PAGE_MSG)
     public Result<IPage<Definition>> page(@RequestBody PageParam<DefinitionPageQuery> pageParam) {
-        FlowDefinition flowDefinition = BeanUtil.toBean(pageParam.getModel(), FlowDefinition.class);
+        FlowDefinition flowDefinition = new FlowDefinition();
+        BeanUtil.copyProperties(pageParam.getModel(), flowDefinition);
         // flow组件自带分页功能
-        Page<Definition> page = Page.pageOf(pageParam.getPage().intValue(), pageParam.getCount().intValue());
+        Page<Definition> page = Page.pageOf(pageParam.getPage()==null?1:pageParam.getPage().intValue(), pageParam.getPerPage()==null?10:pageParam.getPerPage().intValue());
         page = defService.orderByCreateTime().desc().page(flowDefinition, page);
 
         IPage<Definition> pageVo = new com.baomidou.mybatisplus.extension.plugins.pagination.Page<>();
@@ -95,19 +98,24 @@ public class DefController  {
     /**
      * 修改流程定义
      */
-    @PutMapping
+    @PutMapping(value = "/updateById")
+    @Operation(summary = CommonConstant.UPDATE_BY_ID_MSG)
     @Transactional(rollbackFor = Exception.class)
-    public Result<Boolean> edit(@RequestBody FlowDefinition flowDefinition) {
+    public Result<Boolean> updateById(@RequestBody FlowDefinition flowDefinition) {
         return Result.success(defService.updateById(flowDefinition));
     }
 
     /**
      * 删除流程定义
      */
-    @DeleteMapping("/{ids}")
+    @DeleteMapping(value = "/removeBatchByIds")
+    @Operation(summary = CommonConstant.REMOVE_BATCH_BY_IDS_MSG)
+    @Parameter(name = "ids",required = true)
     @Transactional(rollbackFor = Exception.class)
-    public Result<Boolean> remove(@PathVariable List<Long> ids) {
-        return Result.success(defService.removeDef(ids));
+    public Result<Boolean> removeBatchByIds(@RequestParam("ids") String ids) {
+        return Result.success(defService.removeDef(Arrays.stream(ids.split(","))
+                .map(Long::parseLong)
+                .collect(Collectors.toList())));
     }
 
 
@@ -158,8 +166,9 @@ public class DefController  {
     }
 
 
-    @GetMapping("/xmlString/{id}")
-    public Result<String> xmlString(@PathVariable("id") Long id, HttpServletResponse response) throws Exception {
+    @GetMapping("/xmlString")
+    @Parameter(name = "id",required = true)
+    public Result<String> xmlString(@RequestParam("id") Long id) throws Exception {
         return Result.success(defService.xmlString(id));
     }
 

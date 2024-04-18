@@ -35,7 +35,7 @@
         <redisson.version>3.25.0</redisson.version>
         <hutool-all.version>5.8.16</hutool-all.version>
         <lombok.version>1.18.30</lombok.version>
-        <flow.version>1.1.3</flow.version>
+        <flow.version>1.1.5</flow.version>
     </properties>
     <!-- 模块 -->
     <modules>
