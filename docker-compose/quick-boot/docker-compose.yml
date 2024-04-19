@@ -12,22 +12,22 @@ services:
       - ./quick-boot-gateway-start.jar:/app/quick-boot-gateway-start.jar
       # ./quick-boot/logs/quick-boot-gateway-biz/ 挂载到容器 /logs/quick-boot-gateway-biz 目录下
       - ./logs/quick-boot-gateway/:/logs/quick-boot-gateway
-    entrypoint: java -Xmx1024m -jar ./app/quick-boot-gateway-start.jar
+    entrypoint: java -Xmx256m -jar ./app/quick-boot-gateway-start.jar
     network_mode: host
     restart: always
-  quick-boot-oauth2:
-    container_name: quick-boot-oauth2
-    image: openjdk:21-jdk
-    environment:
-      - TZ=Asia/Shanghai
-      - JAR_NAME=quick-boot-oauth2-start.jar
-      - JAVA_OPTIONS=-Dfile.encoding=UTF-8
-    volumes:
-      - ./quick-boot-oauth2-start.jar:/app/quick-boot-oauth2-start.jar
-      - ./logs/quick-boot-oauth2/:/logs/quick-boot-oauth2
-    entrypoint: java -Xmx1024m -jar ./app/quick-boot-oauth2-start.jar
-    network_mode: host
-    restart: always
+#  quick-boot-oauth2:
+#    container_name: quick-boot-oauth2
+#    image: openjdk:21-jdk
+#    environment:
+#      - TZ=Asia/Shanghai
+#      - JAR_NAME=quick-boot-oauth2-start.jar
+#      - JAVA_OPTIONS=-Dfile.encoding=UTF-8
+#    volumes:
+#      - ./quick-boot-oauth2-start.jar:/app/quick-boot-oauth2-start.jar
+#      - ./logs/quick-boot-oauth2/:/logs/quick-boot-oauth2
+#    entrypoint: java -Xmx256m -jar ./app/quick-boot-oauth2-start.jar
+#    network_mode: host
+#    restart: always
   quick-boot-system:
     container_name: quick-boot-system
     image: openjdk:21-jdk
@@ -38,7 +38,7 @@ services:
     volumes:
       - ./quick-boot-system-start.jar:/app/quick-boot-system-start.jar
       - ./logs/quick-boot-system/:/logs/quick-boot-system
-    entrypoint: java -Xmx1024m -jar ./app/quick-boot-system-start.jar
+    entrypoint: java -Xmx256m -jar ./app/quick-boot-system-start.jar
     network_mode: host
     restart: always
   quick-boot-online:
@@ -51,9 +51,22 @@ services:
       volumes:
         - ./quick-boot-online-start.jar:/app/quick-boot-online-start.jar
         - ./logs/quick-boot-online/:/logs/quick-boot-online
-      entrypoint: java -Xmx512m -jar ./app/quick-boot-online-start.jar
+      entrypoint: java -Xmx256m -jar ./app/quick-boot-online-start.jar
       network_mode: host
       restart: always
+  quick-boot-flow:
+    container_name: quick-boot-flow
+    image: openjdk:21-jdk
+    environment:
+      - TZ=Asia/Shanghai
+      - JAR_NAME=quick-boot-flow-start.jar
+      - JAVA_OPTIONS=-Dfile.encoding=UTF-8
+    volumes:
+      - ./quick-boot-flow-start.jar:/app/quick-boot-flow-start.jar
+      - ./logs/quick-boot-flow/:/logs/quick-boot-flow
+    entrypoint: java -Xmx256m -jar ./app/quick-boot-flow-start.jar
+    network_mode: host
+    restart: always
   quick-boot-monitor:
     container_name: quick-boot-monitor
     image: openjdk:21-jdk
@@ -64,6 +77,19 @@ services:
     volumes:
       - ./quick-boot-monitor-start.jar:/app/quick-boot-monitor-start.jar
       - ./logs/quick-boot-monitor/:/logs/quick-boot-monitor
-    entrypoint: java -Xmx512m -jar ./app/quick-boot-monitor-start.jar
+    entrypoint: java -Xmx256m -jar ./app/quick-boot-monitor-start.jar
+    network_mode: host
+    restart: always
+  quick-boot-jimureport:
+    container_name: quick-boot-jimureport
+    image: openjdk:21-jdk
+    environment:
+      - TZ=Asia/Shanghai
+      - JAR_NAME=quick-boot-jimureport-start.jar
+      - JAVA_OPTIONS=-Dfile.encoding=UTF-8
+    volumes:
+      - ./quick-boot-jimureport-start.jar:/app/quick-boot-jimureport-start.jar
+      - ./logs/quick-boot-jimureport/:/logs/quick-boot-jimureport
+    entrypoint: java -Xmx256m -jar ./app/quick-boot-jimureport-start.jar
     network_mode: host
     restart: always
