@@ -17,7 +17,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/dataRule/api")
+@RequestMapping("/system/dataRule/api")
 @RequiredArgsConstructor
 @Tag(name = "数据权限API")
 public class SysDataRuleApiController {

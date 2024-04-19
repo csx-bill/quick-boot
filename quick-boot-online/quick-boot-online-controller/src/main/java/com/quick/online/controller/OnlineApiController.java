@@ -27,7 +27,7 @@ import static apijson.framework.APIJSONConstant.REQUEST_;
 
 @Slf4j
 @RestController
-@RequestMapping("/crud")
+@RequestMapping("/online/crud")
 @RequiredArgsConstructor
 @Tag(name = "增删改查统一接口")
 public class OnlineApiController extends APIJSONRouterController<Long> {

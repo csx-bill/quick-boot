@@ -8,21 +8,28 @@ spring:
         - id: quick-boot-system
           uri: lb://quick-boot-system
           predicates:
-            - Path=/api/system/**
+            - Path=/api/system/**,/api/auth/**
           filters:
-            - StripPrefix=2
-        - id: quick-boot-oauth2
-          uri: lb://quick-boot-oauth2
-          predicates:
-            - Path=/api/auth/**
-          filters:
-            - StripPrefix=2
+            - StripPrefix=1
+# 合并 oauth2 到 quick-boot-system 模块 降低服务器资源
+#        - id: quick-boot-oauth2
+#          uri: lb://quick-boot-oauth2
+#          predicates:
+#            - Path=/api/auth/**
+#          filters:
+#            - StripPrefix=1
         - id: quick-boot-online
           uri: lb://quick-boot-online
           predicates:
             - Path=/api/online/**
           filters:
-            - StripPrefix=2
+            - StripPrefix=1
+        - id: quick-boot-flow
+          uri: lb://quick-boot-flow
+          predicates:
+            - Path=/api/flow/**
+          filters:
+            - StripPrefix=1
         - id: quick-boot-jimureport
           uri: lb://quick-boot-jimureport
           predicates:

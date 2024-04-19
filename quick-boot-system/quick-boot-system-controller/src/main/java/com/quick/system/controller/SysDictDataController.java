@@ -23,7 +23,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/dictData")
+@RequestMapping("/system/dictData")
 @RequiredArgsConstructor
 @Tag(name = "字典数据信息")
 //@PreAuth(replace = "system:sys_dict_data:")

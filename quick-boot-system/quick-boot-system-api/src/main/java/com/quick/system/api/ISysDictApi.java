@@ -25,7 +25,7 @@ public interface ISysDictApi extends ISysDictBaseApi {
      * @param dictValue
      * @return
      */
-    @GetMapping("/dict/api/translateDict")
+    @GetMapping("/system/dict/api/translateDict")
     @Override
     Result<String> translateDict(@RequestParam("dictCode") String dictCode, @RequestParam("dictValue") String dictValue);
 

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping("/request")
+@RequestMapping("/online/request")
 @RequiredArgsConstructor
 @Tag(name = "请求参数校验配置")
 @PreAuth(replace = "online:request:")

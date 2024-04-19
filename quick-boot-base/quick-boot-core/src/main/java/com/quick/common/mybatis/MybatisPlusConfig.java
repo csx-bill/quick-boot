@@ -1,4 +1,4 @@
-package com.quick.system.config;
+package com.quick.common.mybatis;
 
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;

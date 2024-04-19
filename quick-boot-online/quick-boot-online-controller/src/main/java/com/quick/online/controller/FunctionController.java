@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping("/function")
+@RequestMapping("/online/function")
 @RequiredArgsConstructor
 @Tag(name = "远程函数")
 @PreAuth(replace = "online:function:")

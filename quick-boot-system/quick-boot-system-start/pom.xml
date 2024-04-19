@@ -21,6 +21,10 @@
             <groupId>com.quick</groupId>
             <artifactId>quick-boot-system-controller</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.quick</groupId>
+            <artifactId>quick-boot-oauth2-controller</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>com.quick</groupId>

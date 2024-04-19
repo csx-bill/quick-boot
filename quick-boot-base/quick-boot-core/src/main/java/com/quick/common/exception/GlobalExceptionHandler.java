@@ -1,18 +1,15 @@
-package com.quick.common.handler;
+package com.quick.common.exception;
 
 import cn.dev33.satoken.exception.NotLoginException;
 import cn.dev33.satoken.exception.NotPermissionException;
 import com.quick.common.constant.CommonConstant;
-import com.quick.common.exception.BizException;
-import com.quick.common.exception.ForbiddenException;
-import com.quick.common.exception.OAuth2Exception;
-import com.quick.common.exception.UsernameNotFoundException;
 import com.quick.common.exception.code.ExceptionCode;
 import com.quick.common.vo.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.sql.SQLException;
 
@@ -20,7 +17,8 @@ import java.sql.SQLException;
  * 全局异常处理
  */
 @Slf4j
-public abstract class AbstractGlobalExceptionHandler {
+@RestControllerAdvice
+public abstract class GlobalExceptionHandler {
 
     @ExceptionHandler(NullPointerException.class)
     @ResponseStatus(HttpStatus.OK)

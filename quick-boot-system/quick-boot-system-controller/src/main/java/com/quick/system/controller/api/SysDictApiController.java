@@ -16,7 +16,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/dict/api")
+@RequestMapping("/system/dict/api")
 @RequiredArgsConstructor
 @Tag(name = "数据字典API")
 public class SysDictApiController {

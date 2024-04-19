@@ -25,7 +25,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/menu")
+@RequestMapping("/system/menu")
 @RequiredArgsConstructor
 @Tag(name = "菜单信息")
 @PreAuth(replace = "system:sys_menu:")

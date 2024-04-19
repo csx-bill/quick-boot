@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
-@RequestMapping("/tenant")
+@RequestMapping("/system/tenant")
 @RequiredArgsConstructor
 @Tag(name = "租户信息")
 @PreAuth(replace = "system:sys_tenant:")

@@ -22,7 +22,7 @@ import java.util.Map;
 
 @Slf4j
 @RestController
-@RequestMapping("/access")
+@RequestMapping("/online/access")
 @RequiredArgsConstructor
 @Tag(name = "权限配置")
 @PreAuth(replace = "online:access:")

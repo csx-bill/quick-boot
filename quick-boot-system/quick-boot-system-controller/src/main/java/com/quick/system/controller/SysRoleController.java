@@ -32,7 +32,7 @@ import java.util.Arrays;
 
 @Slf4j
 @RestController
-@RequestMapping("/role")
+@RequestMapping("/system/role")
 @RequiredArgsConstructor
 @Tag(name = "角色信息")
 @PreAuth(replace = "system:sys_role:")

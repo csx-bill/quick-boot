@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping("/dataRule")
+@RequestMapping("/system/dataRule")
 @RequiredArgsConstructor
 @Tag(name = "数据权限")
 @PreAuth(replace = "system:sys_data_rule:")

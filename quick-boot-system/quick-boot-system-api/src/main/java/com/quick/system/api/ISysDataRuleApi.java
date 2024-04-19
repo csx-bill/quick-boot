@@ -23,6 +23,6 @@ public interface ISysDataRuleApi {
      * @param apiPath
      * @return
      */
-    @GetMapping(value = "/dataRule/api/queryDataRuleByPath")
+    @GetMapping(value = "/system/dataRule/api/queryDataRuleByPath")
     Result<List<SysDataRuleApiDTO>> queryDataRuleByPath(@RequestParam("menuPath") String menuPath,@RequestParam("apiPath") String apiPath);
 }

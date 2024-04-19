@@ -20,7 +20,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/dept")
+@RequestMapping("/system/dept")
 @RequiredArgsConstructor
 @Tag(name = "部门信息")
 @PreAuth(replace = "system:sys_dept:")

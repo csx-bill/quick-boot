@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/system/user")
 @RequiredArgsConstructor
 @Tag(name = "用户信息")
 @PreAuth(replace = "system:sys_user:")

@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
+@RequestMapping("/auth")
 @RequiredArgsConstructor
 @Tag(name = "token")
 public class TokenEndpointController {

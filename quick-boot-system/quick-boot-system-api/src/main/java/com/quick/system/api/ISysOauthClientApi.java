@@ -18,6 +18,6 @@ public interface ISysOauthClientApi {
      * @param clientId
      * @return
      */
-    @GetMapping("/oauthClient/api/findByClientId")
+    @GetMapping("/system/oauthClient/api/findByClientId")
     Result<SysOauthClientApiDTO> findByClientId(@RequestParam(value = "clientId") String clientId);
 }
