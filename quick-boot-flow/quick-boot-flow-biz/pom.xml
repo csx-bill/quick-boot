@@ -26,7 +26,7 @@
 
         <dependency>
             <groupId>io.github.minliuhua</groupId>
-            <artifactId>warm-flow-mybatis-sb-starter</artifactId>
+            <artifactId>warm-flow-mybatis-plus-sb-starter</artifactId>
         </dependency>
 
 

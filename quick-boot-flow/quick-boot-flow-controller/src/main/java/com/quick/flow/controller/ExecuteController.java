@@ -62,13 +62,14 @@ public class ExecuteController {
         // flow组件自带分页功能
         Page<Task> page = Page.pageOf(pageParam.getPage()==null?1:pageParam.getPage().intValue(), pageParam.getPerPage()==null?10:pageParam.getPerPage().intValue());
         //flowTask.setPermissionList(new ArrayList<String>());
-        page = taskService.toDoPage(flowTask, page);
-
-        IPage<Task> pageVo = new com.baomidou.mybatisplus.extension.plugins.pagination.Page<>();
-        BeanUtils.copyProperties(page,pageVo);
-        pageVo.setRecords(page.getList());
-        pageVo.setTotal(page.getTotal());
-        return Result.success(pageVo);
+//        page = taskService.toDoPage(flowTask, page);
+//
+//        IPage<Task> pageVo = new com.baomidou.mybatisplus.extension.plugins.pagination.Page<>();
+//        BeanUtils.copyProperties(page,pageVo);
+//        pageVo.setRecords(page.getList());
+//        pageVo.setTotal(page.getTotal());
+        //return Result.success(pageVo);
+        return Result.success(null);
     }
 
     @PostMapping(value = "/donePage")
@@ -77,7 +78,7 @@ public class ExecuteController {
         FlowHisTask flowHisTask = BeanUtil.toBean(pageParam.getModel(), FlowHisTask.class);
         // flow组件自带分页功能
         Page<HisTask> page = Page.pageOf(pageParam.getPage()==null?1:pageParam.getPage().intValue(), pageParam.getPerPage()==null?10:pageParam.getPerPage().intValue());
-        page = hisTaskService.donePage(flowHisTask, page);
+        //page = hisTaskService.donePage(flowHisTask, page);
 
         IPage<HisTask> pageVo = new com.baomidou.mybatisplus.extension.plugins.pagination.Page<>();
         BeanUtils.copyProperties(page,pageVo);

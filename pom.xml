@@ -35,7 +35,7 @@
         <redisson.version>3.25.0</redisson.version>
         <hutool-all.version>5.8.16</hutool-all.version>
         <lombok.version>1.18.30</lombok.version>
-        <flow.version>1.1.51</flow.version>
+        <flow.version>1.1.90</flow.version>
     </properties>
     <!-- 模块 -->
     <modules>
@@ -349,7 +349,7 @@
             <!-- flow 依赖 -->
             <dependency>
                 <groupId>io.github.minliuhua</groupId>
-                <artifactId>warm-flow-mybatis-sb-starter</artifactId>
+                <artifactId>warm-flow-mybatis-plus-sb-starter</artifactId>
                 <version>${flow.version}</version>
             </dependency>
 
