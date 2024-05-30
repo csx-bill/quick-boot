@@ -56,4 +56,8 @@
             AND b.real_name like concat('%', #{param.realName}, '%')
         </if>
     </select>
+
+    <select id="selectByUsername" resultType="com.quick.system.entity.SysUser">
+        SELECT * FROM sys_user WHERE username = #{username}
+    </select>
 </mapper>

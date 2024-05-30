@@ -38,7 +38,7 @@ public class SysUserApiServiceImpl implements ISysUserApiService {
 
     @Override
     public SysUser findByUsername(String username) {
-        return sysUserMapper.selectOne(new LambdaQueryWrapper<SysUser>().eq(SysUser::getUsername, username));
+        return sysUserMapper.selectByUsername(username);
     }
 
     @Cacheable(value = CacheConstant.SYS_USER_ROLE_CACHE,key = "#p0", unless = "#result == null ")

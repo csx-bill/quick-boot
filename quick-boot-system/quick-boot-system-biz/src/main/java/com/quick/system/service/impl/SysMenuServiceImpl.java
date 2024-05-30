@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -25,14 +26,14 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
     @Override
     public List<SysMenu> getRoutes() {
         List<SysMenu> sysMenus = list(new LambdaQueryWrapper<SysMenu>().eq(SysMenu::getStatus,CommonConstant.A).in(SysMenu::getMenuType,CommonConstant.MENU,CommonConstant.DIR,CommonConstant.ONLINE_FORM)
-                .select(BaseEntity::getId,SysMenu::getParentId,SysMenu::getMenuType,SysMenu::getName,SysMenu::getPath,SysMenu::getPerms,SysMenu::getHideInMenu,SysMenu::getStatus));
+                .select(BaseEntity::getId,SysMenu::getParentId,SysMenu::getMenuType,SysMenu::getName,SysMenu::getPath,SysMenu::getPerms,SysMenu::getHideInMenu,SysMenu::getStatus,SysMenu::getComponent));
         // 组装菜单树
         return this.getSysMenuTree(sysMenus);
     }
 
     @Override
-    public List<SysMenu> queryByUser(Long userId) {
-        return baseMapper.queryByUser(userId);
+    public List<SysMenu> queryByUser(Long userId,List<String> menuTypes) {
+        return baseMapper.queryByUser(userId,menuTypes);
     }
 
 
@@ -43,7 +44,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
      */
     @Override
     public List<SysMenu> getUserMenuTree(Long userId) {
-        List<SysMenu> sysMenus = getUserMenu(userId);
+        List<SysMenu> sysMenus = getUserMenuButton(userId);
         // 组装菜单树
         return this.getSysMenuTree(sysMenus);
     }
@@ -98,14 +99,14 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
      * @return
      */
     @Override
-    public List<SysMenu> getUserMenu(Long userId) {
+    public List<SysMenu> getUserMenuButton(Long userId) {
         List<SysMenu> sysMenus = new ArrayList<>();
         // 超级管理员拥有所有权限
         if (SuperAdminUtils.isSuperAdmin(userId)) {
            sysMenus = list(new LambdaQueryWrapper<SysMenu>().eq(SysMenu::getStatus,CommonConstant.A)
                    .select(BaseEntity::getId,SysMenu::getParentId,SysMenu::getMenuType,SysMenu::getName,SysMenu::getPath,SysMenu::getPerms,SysMenu::getHideInMenu,SysMenu::getStatus));
         } else {
-            sysMenus = this.queryByUser(userId);
+            sysMenus = this.queryByUser(userId,null);
         }
         return sysMenus;
     }
@@ -117,14 +118,38 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
      */
     @Override
     public List<String> getUserButton(Long userId) {
-        List<SysMenu> sysMenus = getUserMenu(userId);
+
+        List<SysMenu> sysMenus = new ArrayList<>();
+        // 超级管理员拥有所有权限
+        if (SuperAdminUtils.isSuperAdmin(userId)) {
+            sysMenus = list(new LambdaQueryWrapper<SysMenu>().eq(SysMenu::getStatus,CommonConstant.A)
+                    .eq(SysMenu::getMenuType,CommonConstant.BUTTON)
+                    .select(BaseEntity::getId,SysMenu::getParentId,SysMenu::getMenuType,SysMenu::getName,SysMenu::getPath,SysMenu::getPerms,SysMenu::getHideInMenu,SysMenu::getStatus));
+        } else {
+            sysMenus = this.queryByUser(userId,Arrays.asList(CommonConstant.BUTTON));
+        }
         //按钮权限
-        List<String> permsCode = sysMenus.stream().filter(m -> m.getMenuType().equals(CommonConstant.BUTTON)).map(
-                (m) -> {
-                    return m.getPerms();
-                }
-        ).collect(Collectors.toList());
+        List<String> permsCode = sysMenus.stream().map(obj->obj.getPerms()).collect(Collectors.toList());
+
         return permsCode;
     }
 
+    /**
+     * 查询用户菜单(不包含按钮权限)
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<SysMenu> getUserMenu(Long userId) {
+        List<SysMenu> sysMenus = new ArrayList<>();
+        // 超级管理员拥有所有权限
+        if (SuperAdminUtils.isSuperAdmin(userId)) {
+            sysMenus = list(new LambdaQueryWrapper<SysMenu>().eq(SysMenu::getStatus,CommonConstant.A)
+                    .in(SysMenu::getMenuType,CommonConstant.MENU,CommonConstant.DIR)
+                    .select(BaseEntity::getId,SysMenu::getParentId,SysMenu::getMenuType,SysMenu::getName,SysMenu::getPath,SysMenu::getPerms,SysMenu::getHideInMenu,SysMenu::getStatus));
+        } else {
+            sysMenus = this.queryByUser(userId, Arrays.asList(CommonConstant.MENU,CommonConstant.DIR));
+        }
+        return getSysMenuTree(sysMenus);
+    }
 }
