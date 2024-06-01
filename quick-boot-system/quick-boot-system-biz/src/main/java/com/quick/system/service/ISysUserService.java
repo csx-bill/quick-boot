@@ -7,6 +7,7 @@ import com.quick.system.entity.SysTenant;
 import com.quick.system.entity.SysUser;
 import com.quick.system.req.AuthorizedUserPageParam;
 import com.quick.system.vo.UserInfoVO;
+import com.quick.system.vo.UserPermissionVO;
 
 import java.util.List;
 
@@ -15,6 +16,7 @@ public interface ISysUserService extends IService<SysUser> {
     IPage<SysUser> unauthorizedUserPage(Page<SysUser> page, AuthorizedUserPageParam param);
     void checkUserAllowed(Long userId);
     UserInfoVO getUserInfo(Long userId);
+    UserPermissionVO getUserPermission(Long userId);
 
     List<SysTenant> getUserTenantList();
 }

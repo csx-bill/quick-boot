@@ -11,6 +11,7 @@ import com.quick.system.entity.SysTenant;
 import com.quick.system.entity.SysUser;
 import com.quick.system.service.ISysUserService;
 import com.quick.system.vo.UserInfoVO;
+import com.quick.system.vo.UserPermissionVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +35,12 @@ public class SysUserController extends SuperController<ISysUserService, Long, Sy
     @Operation(summary = "获取当前用户信息", description = "获取当前用户信息")
     public Result<UserInfoVO> getUserInfo() {
         return Result.success(baseService.getUserInfo(StpUtil.getLoginIdAsLong()));
+    }
+
+    @GetMapping(value = "/getUserPermission")
+    @Operation(summary = "获取当前用户权限信息", description = "获取当前用户权限信息")
+    public Result<UserPermissionVO> getUserPermission() {
+        return Result.success(baseService.getUserPermission(StpUtil.getLoginIdAsLong()));
     }
 
     @GetMapping(value = "/getUserTenantList")

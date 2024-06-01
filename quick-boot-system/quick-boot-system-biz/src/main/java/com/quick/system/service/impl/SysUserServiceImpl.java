@@ -16,6 +16,7 @@ import com.quick.system.mapper.SysUserMapper;
 import com.quick.system.req.AuthorizedUserPageParam;
 import com.quick.system.service.*;
 import com.quick.system.vo.UserInfoVO;
+import com.quick.system.vo.UserPermissionVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -116,11 +117,6 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         UserInfoVO userInfoVO = new UserInfoVO();
         BeanUtils.copyProperties(sysUser, userInfoVO);
         userInfoVO.setUserId(userId);
-        // 按钮权限
-        List<String> permsCode = sysMenuService.getUserButton(userId);
-        userInfoVO.setPermsCode(permsCode);
-        List<SysMenu> userMenuTree = sysMenuService.getUserMenu(userId);
-        userInfoVO.setUserMenuTree(userMenuTree);
 
         // 查询当前登录用户的租户
         List<SysUserTenant> list = sysUserTenantService.list(new LambdaQueryWrapper<SysUserTenant>()
@@ -130,6 +126,17 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         userInfoVO.setUserTenant(userTenant);
 
         return userInfoVO;
+    }
+
+    @Override
+    public UserPermissionVO getUserPermission(Long userId) {
+        UserPermissionVO vo = new UserPermissionVO();
+        // 按钮权限
+        List<String> permsCode = sysMenuService.getUserButton(userId);
+        vo.setPermsCode(permsCode);
+        List<SysMenu> userMenu = sysMenuService.getUserMenu(userId);
+        vo.setUserMenuTree(userMenu);
+        return vo;
     }
 
     @Override
