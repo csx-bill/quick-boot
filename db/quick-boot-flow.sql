@@ -11,7 +11,7 @@
  Target Server Version : 80031
  File Encoding         : 65001
 
- Date: 15/05/2024 23:05:30
+ Date: 02/06/2024 23:23:10
 */
 
 SET NAMES utf8mb4;
@@ -38,6 +38,14 @@ CREATE TABLE `flow_definition`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '流程定义表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
+-- Records of flow_definition
+-- ----------------------------
+INSERT INTO `flow_definition` VALUES (1240451602826006528, '999', '99', '9', 0, 'N', NULL, '2024-05-15 15:51:49', '2024-05-15 15:51:49', '0', '1');
+INSERT INTO `flow_definition` VALUES (1790761835389313025, 'test', '1', '1', 0, 'N', NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `flow_definition` VALUES (1790763197414043650, 'ggg', 'GG', '1', 0, 'N', NULL, NULL, NULL, '0', NULL);
+INSERT INTO `flow_definition` VALUES (1790765997636222978, '666', '66', '1', 0, 'N', NULL, NULL, NULL, '0', '1');
+
+-- ----------------------------
 -- Table structure for flow_his_task
 -- ----------------------------
 DROP TABLE IF EXISTS `flow_his_task`;
@@ -62,6 +70,10 @@ CREATE TABLE `flow_his_task`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '历史任务记录表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
+-- Records of flow_his_task
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for flow_instance
 -- ----------------------------
 DROP TABLE IF EXISTS `flow_instance`;
@@ -82,6 +94,10 @@ CREATE TABLE `flow_instance`  (
   `tenant_id` varchar(40) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '租户id',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '流程实例表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of flow_instance
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for flow_node
@@ -108,6 +124,13 @@ CREATE TABLE `flow_node`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '流程结点表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
+-- Records of flow_node
+-- ----------------------------
+INSERT INTO `flow_node` VALUES (1246498114894958593, 0, 1240451602826006528, 'Event_2fb1984', '开始', NULL, '250,140|250,180', 'N', NULL, NULL, '9', '2024-06-01 08:18:29', '2024-06-01 08:18:29', '0', '1');
+INSERT INTO `flow_node` VALUES (1246498114894958595, 1, 1240451602826006528, 'Activity_63ded5c', '用户任务', NULL, '530,190|530,190', 'N', NULL, NULL, '9', '2024-06-01 08:18:29', '2024-06-01 08:18:29', '0', '1');
+INSERT INTO `flow_node` VALUES (1246498114894958597, 2, 1240451602826006528, 'Event_d678d35', '结束', NULL, '810,250|810,290', 'N', NULL, NULL, '9', '2024-06-01 08:18:29', '2024-06-01 08:18:29', '0', '1');
+
+-- ----------------------------
 -- Table structure for flow_skip
 -- ----------------------------
 DROP TABLE IF EXISTS `flow_skip`;
@@ -130,6 +153,12 @@ CREATE TABLE `flow_skip`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '结点跳转关联表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
+-- Records of flow_skip
+-- ----------------------------
+INSERT INTO `flow_skip` VALUES (1246498114894958594, 1240451602826006528, 'Event_2fb1984', 0, 'Activity_63ded5c', 1, NULL, NULL, NULL, '268,140;298,140;298,190;480,190', '2024-06-01 08:18:29', '2024-06-01 08:18:29', '0', '1');
+INSERT INTO `flow_skip` VALUES (1246498114894958596, 1240451602826006528, 'Activity_63ded5c', 1, 'Event_d678d35', 2, NULL, NULL, NULL, '580,190;762,190;762,250;792,250', '2024-06-01 08:18:29', '2024-06-01 08:18:29', '0', '1');
+
+-- ----------------------------
 -- Table structure for flow_task
 -- ----------------------------
 DROP TABLE IF EXISTS `flow_task`;
@@ -150,5 +179,9 @@ CREATE TABLE `flow_task`  (
   `tenant_id` varchar(40) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '租户id',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '待办任务表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of flow_task
+-- ----------------------------
 
 SET FOREIGN_KEY_CHECKS = 1;

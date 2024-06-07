@@ -172,12 +172,6 @@
 
             <dependency>
                 <groupId>com.quick</groupId>
-                <artifactId>quick-boot-flow-engine</artifactId>
-                <version>${quick.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.quick</groupId>
                 <artifactId>quick-boot-flow-domain</artifactId>
                 <version>${quick.version}</version>
             </dependency>
@@ -264,6 +258,17 @@
             <dependency>
                 <groupId>com.baomidou</groupId>
                 <artifactId>dynamic-datasource-spring-boot3-starter</artifactId>
+                <version>${dynamic-datasource.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>dynamic-datasource-creator</artifactId>
+                <version>${dynamic-datasource.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>dynamic-datasource-spring</artifactId>
                 <version>${dynamic-datasource.version}</version>
             </dependency>
 

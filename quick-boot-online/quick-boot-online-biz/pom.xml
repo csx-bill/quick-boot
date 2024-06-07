@@ -41,6 +41,16 @@
             <groupId>com.github.APIJSON</groupId>
             <artifactId>apijson-router</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>dynamic-datasource-creator</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>dynamic-datasource-spring</artifactId>
+            <scope>compile</scope>
+        </dependency>
 
     </dependencies>
 
