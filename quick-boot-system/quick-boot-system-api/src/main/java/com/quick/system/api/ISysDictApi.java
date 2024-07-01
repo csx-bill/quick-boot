@@ -34,6 +34,6 @@ public interface ISysDictApi extends ISysDictBaseApi {
      * @param dictCode
      * @return
      */
-    @GetMapping(value = "/dict/api/queryDictDataByDictCode")
+    @GetMapping(value = "/system/dict/api/queryDictDataByDictCode")
     Result<List<SysDictDataApiDTO>> queryDictDataByDictCode(@RequestParam("dictCode") String dictCode);
 }

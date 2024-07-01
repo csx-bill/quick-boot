@@ -13,7 +13,7 @@ import java.io.Serializable;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Schema(name = "保存-远程函数")
+@Schema(name = "查询-远程函数")
 public class FunctionPageQuery implements Serializable {
     private static final long serialVersionUID = 1L;
 

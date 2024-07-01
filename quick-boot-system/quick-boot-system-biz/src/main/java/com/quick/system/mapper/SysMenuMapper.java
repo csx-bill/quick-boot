@@ -9,7 +9,7 @@ import java.util.List;
 
 @Mapper
 public interface SysMenuMapper extends BaseMapper<SysMenu> {
-    List<SysMenu> queryByUser(@Param("userId") Long userId);
+    List<SysMenu> queryByUser(@Param("userId") Long userId,@Param("menuTypes") List<String> menuTypes);
 
     /**
      * 根据角色id 查询按钮权限

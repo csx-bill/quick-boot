@@ -37,6 +37,12 @@ public class SysMenuController extends SuperController<ISysMenuService, Long, Sy
         return Result.success(baseService.getRoutes());
     }
 
+    @GetMapping(value = "/getUserMenu")
+    @Operation(summary = "查询用户菜单(不包含按钮权限)", description = "查询用户菜单(不包含按钮权限)")
+    public Result<List<SysMenu>> getUserMenu() {
+        return Result.success(baseService.getUserMenu(StpUtil.getLoginIdAsLong()));
+    }
+
     @GetMapping(value = "/getUserMenuTree")
     @Operation(summary = "查询当前登录用户拥有的菜单树和按钮权限", description = "查询当前登录用户拥有的菜单树和按钮权限")
     public Result<List<SysMenu>> getUserMenuTree() {

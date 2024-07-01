@@ -11,7 +11,7 @@ import com.quick.flow.dto.DefinitionPageQuery;
 import com.warm.flow.core.entity.Definition;
 import com.warm.flow.core.service.DefService;
 import com.warm.flow.orm.entity.FlowDefinition;
-import com.warm.tools.utils.page.Page;
+import com.warm.flow.core.utils.page.Page;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.annotation.Resource;
@@ -79,6 +79,7 @@ public class DefController  {
      */
     @GetMapping("/publish/{id}")
     @Transactional(rollbackFor = Exception.class)
+    @Operation(summary = "发布流程定义")
     public Result<Boolean> publish(@PathVariable("id") Long id) {
         return Result.success(defService.publish(id));
     }
@@ -89,6 +90,7 @@ public class DefController  {
      */
     @GetMapping("/unPublish/{id}")
     @Transactional(rollbackFor = Exception.class)
+    @Operation(summary = "取消发布流程定义")
     public Result<Boolean> unPublish(@PathVariable("id") Long id) {
         defService.unPublish(id);
         return Result.success();
@@ -121,6 +123,7 @@ public class DefController  {
 
     @PostMapping("/saveXml")
     @Transactional(rollbackFor = Exception.class)
+    @Operation(summary = "保存XML")
     public Result<Boolean> saveXml(@RequestBody FlowDefinition def) throws Exception {
         defService.saveXml(def);
         return Result.success();
@@ -131,6 +134,7 @@ public class DefController  {
      */
     @GetMapping("/copyDef/{id}")
     @Transactional(rollbackFor = Exception.class)
+    @Operation(summary = "保存XML")
     public Result<Boolean> copyDef(@PathVariable("id") Long id) {
         return Result.success(defService.copyDef(id));
     }

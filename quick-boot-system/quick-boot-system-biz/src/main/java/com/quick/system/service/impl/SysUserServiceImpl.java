@@ -1,22 +1,22 @@
 package com.quick.system.service.impl;
 
 import cn.dev33.satoken.secure.BCrypt;
+import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.quick.common.constant.CommonConstant;
+import com.quick.common.entity.BaseEntity;
 import com.quick.common.exception.BizException;
 import com.quick.common.util.SuperAdminUtils;
-import com.quick.system.entity.SysDept;
-import com.quick.system.entity.SysMenu;
-import com.quick.system.entity.SysUser;
+import com.quick.system.entity.*;
 import com.quick.system.mapper.SysUserMapper;
 import com.quick.system.req.AuthorizedUserPageParam;
-import com.quick.system.service.ISysDeptService;
-import com.quick.system.service.ISysMenuService;
-import com.quick.system.service.ISysUserService;
+import com.quick.system.service.*;
 import com.quick.system.vo.UserInfoVO;
+import com.quick.system.vo.UserPermissionVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -27,6 +27,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -36,6 +37,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
     final ISysMenuService sysMenuService;
     final ISysDeptService sysDeptService;
+    final ISysUserTenantService sysUserTenantService;
+    final ISysTenantService sysTenantService;
 
     @Override
     public IPage<SysUser> authorizedUserPage(Page<SysUser> page, AuthorizedUserPageParam param) {
@@ -114,11 +117,35 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         UserInfoVO userInfoVO = new UserInfoVO();
         BeanUtils.copyProperties(sysUser, userInfoVO);
         userInfoVO.setUserId(userId);
+
+        // 查询当前登录用户的租户
+        List<SysUserTenant> list = sysUserTenantService.list(new LambdaQueryWrapper<SysUserTenant>()
+                .eq(SysUserTenant::getUserId, userId));
+        List<Long> tenantIds = list.stream().map(SysUserTenant::getTenantId).collect(Collectors.toList());
+        List<SysTenant> userTenant = sysTenantService.list(new LambdaQueryWrapper<SysTenant>().in(BaseEntity::getId, tenantIds));
+        userInfoVO.setUserTenant(userTenant);
+
+        return userInfoVO;
+    }
+
+    @Override
+    public UserPermissionVO getUserPermission(Long userId) {
+        UserPermissionVO vo = new UserPermissionVO();
         // 按钮权限
         List<String> permsCode = sysMenuService.getUserButton(userId);
-        userInfoVO.setPermsCode(permsCode);
-        List<SysMenu> userMenuTree = sysMenuService.getUserMenuTree(userId);
-        userInfoVO.setUserMenuTree(userMenuTree);
-        return userInfoVO;
+        vo.setPermsCode(permsCode);
+        List<SysMenu> userMenu = sysMenuService.getUserMenu(userId);
+        vo.setUserMenuTree(userMenu);
+        return vo;
+    }
+
+    @Override
+    public List<SysTenant> getUserTenantList() {
+        // 查询当前登录用户的租户
+        List<SysUserTenant> list = sysUserTenantService.list(new LambdaQueryWrapper<SysUserTenant>()
+                .eq(SysUserTenant::getUserId, StpUtil.getLoginIdAsLong()));
+        List<Long> tenantIds = list.stream().map(SysUserTenant::getTenantId).collect(Collectors.toList());
+        List<SysTenant> userTenant = sysTenantService.list(new LambdaQueryWrapper<SysTenant>().in(BaseEntity::getId, tenantIds));
+        return userTenant;
     }
 }

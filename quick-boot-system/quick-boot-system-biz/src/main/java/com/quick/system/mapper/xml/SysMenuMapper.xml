@@ -26,6 +26,12 @@
                             AND d.id = #{userId}
                       )
                   )
+        <if test="menuTypes != null">
+            AND p.menu_type in
+            <foreach item="menuType" collection="menuTypes" open="(" separator="," close=")">
+                #{menuType}
+            </foreach>
+        </if>
                 AND p.del_flag = 0
                 AND p.`status` = 'A') h
         ORDER BY h.order_no ASC

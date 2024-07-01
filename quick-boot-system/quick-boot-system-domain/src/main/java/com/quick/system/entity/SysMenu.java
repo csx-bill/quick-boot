@@ -63,4 +63,7 @@ public class SysMenu extends TreeEntity<SysMenu,Long> implements Serializable {
     @Schema(description = "schema")
     private String schema;
 
+    @Schema(description = "组件")
+    private String component;
+
 }

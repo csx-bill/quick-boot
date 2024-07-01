@@ -3,10 +3,6 @@ package com.quick.online.config;
 import apijson.JSONRequest;
 import apijson.RequestMethod;
 import apijson.framework.APIJSONSQLConfig;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.quick.common.util.SpringBeanUtils;
-import com.quick.online.entity.Access;
-import com.quick.online.service.IAccessService;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -126,20 +122,6 @@ public class OnlineSQLConfig extends APIJSONSQLConfig<Long> {
         return isInfluxDB() ? t.toLowerCase() : JSONRequest.recoverUnderline(t, false);
     }
 
-    /**
-     * 实现跨库查询
-     * @return
-     */
-    @Override
-    public String getSQLSchema() {
-        // 查找表的数据库
-        IAccessService accessService = SpringBeanUtils.getBean(IAccessService.class);
-        Access access = accessService.getOne(new LambdaQueryWrapper<Access>().eq(Access::getAlias, this.getTable()));
-        String schema = access.getSchema();
-        return schema;
-    }
-
-
     // 取消注释后，默认的数据库类型会由 MySQL 改为 PostgreSQL
     	@Override
     	public String getDatabase() {
@@ -149,10 +131,6 @@ public class OnlineSQLConfig extends APIJSONSQLConfig<Long> {
 
     @Override
     public String getDatasource() {
-        // 查找表的数据库
-        IAccessService accessService = SpringBeanUtils.getBean(IAccessService.class);
-        Access access = accessService.getOne(new LambdaQueryWrapper<Access>().eq(Access::getAlias, this.getTable()));
-        String schema = access.getSchema();
-        return schema;
+        return super.getSQLSchema();
     }
 }
