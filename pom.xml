@@ -23,7 +23,7 @@
         <spring-cloud-alibaba.version>2022.0.0.0</spring-cloud-alibaba.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <mysql.version>8.0.31</mysql.version>
-        <native-maven-plugin.version>0.10.0</native-maven-plugin.version>
+        <native-maven-plugin.version>0.10.2</native-maven-plugin.version>
         <mybatis-plus.version>3.5.5</mybatis-plus.version>
         <dynamic-datasource.version>4.3.0</dynamic-datasource.version>
         <p6spy.version>3.9.1</p6spy.version>
@@ -36,6 +36,8 @@
         <hutool-all.version>5.8.16</hutool-all.version>
         <lombok.version>1.18.30</lombok.version>
         <flow.version>1.2.0</flow.version>
+        <apijson.version>7.0.3</apijson.version>
+        <apijson-router.version>2.0.3</apijson-router.version>
     </properties>
     <!-- 模块 -->
     <modules>
@@ -336,19 +338,19 @@
             <dependency>
                 <groupId>com.github.Tencent</groupId>
                 <artifactId>APIJSON</artifactId>
-                <version>7.0.0</version>
+                <version>${apijson.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.github.APIJSON</groupId>
                 <artifactId>apijson-framework</artifactId>
-                <version>7.0.0</version>
+                <version>${apijson.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.github.APIJSON</groupId>
                 <artifactId>apijson-router</artifactId>
-                <version>2.0.0</version>
+                <version>${apijson-router.version}</version>
             </dependency>
 
             <!-- flow 依赖 -->
@@ -388,6 +390,23 @@
                         </layers>
                     </configuration>
                 </plugin>
+
+                <plugin>
+                    <groupId>org.graalvm.buildtools</groupId>
+                    <artifactId>native-maven-plugin</artifactId>
+                    <version>${native-maven-plugin.version}</version>
+                    <extensions>true</extensions>
+                    <executions>
+                        <execution>
+                            <id>build-native</id>
+                            <goals>
+                                <goal>compile-no-fork</goal>
+                            </goals>
+                            <phase>package</phase>
+                        </execution>
+                    </executions>
+                </plugin>
+
             </plugins>
         </pluginManagement>
 
