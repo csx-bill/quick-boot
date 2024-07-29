@@ -5,6 +5,7 @@ import com.baomidou.dynamic.datasource.toolkit.DynamicDataSourceContextHolder;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.quick.common.constant.CommonConstant;
+import com.quick.common.exception.BizException;
 import com.quick.online.dto.OnlCgformHeadDetailsVO;
 import com.quick.online.dto.OnlCgformHeadVO;
 import com.quick.online.dto.SyncedTableInfoDTO;
@@ -20,6 +21,10 @@ import com.quick.online.service.IRequestService;
 import com.quick.online.util.APIJSONRequestUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.anyline.metadata.Column;
+import org.anyline.metadata.Table;
+import org.anyline.proxy.ServiceProxy;
+import org.anyline.service.AnylineService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -139,30 +144,7 @@ public class OnlCgformHeadServiceImpl extends ServiceImpl<OnlCgformHeadMapper, O
             onlCgformFieldService.saveBatch(onlCgformFieldList);
 
             // 添加 APIJSON 配置表
-            // 转换为小驼峰命名法
-            String camelCase = StrUtil.toCamelCase(tableName);
-            // 将第一个字母大写，得到大驼峰命名法
-            String alias = StrUtil.upperFirst(camelCase);
-            Access access = Access.builder()
-                    .schema(dsName)
-                    .alias(alias)
-                    .name(onlCgformHead.getTableName())
-                    .detail(onlCgformHead.getTableTxt())
-                    .debug(0)
-                    .date(LocalDateTime.now()).build();
-            accessService.save(access);
-
-            // 构建APISJON crud 接口参数校验
-            ArrayList<Request> crud = new ArrayList<>();
-
-            String structure = "{}";
-            Request save = APIJSONRequestUtils.builderRequest(CommonConstant.SAVE_MSG, RequestMethod.POST.name(), alias, alias, structure);
-            Request update = APIJSONRequestUtils.builderRequest(CommonConstant.UPDATE_BY_ID_MSG, RequestMethod.PUT.name(), alias, alias, structure);
-            Request delete = APIJSONRequestUtils.builderRequest(CommonConstant.REMOVE_BY_ID_MSG, RequestMethod.DELETE.name(), alias, alias, structure);
-            crud.add(save);
-            crud.add(update);
-            crud.add(delete);
-            requestService.saveBatch(crud);
+            addApiJsonConfig(tableName, onlCgformHead.getTableTxt(),null,null,null,dsName);
         }
         // 刷新APISJON 配置(不执行这个方法,在线接口无法调用该表的操作)
         accessService.reload(null);
@@ -177,26 +159,40 @@ public class OnlCgformHeadServiceImpl extends ServiceImpl<OnlCgformHeadMapper, O
         List<OnlCgformField> onlCgformFieldList = saveDTO.getOnlCgformFieldList();
 
         // 自动建表
-//        if (onlCgformFieldList == null || onlCgformFieldList.isEmpty()) {
-//            throw new RuntimeException("自动创建表[" + tableInfo.getName() + "]中至少需要一个字段");
-//        }
-//        if (!TableModelEnum.CREATE.name().toLowerCase().equals(tableInfo.getModel())) {
-//            throw new RuntimeException("自动创建表[" + tableInfo.getModel() + "]模式的处理未找到,请检查");
-//        }
-//        try {
-//            AnylineService service = ServiceProxy.service();
-//            // 如果已存在，删除重键
-//            Table table = service.metadata().table(tableInfo.getName(), false);
-//            if (null != table)
-//                service.ddl().drop(table);
-//            // 执行建表SQL
-//            service.ddl().create(tableInfo);
-//            log.info("自动创建表处理完成!");
-//        }
-//        catch (Exception e) {
-//            throw new RuntimeException("自动创建表异常", e);
-//        }
+        if (onlCgformFieldList == null || onlCgformFieldList.isEmpty()) {
+            throw new BizException(CommonConstant.SC_INTERNAL_SERVER_ERROR_500,"自动创建表[" + saveDTO.getTableName() + "]中至少需要一个字段");
+        }
 
+        try {
+            AnylineService service = ServiceProxy.service();
+            // 已存在
+            Table table = service.metadata().table(saveDTO.getTableName(), false);
+            if (null != table){
+                throw new BizException(CommonConstant.SC_INTERNAL_SERVER_ERROR_500,"自动创建表[" + saveDTO.getTableName() + "]该表已存在");
+            }
+            // 执行建表SQL
+            table = new Table();
+            table.setName(saveDTO.getTableName());
+            table.setComment(saveDTO.getTableTxt());
+
+            for (OnlCgformField onlCgformField : onlCgformFieldList) {
+                Column column = new Column();
+                column.setName(onlCgformField.getDbFieldName());
+                column.setType(onlCgformField.getDbType());
+                column.setPrimary(onlCgformField.getDbIsKey());
+                column.setNullable(onlCgformField.getDbIsNull());
+                column.setComment(onlCgformField.getDbFieldTxt());
+                column.setDefaultValue(onlCgformField.getDbDefaultVal());
+                column.setScale(onlCgformField.getDbPointLength());
+                column.setLength(onlCgformField.getDbLength());
+                table.addColumn(column);
+            }
+
+            service.ddl().create(table);
+            log.info("自动创建表处理完成!");
+        } catch (Exception e) {
+            throw new BizException(CommonConstant.SC_INTERNAL_SERVER_ERROR_500,"自动创建表异常[" + saveDTO.getTableName() + "]");
+        }
 
         OnlCgformHead onlCgformHead = new OnlCgformHead();
         BeanUtils.copyProperties(saveDTO,onlCgformHead);
@@ -206,8 +202,46 @@ public class OnlCgformHeadServiceImpl extends ServiceImpl<OnlCgformHeadMapper, O
         }
         onlCgformFieldService.saveBatch(onlCgformFieldList);
 
+        // 添加 APIJSON 配置表
+        addApiJsonConfig(onlCgformHead.getTableName(), onlCgformHead.getTableTxt(),saveDTO.getDeletedKey(),saveDTO.getDeletedValue(),saveDTO.getNotDeletedValue(),onlCgformHead.getSchema());
+
+        // 刷新APISJON 配置(不执行这个方法,在线接口无法调用该表的操作)
+        accessService.reload(null);
+
         saveDTO.setId(onlCgformHead.getId());
         return saveDTO;
+    }
+
+    // 添加 APIJSON 配置
+    private void addApiJsonConfig(String tableName,String tableTxt,String deletedKey,String deletedValue,String notDeletedValue,String dsName) {
+        // 将表名转换为驼峰格式
+        String camelCase = StrUtil.toCamelCase(tableName);
+        // 将表名转换为首字母大写
+        String alias = StrUtil.upperFirst(camelCase);
+
+        // 构建 Access 对象
+        Access access = Access.builder()
+                .schema(dsName)
+                .alias(alias)
+                .name(tableName)
+                .detail(tableTxt)
+                .debug(0)
+                .date(LocalDateTime.now())
+                .deletedKey(deletedKey)
+                .deletedValue(deletedValue)
+                .notDeletedValue(notDeletedValue)
+                .build();
+        // 保存 Access 对象
+        accessService.save(access);
+
+        // 构建 Request 对象列表
+        ArrayList<Request> crud = new ArrayList<>();
+        String structure = "{}";
+        // 构建 CRUD 请求并保存
+        crud.add(APIJSONRequestUtils.builderRequest(CommonConstant.SAVE_MSG, RequestMethod.POST.name(), alias, alias, structure));
+        crud.add(APIJSONRequestUtils.builderRequest(CommonConstant.UPDATE_BY_ID_MSG, RequestMethod.PUT.name(), alias, alias, structure));
+        crud.add(APIJSONRequestUtils.builderRequest(CommonConstant.REMOVE_BY_ID_MSG, RequestMethod.DELETE.name(), alias, alias, structure));
+        requestService.saveBatch(crud);
     }
 
 }

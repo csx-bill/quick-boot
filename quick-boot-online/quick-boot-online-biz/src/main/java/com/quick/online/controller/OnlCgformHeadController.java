@@ -1,6 +1,7 @@
 package com.quick.online.controller;
 
 import com.quick.common.aspect.annotation.PreAuth;
+import com.quick.common.constant.CommonConstant;
 import com.quick.common.controller.SuperController;
 import com.quick.common.vo.Result;
 import com.quick.online.dto.*;
@@ -43,12 +44,12 @@ public class OnlCgformHeadController extends SuperController<IOnlCgformHeadServi
         return Result.success(baseService.syncedTableInfo(syncedTableInfoDTO));
     }
 
-//    @PreAuth("{}"+ CommonConstant.ADD)
-//    @PostMapping(value = "/bizSave")
-//    @Operation(summary = CommonConstant.SAVE_MSG)
-//    public Result<OnlCgformHeadVO> bizSave(@RequestBody OnlCgformHeadVO saveDTO) {
-//        baseService.save(entity);
-//        return Result.success(entity);
-//    }
+    @PreAuth("{}"+ CommonConstant.ADD)
+    @PostMapping(value = "/bizSave")
+    @Operation(summary = "新增表单")
+    public Result<OnlCgformHeadVO> bizSave(@RequestBody OnlCgformHeadVO saveDTO) {
+        baseService.bizSave(saveDTO);
+        return Result.success(saveDTO);
+    }
 
 }
