@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quick.online.mapper.OnlCgformFieldMapper">
+
+    <select id="selectByTableName" resultType="com.quick.online.entity.OnlCgformField">
+        SELECT
+            IF
+            ( COLUMN_KEY = 'PRI', 1, 0 ) AS dbIsKey,
+            column_name AS dbFieldName,
+            data_type AS dbType,
+            column_comment AS dbFieldTxt,
+            numeric_scale AS dbPointLength,
+            IF
+            ( numeric_precision, numeric_precision, character_maximum_length ) AS dbLength,
+            IF
+            ( is_nullable = 'YES', 1, 0 ) AS dbIsNull
+        FROM
+            information_schema.COLUMNS
+        WHERE
+            table_name = #{tableName}
+          AND table_schema = (select database())
+    </select>
+</mapper>

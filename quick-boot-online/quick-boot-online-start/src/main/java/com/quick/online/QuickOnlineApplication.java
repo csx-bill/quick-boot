@@ -4,7 +4,6 @@ import apijson.Log;
 import apijson.framework.APIJSONApplication;
 import apijson.framework.APIJSONCreator;
 import apijson.orm.*;
-import apijson.router.APIJSONRouterApplication;
 import com.quick.online.config.OnlineSQLConfig;
 import com.quick.online.config.OnlineSQLExecutor;
 import com.quick.online.parser.OnlineFunctionParser;
@@ -46,19 +45,18 @@ public class QuickOnlineApplication {
         AbstractParser.MAX_UPDATE_COUNT = 100;
 
         APIJSONApplication.init();
-        APIJSONRouterApplication.init();
     }
 
     static {
         // 使用本项目的自定义处理类
-        APIJSONApplication.DEFAULT_APIJSON_CREATOR = new APIJSONCreator<Long>() {
+        APIJSONApplication.DEFAULT_APIJSON_CREATOR = new APIJSONCreator<String>() {
             @Override
             public FunctionParser createFunctionParser() {
                 return new OnlineFunctionParser();
             }
 
             @Override
-            public Parser<Long> createParser() {
+            public Parser<String> createParser() {
                 return new OnlineParser();
             }
 
@@ -73,7 +71,7 @@ public class QuickOnlineApplication {
             }
 
             @Override
-            public Verifier<Long> createVerifier() {
+            public Verifier<String> createVerifier() {
                 return new OnlineVerifier();
             }
         };

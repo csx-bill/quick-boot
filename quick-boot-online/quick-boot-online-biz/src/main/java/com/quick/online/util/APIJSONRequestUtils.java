@@ -1,5 +1,6 @@
 package com.quick.online.util;
 
+import cn.hutool.core.util.StrUtil;
 import com.quick.common.constant.CommonConstant;
 import com.quick.online.entity.Request;
 import com.quick.online.entity.SysTableColumn;
@@ -186,9 +187,9 @@ public class APIJSONRequestUtils {
      * @param structure
      * @return
      */
-    private static Request builderRequest(String detail, String method, String aliasTableName, String tag, String structure){
+    public static Request builderRequest(String detail, String method, String aliasTableName, String tag, String structure){
         Request request = Request.builder()
-                .tag(FormatToAPIJSONUtils.getTag(aliasTableName,tag))
+                .tag(tag)
                 .structure(structure)
                 .method(method)
                 .detail(detail)

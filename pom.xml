@@ -17,10 +17,10 @@
         <maven.compiler.target>21</maven.compiler.target>
         <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
         <quick.version>1.0.1</quick.version>
-        <spring-boot.version>3.2.2</spring-boot.version>
-        <spring-cloud.version>2023.0.0</spring-cloud.version>
+        <spring-boot.version>3.3.2</spring-boot.version>
+        <spring-cloud.version>2023.0.3</spring-cloud.version>
         <micrometer.version>1.12.3</micrometer.version>
-        <spring-cloud-alibaba.version>2022.0.0.0</spring-cloud-alibaba.version>
+        <spring-cloud-alibaba.version>2023.0.1.2</spring-cloud-alibaba.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <mysql.version>8.0.31</mysql.version>
         <native-maven-plugin.version>0.10.2</native-maven-plugin.version>
@@ -31,13 +31,14 @@
         <swagger-annotations-jakarta.version>2.2.19</swagger-annotations-jakarta.version>
         <knife4j.version>4.5.0</knife4j.version>
         <fastjson2.version>2.0.43</fastjson2.version>
-        <sa-token.version>1.37.0</sa-token.version>
+        <sa-token.version>1.38.0</sa-token.version>
         <redisson.version>3.25.0</redisson.version>
         <hutool-all.version>5.8.16</hutool-all.version>
         <lombok.version>1.18.30</lombok.version>
         <flow.version>1.2.0</flow.version>
         <apijson.version>7.0.3</apijson.version>
         <apijson-router.version>2.0.3</apijson-router.version>
+        <anyline.version>8.7.2-jdk21-20240722</anyline.version>
     </properties>
     <!-- 模块 -->
     <modules>
@@ -163,12 +164,6 @@
             <dependency>
                 <groupId>com.quick</groupId>
                 <artifactId>quick-boot-online-biz</artifactId>
-                <version>${quick.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.quick</groupId>
-                <artifactId>quick-boot-online-controller</artifactId>
                 <version>${quick.version}</version>
             </dependency>
 
@@ -358,6 +353,13 @@
                 <groupId>io.github.minliuhua</groupId>
                 <artifactId>warm-flow-mybatis-plus-sb-starter</artifactId>
                 <version>${flow.version}</version>
+            </dependency>
+
+            <!-- anyline -->
+            <dependency>
+                <groupId>org.anyline</groupId>
+                <artifactId>anyline-data-jdbc</artifactId>
+                <version>${anyline.version}</version>
             </dependency>
 
         </dependencies>

@@ -48,7 +48,7 @@ public class PageParam<T> implements Serializable {
 
     public <E> Page<E> buildPage(){
         Page<E> page = new Page<>();
-        page.setCurrent(this.getPage()==0?1:this.getPage());
+        page.setCurrent(this.getPage() == null ? 1 : (this.getPage() == 0 ? 1 : this.getPage()));
         if(this.getCount()!=null){
             page.setSize(this.getCount()==0?10:this.getCount());
         }

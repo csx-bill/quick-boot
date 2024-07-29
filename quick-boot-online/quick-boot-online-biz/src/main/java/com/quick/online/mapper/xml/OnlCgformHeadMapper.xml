@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quick.online.mapper.OnlCgformHeadMapper">
+
+    <select id="selectByTableName" resultType="com.quick.online.entity.OnlCgformHead">
+        SELECT
+        0 AS tableType,
+        TABLE_NAME AS tableName,
+        TABLE_COMMENT AS tableTxt,
+        (select database()) AS `schema`
+        FROM
+        information_schema.TABLES
+        WHERE
+        TABLE_SCHEMA = (select database())
+        <if test='tableName != null and tableName!=""'>
+            AND TABLE_NAME = #{tableName}
+        </if>
+        ORDER BY
+        create_time DESC
+    </select>
+</mapper>

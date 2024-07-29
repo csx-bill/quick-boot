@@ -38,18 +38,13 @@
         </dependency>
 
         <dependency>
-            <groupId>com.github.APIJSON</groupId>
-            <artifactId>apijson-router</artifactId>
+            <groupId>com.quick</groupId>
+            <artifactId>quick-boot-pom</artifactId>
         </dependency>
+
         <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>dynamic-datasource-creator</artifactId>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>dynamic-datasource-spring</artifactId>
-            <scope>compile</scope>
+            <groupId>org.anyline</groupId>
+            <artifactId>anyline-data-jdbc</artifactId>
         </dependency>
 
     </dependencies>

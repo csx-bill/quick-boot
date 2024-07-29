@@ -19,7 +19,7 @@
     <dependencies>
         <dependency>
             <groupId>com.quick</groupId>
-            <artifactId>quick-boot-online-controller</artifactId>
+            <artifactId>quick-boot-online-biz</artifactId>
         </dependency>
 
         <dependency>

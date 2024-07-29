@@ -19,4 +19,6 @@ public interface IAccessService extends IService<Access> {
     boolean refactoringCRUDById(String id);
 
     JSONObject getAccessSchemaById(String id);
+
+    boolean reload(String request);
 }
