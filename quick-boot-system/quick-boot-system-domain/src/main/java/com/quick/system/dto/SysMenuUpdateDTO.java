@@ -52,4 +52,7 @@ public class SysMenuUpdateDTO implements Serializable {
     @Schema(description = "schema")
     private String schema;
 
+    @Schema(description = "组件")
+    private String component;
+
 }
