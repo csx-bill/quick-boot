@@ -14,5 +14,6 @@ public interface IOnlCgformHeadService extends IService<OnlCgformHead> {
     Boolean syncedTableInfo(SyncedTableInfoDTO syncedTableInfoDTO);
 
     OnlCgformHeadVO bizSave(OnlCgformHeadVO saveDTO);
+    Boolean bizUpdateById(OnlCgformHeadVO saveDTO);
 
 }

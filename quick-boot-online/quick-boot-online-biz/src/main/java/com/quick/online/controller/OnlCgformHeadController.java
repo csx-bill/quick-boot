@@ -52,4 +52,11 @@ public class OnlCgformHeadController extends SuperController<IOnlCgformHeadServi
         return Result.success(saveDTO);
     }
 
+    @PreAuth("{}"+ CommonConstant.UPDATE)
+    @PutMapping(value = "/bizUpdateById")
+    @Operation(summary = "更新表单")
+    public Result<Boolean> bizUpdateById(@RequestBody OnlCgformHeadVO saveDTO) {
+        return Result.success(baseService.bizUpdateById(saveDTO));
+    }
+
 }

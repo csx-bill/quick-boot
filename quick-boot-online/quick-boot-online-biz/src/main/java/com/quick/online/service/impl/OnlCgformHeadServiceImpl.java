@@ -27,6 +27,7 @@ import org.anyline.proxy.ServiceProxy;
 import org.anyline.service.AnylineService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -212,36 +213,106 @@ public class OnlCgformHeadServiceImpl extends ServiceImpl<OnlCgformHeadMapper, O
         return saveDTO;
     }
 
+    @Override
+    public Boolean bizUpdateById(OnlCgformHeadVO saveDTO) {
+        // 切换目标数据源
+        DynamicDataSourceContextHolder.push(saveDTO.getSchema());
+        List<OnlCgformField> onlCgformFieldList = saveDTO.getOnlCgformFieldList();
+
+        // 自动建表
+        if (onlCgformFieldList == null || onlCgformFieldList.isEmpty()) {
+            throw new BizException(CommonConstant.SC_INTERNAL_SERVER_ERROR_500,"自动创建表[" + saveDTO.getTableName() + "]中至少需要一个字段");
+        }
+
+        try {
+            AnylineService service = ServiceProxy.service();
+            // 已存在
+            Table table = service.metadata().table(saveDTO.getTableName(), false);
+            if (null == table){
+                throw new BizException(CommonConstant.SC_INTERNAL_SERVER_ERROR_500,"自动创建表[" + saveDTO.getTableName() + "]该表不存在");
+            }
+            // 执行建表SQL
+            table = new Table();
+            table.setName(saveDTO.getTableName());
+            table.setComment(saveDTO.getTableTxt());
+
+            for (OnlCgformField onlCgformField : onlCgformFieldList) {
+                Column column = new Column();
+                column.setName(onlCgformField.getDbFieldName());
+                column.setType(onlCgformField.getDbType());
+                column.setPrimary(onlCgformField.getDbIsKey());
+                column.setNullable(onlCgformField.getDbIsNull());
+                column.setComment(onlCgformField.getDbFieldTxt());
+                column.setDefaultValue(onlCgformField.getDbDefaultVal());
+                column.setScale(onlCgformField.getDbPointLength());
+                column.setLength(onlCgformField.getDbLength());
+                table.addColumn(column);
+            }
+
+            service.ddl().save(table);
+            log.info("自动创建表处理完成!");
+        } catch (Exception e) {
+            throw new BizException(CommonConstant.SC_INTERNAL_SERVER_ERROR_500,"自动创建表异常[" + saveDTO.getTableName() + "]");
+        }
+
+        OnlCgformHead onlCgformHead = new OnlCgformHead();
+        BeanUtils.copyProperties(saveDTO,onlCgformHead);
+        updateById(onlCgformHead);
+        for (OnlCgformField onlCgformField : onlCgformFieldList) {
+            onlCgformField.setCgformHeadId(onlCgformHead.getId());
+        }
+        onlCgformFieldService.saveOrUpdateBatch(onlCgformFieldList);
+
+        // 添加 APIJSON 配置表
+        addApiJsonConfig(onlCgformHead.getTableName(), onlCgformHead.getTableTxt(),saveDTO.getDeletedKey(),saveDTO.getDeletedValue(),saveDTO.getNotDeletedValue(),onlCgformHead.getSchema());
+
+        // 刷新APISJON 配置(不执行这个方法,在线接口无法调用该表的操作)
+        accessService.reload(null);
+        return true;
+    }
+
     // 添加 APIJSON 配置
     private void addApiJsonConfig(String tableName,String tableTxt,String deletedKey,String deletedValue,String notDeletedValue,String dsName) {
+
+        Access access = accessService.getOne(new LambdaQueryWrapper<Access>().eq(Access::getName, tableName));
+
         // 将表名转换为驼峰格式
         String camelCase = StrUtil.toCamelCase(tableName);
         // 将表名转换为首字母大写
         String alias = StrUtil.upperFirst(camelCase);
+        if(Objects.isNull(access)){
+            access = Access.builder()
+                    .schema(dsName)
+                    .alias(alias)
+                    .name(tableName)
+                    .detail(tableTxt)
+                    .debug(0)
+                    .date(LocalDateTime.now())
+                    .deletedKey(deletedKey)
+                    .deletedValue(deletedValue)
+                    .notDeletedValue(notDeletedValue)
+                    .build();
+        }else {
+            access.setDetail(tableTxt);
+            access.setDeletedKey(deletedKey);
+            access.setDeletedValue(deletedValue);
+            access.setNotDeletedValue(notDeletedValue);
+        }
+        accessService.saveOrUpdate(access);
 
-        // 构建 Access 对象
-        Access access = Access.builder()
-                .schema(dsName)
-                .alias(alias)
-                .name(tableName)
-                .detail(tableTxt)
-                .debug(0)
-                .date(LocalDateTime.now())
-                .deletedKey(deletedKey)
-                .deletedValue(deletedValue)
-                .notDeletedValue(notDeletedValue)
-                .build();
-        // 保存 Access 对象
-        accessService.save(access);
+        List<Request> list = requestService.list(new LambdaQueryWrapper<Request>().eq(Request::getTag, alias));
+        // 如果有就不需要再次添加了
+        if(CollectionUtils.isEmpty(list)){
+            // 构建 Request 对象列表
+            ArrayList<Request> crud = new ArrayList<>();
+            String structure = "{}";
+            // 构建 CRUD 请求并保存
+            crud.add(APIJSONRequestUtils.builderRequest(CommonConstant.SAVE_MSG, RequestMethod.POST.name(), alias, alias, structure));
+            crud.add(APIJSONRequestUtils.builderRequest(CommonConstant.UPDATE_BY_ID_MSG, RequestMethod.PUT.name(), alias, alias, structure));
+            crud.add(APIJSONRequestUtils.builderRequest(CommonConstant.REMOVE_BY_ID_MSG, RequestMethod.DELETE.name(), alias, alias, structure));
+            requestService.saveBatch(crud);
+        }
 
-        // 构建 Request 对象列表
-        ArrayList<Request> crud = new ArrayList<>();
-        String structure = "{}";
-        // 构建 CRUD 请求并保存
-        crud.add(APIJSONRequestUtils.builderRequest(CommonConstant.SAVE_MSG, RequestMethod.POST.name(), alias, alias, structure));
-        crud.add(APIJSONRequestUtils.builderRequest(CommonConstant.UPDATE_BY_ID_MSG, RequestMethod.PUT.name(), alias, alias, structure));
-        crud.add(APIJSONRequestUtils.builderRequest(CommonConstant.REMOVE_BY_ID_MSG, RequestMethod.DELETE.name(), alias, alias, structure));
-        requestService.saveBatch(crud);
     }
 
 }

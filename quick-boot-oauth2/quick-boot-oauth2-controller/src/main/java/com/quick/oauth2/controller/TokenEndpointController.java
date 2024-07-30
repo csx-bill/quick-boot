@@ -50,7 +50,7 @@ public class TokenEndpointController {
                 return Result.success(tokenInfo);
             }
         }
-        log.info("------- 登录失败 :{} ",StpUtil.getLoginId());
+        log.info("------- 登录失败 :{} ",loginDTO.getUsername());
         throw new UsernameNotFoundException(ExceptionCode.USERNAME_NOT_FOUND.getCode(),ExceptionCode.USERNAME_NOT_FOUND.getMsg());
     }
 
