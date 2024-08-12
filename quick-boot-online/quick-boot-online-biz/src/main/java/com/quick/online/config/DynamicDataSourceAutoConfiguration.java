@@ -7,6 +7,8 @@ import com.baomidou.dynamic.datasource.processor.DsProcessor;
 import com.baomidou.dynamic.datasource.processor.DsSpelExpressionProcessor;
 import com.baomidou.dynamic.datasource.provider.DynamicDataSourceProvider;
 import com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSourceProperties;
+
+import cn.hutool.core.util.StrUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.BeanFactory;
@@ -19,18 +21,32 @@ import org.springframework.context.expression.BeanFactoryResolver;
 @RequiredArgsConstructor
 public class DynamicDataSourceAutoConfiguration {
     private final DynamicDataSourceProperties properties;
+
     /**
      * 获取动态数据源提供者
+     * 
      * @param defaultDataSourceCreator 默认数据源创建器
      * @return 动态数据源提供者
      */
     @Bean
     public DynamicDataSourceProvider dynamicDataSourceProvider(DefaultDataSourceCreator defaultDataSourceCreator) {
-        return new JdbcDynamicDataSourceProvider(defaultDataSourceCreator, properties.getDatasource().get("master").getDriverClassName(),properties.getDatasource().get("master").getUrl(), properties.getDatasource().get("master").getUsername(), properties.getDatasource().get("master").getPassword());
+        // 读取yaml配置文件中的spring:datasource:dynamic:primary值
+        String primary = properties.getPrimary();
+        if (StrUtil.isBlank(primary)) {
+            primary = "master";
+        }
+
+        log.info("dynamicDataSourceProvider primary: {}", primary);
+
+        return new JdbcDynamicDataSourceProvider(defaultDataSourceCreator,
+                properties.getDatasource().get(primary).getDriverClassName(),
+                properties.getDatasource().get(primary).getUrl(), properties.getDatasource().get(primary).getUsername(),
+                properties.getDatasource().get(primary).getPassword());
     }
 
     /**
      * 获取数据源处理器
+     * 
      * @return 数据源处理器
      */
     @Bean
