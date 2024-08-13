@@ -1,5 +1,6 @@
 mysql-server:
   address: jdbc:p6spy:mysql://127.0.0.1:3306
+  params: useUnicode=true&characterEncoding=utf8&serverTimezone=UTC&nullCatalogMeansCurrent=true&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true
   username: root
   password: 123456
   driver-class-name: com.p6spy.engine.spy.P6SpyDriver

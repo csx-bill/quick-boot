@@ -10,6 +10,16 @@ spring:
           predicates:
             - Path=/api/system/**,/api/auth/**
           filters:
+            # 添加了一个过滤器，用于重写API文档的路径。它捕获了api-docs路径"v3/api-docs"以及后面的路径部分，并将其附加到/stripPos/（仅充当占位符，以满足匹配StripPrefix = 1规则），从而允许网关重定向各服务API文档请求。
+            # 添加对api-docs路径的重定向处理
+            - name: RewritePath
+              args:
+                regexp: /api/system/(?<apiDocsPath>v3/api-docs.*)$
+                replacement: /stripPos/${apiDocsPath}
+            - name: RewritePath
+              args:
+                regexp: /api/auth/(?<apiDocsPath>v3/api-docs.*)$
+                replacement: /stripPos/${apiDocsPath}
             - StripPrefix=1
 # 合并 oauth2 到 quick-boot-system 模块 降低服务器资源
 #        - id: quick-boot-oauth2
@@ -23,18 +33,37 @@ spring:
           predicates:
             - Path=/api/online/**
           filters:
+            # 添加对api-docs路径的重定向处理
+            - name: RewritePath
+              args:
+                regexp: /api/online/(?<apiDocsPath>v3/api-docs.*)$
+                replacement: /stripPos/${apiDocsPath}
             - StripPrefix=1
         - id: quick-boot-flow
           uri: lb://quick-boot-flow
           predicates:
             - Path=/api/flow/**
           filters:
+            # 添加对api-docs路径的重定向处理
+            - name: RewritePath
+              args:
+                regexp: /api/flow/(?<apiDocsPath>v3/api-docs.*)$
+                replacement: /stripPos/${apiDocsPath}
             - StripPrefix=1
         - id: quick-boot-jimureport
           uri: lb://quick-boot-jimureport
           predicates:
-            - Path=/jmreport/**
-          #filters:
+            - Path=/jmreport/**,/api/jmreport/**
+          filters:
+            # 添加对api-docs路径的重定向处理
+            - name: RewritePath
+              args:
+                regexp: /api/jmreport/(?<apiDocsPath>v3/api-docs.*)$
+                replacement: /${apiDocsPath}
+            - name: RewritePath
+              args:
+                regexp: /jmreport/(?<apiDocsPath>v3/api-docs.*)$
+                replacement: /${apiDocsPath}
           #  - StripPrefix=2
 
 knife4j:
@@ -57,6 +86,8 @@ ignore:
     - /doc.html
     - /api/system/v3/api-docs/**
     - /api/auth/v3/api-docs/**
+    # - /api/flow/v3/api-docs/**
+    # - /api/online/v3/api-docs/**
     - /webjars/**
     - /swagger-resources/**
     - /v3/api-docs/**
