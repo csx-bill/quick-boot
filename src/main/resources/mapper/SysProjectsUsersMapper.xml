@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quik.boot.modules.system.mapper.SysProjectsUsersMapper">
+
+    <select id="projectsUsersPage" resultType="com.quik.boot.modules.system.vo.ProjectsUsersVO">
+        SELECT
+            up.id,
+            up.user_id,
+            u.username,
+            up.user_type,
+            up.create_time,
+            GROUP_CONCAT(DISTINCT r.role_name ORDER BY r.role_name SEPARATOR ',') AS role_names
+        FROM
+            sys_users u
+            JOIN sys_projects_users up ON u.id = up.user_id
+            LEFT JOIN sys_user_role ur ON ur.user_id = up.user_id
+            AND ur.project_id = up.project_id
+            AND ur.del_flag = '0'
+            LEFT JOIN sys_roles r ON r.id = ur.role_id
+        <where>
+            u.del_flag = '0'
+            AND up.del_flag = '0'
+            AND up.project_id = 1
+            <if test="query.username != null and query.username != ''">
+                <bind name="usernameLike" value="'%'+query.username+'%'"/>
+                AND u.username LIKE #{usernameLike}
+            </if>
+            GROUP BY
+            up.id, up.user_id, u.username, up.user_type, up.create_time
+            ORDER BY
+            up.create_time DESC
+        </where>
+    </select>
+
+    <select id="findUserByProjectsUsersId" resultType="com.quik.boot.modules.system.vo.ProjectsUsersDetailsVO">
+        SELECT
+            up.id,
+            up.user_id,
+            up.user_type,
+            GROUP_CONCAT(ur.role_id ORDER BY ur.role_id SEPARATOR ',') AS roles,
+            up.create_time
+        FROM
+            sys_projects_users up
+            JOIN sys_user_role ur ON up.user_id = ur.user_id
+            AND ur.project_id = up.project_id
+        WHERE
+            ur.del_flag = '0'
+            AND up.del_flag = '0'
+            AND up.id = #{id}
+        GROUP BY
+            up.id, up.user_id, up.user_type
+        ORDER BY
+            up.create_time DESC
+    </select>
+</mapper>

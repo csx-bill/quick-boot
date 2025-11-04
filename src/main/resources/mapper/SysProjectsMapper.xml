@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quik.boot.modules.system.mapper.SysProjectsMapper">
+
+    <select id="projectsPage" resultType="com.quik.boot.modules.system.vo.SysProjectsVO">
+        SELECT
+        p.id,
+        p.project_name,
+        p.project_description,
+        up.user_type,
+        p.create_time
+        FROM
+        sys_projects p
+        JOIN sys_projects_users up ON p.id = up.project_id
+        <where>
+            p.del_flag = '0'
+            AND up.user_id = #{query.userId}
+            <if test="query.projectName != null and query.projectName != ''">
+                <bind name="projectNameLike" value="'%'+query.projectName+'%'"/>
+                AND p.project_name LIKE #{projectNameLike}
+            </if>
+        </where>
+        ORDER BY p.create_time DESC
+    </select>
+</mapper>
