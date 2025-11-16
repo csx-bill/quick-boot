@@ -14,6 +14,9 @@ public class SysProjectsVO {
     @Schema(description = "项目名称")
     private String projectName;
 
+    @Schema(description = "LOGO")
+    private String logo;
+
     @Schema(description = "项目描述")
     private String projectDescription;
 
