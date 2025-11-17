@@ -68,6 +68,17 @@ public class SysUsersController {
     }
 
     /**
+     * 查询未加入当前项目的用户列表
+     * @param projectId 项目ID
+     * @return R
+     */
+    @GetMapping("/not-in-project")
+    @Operation(summary = "查询未加入当前项目的用户列表" , description = "查询未加入当前项目的用户列表" )
+    public R<List<SysUsers>> notInProject(@RequestParam("projectId")Long projectId) {
+        return R.ok(sysUsersService.findNotInProjectUsers(projectId));
+    }
+
+    /**
      * 分页查询
      * @param page 分页对象
      * @param params 查询参数

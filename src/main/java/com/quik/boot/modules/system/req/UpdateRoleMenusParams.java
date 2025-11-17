@@ -11,9 +11,9 @@ public class UpdateRoleMenusParams {
 
     @Schema(description = "角色ID")
     @NotNull
-    private Long roleId;
+    private Long id;
 
     @Schema(description = "菜单列表")
-    private List<Long> menuIds;
+    private String menuIds;
 
 }

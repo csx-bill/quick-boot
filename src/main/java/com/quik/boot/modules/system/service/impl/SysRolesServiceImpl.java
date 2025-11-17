@@ -13,7 +13,9 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
+
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,16 +28,17 @@ public class SysRolesServiceImpl extends ServiceImpl<SysRolesMapper, SysRoles> i
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Boolean updateRoleMenus(UpdateRoleMenusParams params) {
-        sysRoleMenuMapper.delete(Wrappers.<SysRoleMenu>query().lambda().eq(SysRoleMenu::getRoleId, params.getRoleId()));
-        if (CollectionUtils.isEmpty(params.getMenuIds())) {
+        sysRoleMenuMapper.delete(Wrappers.<SysRoleMenu>query().lambda().eq(SysRoleMenu::getRoleId, params.getId()));
+        if (!StringUtils.hasText(params.getMenuIds())) {
             return Boolean.TRUE;
         }
+        String[] menuIds = params.getMenuIds().split(",");
         // 批量创建角色菜单关联对象
-        List<SysRoleMenu> roleMenuList = params.getMenuIds().stream()
+        List<SysRoleMenu> roleMenuList = Arrays.asList(menuIds).stream()
                 .map(menuId -> {
                     SysRoleMenu rm = new SysRoleMenu();
-                    rm.setRoleId(params.getRoleId());
-                    rm.setMenuId(menuId);
+                    rm.setRoleId(params.getId());
+                    rm.setMenuId(Long.parseLong(menuId));
                     return rm;
                 })
                 .collect(Collectors.toList());
@@ -49,8 +52,11 @@ public class SysRolesServiceImpl extends ServiceImpl<SysRolesMapper, SysRoles> i
     public GetRoleMenusVO getRoleMenus(Long roleId) {
         GetRoleMenusVO roleMenusVO = new GetRoleMenusVO();
         List<SysRoleMenu> sysRoleMenus = sysRoleMenuMapper.selectList(Wrappers.<SysRoleMenu>query().lambda().eq(SysRoleMenu::getRoleId, roleId));
-        roleMenusVO.setMenuIds( sysRoleMenus.stream().map(SysRoleMenu::getMenuId).collect(Collectors.toList()));
-        roleMenusVO.setRoleId(roleId);
+        String menuIds = sysRoleMenus.stream()
+                .map(roleMenu -> String.valueOf(roleMenu.getMenuId()))
+                .collect(Collectors.joining(","));
+        roleMenusVO.setMenuIds(menuIds);
+        roleMenusVO.setId(roleId);
         return roleMenusVO;
     }
 }

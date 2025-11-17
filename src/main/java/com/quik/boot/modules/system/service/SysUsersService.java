@@ -9,4 +9,6 @@ import java.util.List;
 public interface SysUsersService extends IService<SysUsers> {
 
     List<SysUsersVO> usersList(UsersListParams params);
+
+    List<SysUsers> findNotInProjectUsers(Long projectId);
 }

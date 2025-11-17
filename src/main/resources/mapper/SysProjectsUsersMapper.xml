@@ -52,4 +52,15 @@
         ORDER BY
             up.create_time DESC
     </select>
+
+    <select id="findNotInProjectUsers" resultType="com.quik.boot.modules.system.entity.SysUsers">
+        SELECT
+            u.*
+        FROM
+            sys_users u
+                LEFT JOIN sys_projects_users pu ON u.id = pu.user_id
+                AND pu.project_id = #{projectId}
+        WHERE
+            pu.user_id IS NULL
+    </select>
 </mapper>
