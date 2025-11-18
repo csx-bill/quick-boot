@@ -1,8 +1,6 @@
 package com.quik.boot.modules.common.config.jackson;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-import com.quik.boot.modules.common.config.jackson.mixin.PageMixIn;
 import com.quik.boot.modules.common.constant.DatePatternConstants;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.jackson.autoconfigure.Jackson2ObjectMapperBuilderCustomizer;
@@ -22,9 +20,6 @@ public class JacksonConfiguration {
     @ConditionalOnMissingBean
     public Jackson2ObjectMapperBuilderCustomizer customizer() {
         return builder -> {
-            // 通过混入(PageMixIn)覆盖Mybatis Plus的Page类序列化行为，
-            builder.mixIn(Page.class, PageMixIn.class);
-
             builder.locale(Locale.CHINA);
             builder.timeZone(TimeZone.getTimeZone(ZoneId.systemDefault()));
             builder.simpleDateFormat(DatePatternConstants.NORM_DATETIME_PATTERN);

@@ -9,7 +9,7 @@ public class MenusTreeParams {
     @Schema(description = "菜单类型")
     private String menuType;
     @Schema(description = "菜单名称")
-    private String menuName;
+    private String name;
     @Schema(description = "上级菜单ID")
     private Long parentId;
     @Schema(description = "项目ID")

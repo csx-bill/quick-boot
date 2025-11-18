@@ -31,7 +31,7 @@ public class SysMenusServiceImpl extends ServiceImpl<SysMenusMapper, SysMenus> i
     @Override
     public List<SysMenusVO> treeMenu(MenusTreeParams params) {
         Long parentId = params.getParentId();
-        String menuName = params.getMenuName();
+        String name = params.getName();
         String menuType = params.getMenuType();
 
         Long parent = Objects.isNull(parentId) ? CommonConstants.MENU_TREE_ROOT_ID : parentId;
@@ -39,7 +39,7 @@ public class SysMenusServiceImpl extends ServiceImpl<SysMenusMapper, SysMenus> i
         List<SysMenus> menuList = baseMapper
                 .selectList(Wrappers.<SysMenus>lambdaQuery()
                         .eq(SysMenus::getProjectId, params.getProjectId())
-                        .like(StringUtils.hasText(menuName), SysMenus::getName, menuName)
+                        .like(StringUtils.hasText(name), SysMenus::getName, name)
                         .eq(StringUtils.hasText(menuType), SysMenus::getMenuType, menuType)
                         .orderByAsc(SysMenus::getSortOrder));
 
@@ -72,7 +72,7 @@ public class SysMenusServiceImpl extends ServiceImpl<SysMenusMapper, SysMenus> i
         }).collect(Collectors.toList());
 
         // 模糊查询 不组装树结构 直接返回 表格方便编辑
-        if (StringUtils.hasText(menuName)) {
+        if (StringUtils.hasText(name)) {
             return menuVoList;
         }
 

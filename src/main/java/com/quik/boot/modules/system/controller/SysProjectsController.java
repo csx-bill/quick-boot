@@ -2,6 +2,7 @@ package com.quik.boot.modules.system.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.quik.boot.modules.common.vo.ApiPage;
 import com.quik.boot.modules.common.vo.R;
 import com.quik.boot.modules.system.entity.SysProjects;
 import com.quik.boot.modules.system.req.ProjectsPageParams;
@@ -31,7 +32,7 @@ public class SysProjectsController {
      */
     @GetMapping("/page")
     @Operation(summary = "分页查询" , description = "分页查询" )
-    public R<IPage<SysProjectsVO>> page(@ParameterObject Page page, @ParameterObject ProjectsPageParams params) {
+    public R<IPage<SysProjectsVO>> page(@ParameterObject ApiPage page, @ParameterObject ProjectsPageParams params) {
         return R.ok(sysProjectsService.projectsPage(page, params));
     }
 

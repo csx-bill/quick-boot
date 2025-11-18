@@ -4,6 +4,7 @@ import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.quik.boot.modules.common.vo.ApiPage;
 import com.quik.boot.modules.common.vo.R;
 import com.quik.boot.modules.common.vo.UserInfo;
 import com.quik.boot.modules.system.entity.SysUsers;
@@ -86,7 +87,7 @@ public class SysUsersController {
      */
     @GetMapping("/page")
     @Operation(summary = "分页查询" , description = "分页查询" )
-    public R<IPage<ProjectsUsersVO>> projectsUsersPage(@ParameterObject Page page, @ParameterObject ProjectsUsersPageParams params) {
+    public R<IPage<ProjectsUsersVO>> projectsUsersPage(@ParameterObject ApiPage page, @ParameterObject ProjectsUsersPageParams params) {
         return R.ok(sysProjectsUsersService.projectsUsersPage(page,params));
     }
 

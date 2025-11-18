@@ -3,7 +3,7 @@ package com.quik.boot.modules.system.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.quik.boot.modules.common.vo.ApiPage;
 import com.quik.boot.modules.common.vo.R;
 import com.quik.boot.modules.system.entity.SysPages;
 import com.quik.boot.modules.system.req.PagesParams;
@@ -37,7 +37,7 @@ public class SysPagesController {
      */
     @GetMapping("/page")
     @Operation(summary = "分页查询" , description = "分页查询" )
-    public R<IPage<SysPages>> page(@ParameterObject Page page, @ParameterObject @Valid PagesParams params) {
+    public R<IPage<SysPages>> page(@ParameterObject ApiPage page, @ParameterObject @Valid PagesParams params) {
         LambdaQueryWrapper<SysPages> wrapper = Wrappers.lambdaQuery();
         wrapper.eq(SysPages::getProjectId,params.getProjectId());
         wrapper.like(StringUtils.hasText(params.getPageName()), SysPages::getPageName,params.getPageName());

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.quik.boot.modules.common.vo.ApiPage;
 import com.quik.boot.modules.common.vo.R;
 import com.quik.boot.modules.system.entity.SysRoles;
 import com.quik.boot.modules.system.req.RolesPageParams;
@@ -41,7 +42,7 @@ public class SysRolesController {
      */
     @GetMapping("/page")
     @Operation(summary = "分页查询" , description = "分页查询" )
-    public R<IPage<SysRoles>> page(@ParameterObject Page page, @ParameterObject @Valid RolesPageParams params) {
+    public R<IPage<SysRoles>> page(@ParameterObject ApiPage page, @ParameterObject @Valid RolesPageParams params) {
         LambdaQueryWrapper<SysRoles> wrapper = Wrappers.lambdaQuery();
         wrapper.eq(SysRoles::getProjectId,params.getProjectId());
         wrapper.like(StringUtils.hasText(params.getRoleName()), SysRoles::getRoleName,params.getRoleName());
