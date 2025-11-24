@@ -7,7 +7,8 @@
 | 后台源码 JAVA    | https://github.com/csx-bill/quick-boot  |
 | 前端源码 `React` | https://github.com/csx-bill/quick-admin |
 | 登录账号         | admin/123456       |
-| 演示站点         | http://81.71.132.186:5173/              |
+| 演示站点 editor 端 | http://81.71.132.186:5173/              |
+| 演示站点 admin 端  | http://81.71.132.186:5174/              |
 
 ## 概述
 
