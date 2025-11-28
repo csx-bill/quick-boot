@@ -20,7 +20,7 @@ public class R<T> implements Serializable {
 
     @Getter
     @Setter
-    private int code;
+    private int status;
 
     @Getter
     @Setter
@@ -60,9 +60,9 @@ public class R<T> implements Serializable {
         return restResult(data, CommonConstants.FAIL, msg);
     }
 
-    public static <T> R<T> restResult(T data, int code, String msg) {
+    public static <T> R<T> restResult(T data, int status, String msg) {
         R<T> apiResult = new R<>();
-        apiResult.setCode(code);
+        apiResult.setStatus(status);
         apiResult.setData(data);
         apiResult.setMsg(msg);
         return apiResult;
