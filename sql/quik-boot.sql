@@ -5,7 +5,7 @@
  Source Server Type    : MySQL
  Source Server Version : 80042 (8.0.42)
  Source Host           : localhost:3306
- Source Schema         : quik-boot
+ Source Schema         : quick-boot
 
  Target Server Type    : MySQL
  Target Server Version : 80042 (8.0.42)
