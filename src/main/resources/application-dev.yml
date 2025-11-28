@@ -1,6 +1,7 @@
 server:
   port: 9999
-
+  upload:
+    path: /test-upload
 
 spring:
   application:
