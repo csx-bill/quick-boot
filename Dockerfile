@@ -1,8 +1,8 @@
 FROM registry.cn-hangzhou.aliyuncs.com/dockerhub_mirror/java:21-anolis
 
-WORKDIR /quik-boot
+WORKDIR /quick-boot
 
-ARG JAR_FILE=target/quik-boot.jar
+ARG JAR_FILE=target/quick-boot.jar
 
 COPY ${JAR_FILE} app.jar
 
