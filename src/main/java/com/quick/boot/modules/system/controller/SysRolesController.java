@@ -1,8 +1,11 @@
 package com.quick.boot.modules.system.controller;
 
+import cn.dev33.satoken.annotation.SaCheckRole;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.quick.boot.modules.common.constant.CommonConstants;
+import com.quick.boot.modules.common.project.ProjectContextHolder;
 import com.quick.boot.modules.common.vo.ApiPage;
 import com.quick.boot.modules.common.vo.R;
 import com.quick.boot.modules.system.entity.SysRoles;
@@ -29,6 +32,7 @@ import java.util.List;
 @AllArgsConstructor
 @RequestMapping("/roles")
 @Tag(description = "roles" , name = "角色管理" )
+@SaCheckRole(CommonConstants.PROJECT_ADMIN)
 public class SysRolesController {
     private final SysRolesService sysRolesService;
 
@@ -42,8 +46,9 @@ public class SysRolesController {
     @GetMapping("/page")
     @Operation(summary = "分页查询" , description = "分页查询" )
     public R<IPage<SysRoles>> page(@ParameterObject ApiPage page, @ParameterObject @Valid RolesPageParams params) {
+        Long projectId = ProjectContextHolder.getProjectId();
         LambdaQueryWrapper<SysRoles> wrapper = Wrappers.lambdaQuery();
-        wrapper.eq(SysRoles::getProjectId,params.getProjectId());
+        wrapper.eq(SysRoles::getProjectId,projectId);
         wrapper.like(StringUtils.hasText(params.getRoleName()), SysRoles::getRoleName,params.getRoleName());
         return R.ok(sysRolesService.page(page,wrapper));
     }
@@ -56,8 +61,9 @@ public class SysRolesController {
     @GetMapping("/list")
     @Operation(summary = "列表查询" , description = "列表查询" )
     public R<List<SysRoles>> list(@ParameterObject @Valid RolesPageParams params) {
+        Long projectId = ProjectContextHolder.getProjectId();
         LambdaQueryWrapper<SysRoles> wrapper = Wrappers.lambdaQuery();
-        wrapper.eq(SysRoles::getProjectId,params.getProjectId());
+        wrapper.eq(SysRoles::getProjectId,projectId);
         wrapper.like(StringUtils.hasText(params.getRoleName()), SysRoles::getRoleName,params.getRoleName());
         return R.ok(sysRolesService.list(wrapper));
     }
@@ -72,6 +78,7 @@ public class SysRolesController {
     public R<Boolean> save(@RequestBody @Valid SaveRolesParams params) {
         SysRoles sysRoles = new SysRoles();
         BeanUtils.copyProperties(params,sysRoles);
+        sysRoles.setProjectId(ProjectContextHolder.getProjectId());
         return R.ok(sysRolesService.save(sysRoles));
     }
 

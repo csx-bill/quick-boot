@@ -4,7 +4,9 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.quick.boot.modules.common.constant.CommonConstants;
 import com.quick.boot.modules.common.exception.CheckedException;
+import com.quick.boot.modules.common.project.ProjectContextHolder;
 import com.quick.boot.modules.system.entity.SysProjectsUsers;
 import com.quick.boot.modules.system.entity.SysUserRole;
 import com.quick.boot.modules.system.mapper.SysProjectsUsersMapper;
@@ -42,8 +44,9 @@ public class SysProjectsUsersServiceImpl extends ServiceImpl<SysProjectsUsersMap
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Boolean saveProjectUser(SaveProjectUserParams params) {
+        Long projectId = ProjectContextHolder.getProjectId();
         SysProjectsUsers checkUser = getOne(Wrappers.<SysProjectsUsers>lambdaQuery()
-                .eq(SysProjectsUsers::getProjectId, params.getProjectId())
+                .eq(SysProjectsUsers::getProjectId, projectId)
                 .eq(SysProjectsUsers::getUserId, params.getUserId())
         );
 
@@ -54,7 +57,7 @@ public class SysProjectsUsersServiceImpl extends ServiceImpl<SysProjectsUsersMap
         // 1. 保存用户项目关联信息
         SysProjectsUsers sysUserProject = new SysProjectsUsers();
         sysUserProject.setUserId(params.getUserId());
-        sysUserProject.setProjectId(params.getProjectId());
+        sysUserProject.setProjectId(projectId);
         sysUserProject.setUserType(params.getUserType());
         baseMapper.insert(sysUserProject);
 
@@ -65,7 +68,7 @@ public class SysProjectsUsersServiceImpl extends ServiceImpl<SysProjectsUsersMap
                 SysUserRole sysUserRole = new SysUserRole();
                 sysUserRole.setUserId(params.getUserId());
                 sysUserRole.setRoleId(Long.parseLong(roleId));
-                sysUserRole.setProjectId(params.getProjectId());
+                sysUserRole.setProjectId(projectId);
                 sysUserRoleMapper.insert(sysUserRole);
             }
         }
@@ -92,7 +95,7 @@ public class SysProjectsUsersServiceImpl extends ServiceImpl<SysProjectsUsersMap
                 .eq(SysUserRole::getUserId, existingUser.getUserId()));
 
         // 3. 如果是普通用户类型，保存用户角色关联信息
-        if ("user".equals(params.getUserType())) {
+        if (CommonConstants.PROJECT_USER.equals(params.getUserType())) {
             String[] roles = params.getRoles().split(",");
             for (String roleId : roles) {
                 SysUserRole sysUserRole = new SysUserRole();

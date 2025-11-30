@@ -1,6 +1,9 @@
 package com.quick.boot.modules.system.controller;
 
 
+import cn.dev33.satoken.annotation.SaCheckRole;
+import com.quick.boot.modules.common.constant.CommonConstants;
+import com.quick.boot.modules.common.project.ProjectContextHolder;
 import com.quick.boot.modules.common.vo.R;
 import com.quick.boot.modules.system.entity.SysMenus;
 import com.quick.boot.modules.system.req.MenusTreeParams;
@@ -40,9 +43,11 @@ public class SysMenusController {
      */
     @PostMapping
     @Operation(summary = "新增" , description = "新增" )
+    @SaCheckRole(CommonConstants.PROJECT_ADMIN)
     public R<Boolean> save(@RequestBody @Valid SaveMenusParams params) {
         SysMenus sysMenus = new SysMenus();
         BeanUtils.copyProperties(params,sysMenus);
+        sysMenus.setProjectId(ProjectContextHolder.getProjectId());
         return R.ok(sysMenusService.save(sysMenus));
     }
 
@@ -54,6 +59,7 @@ public class SysMenusController {
      */
     @PutMapping("/{id}")
     @Operation(summary = "通过id更新" , description = "通过id更新" )
+    @SaCheckRole(CommonConstants.PROJECT_ADMIN)
     public R<Boolean> updateById(@PathVariable("id") Long id,@RequestBody SaveMenusParams params) {
         SysMenus sysMenus = new SysMenus();
         BeanUtils.copyProperties(params,sysMenus);
@@ -67,6 +73,7 @@ public class SysMenusController {
      */
     @DeleteMapping
     @Operation(summary = "批量删除" , description = "批量删除" )
+    @SaCheckRole(CommonConstants.PROJECT_ADMIN)
     public R<Boolean> removeBatchByIds(@RequestParam("ids") String ids) {
         return R.ok(sysMenusService.removeBatchByIds(Arrays.asList(ids.split(","))));
     }
@@ -78,6 +85,7 @@ public class SysMenusController {
      */
     @DeleteMapping("/{id}")
     @Operation(summary = "通过id删除" , description = "通过id删除" )
+    @SaCheckRole(CommonConstants.PROJECT_ADMIN)
     public R<Boolean> removeById(@PathVariable("id") Long id) {
         return R.ok(sysMenusService.removeById(id));
     }
@@ -89,6 +97,7 @@ public class SysMenusController {
      */
     @GetMapping("/{id}" )
     @Operation(summary = "通过id查询" , description = "通过id查询" )
+    @SaCheckRole(CommonConstants.PROJECT_ADMIN)
     public R<SysMenus> getById(@PathVariable("id") Long id) {
         return R.ok(sysMenusService.getById(id));
     }

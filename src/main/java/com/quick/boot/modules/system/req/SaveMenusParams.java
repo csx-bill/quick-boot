@@ -24,9 +24,6 @@ public class SaveMenusParams {
     @NotBlank
     private String status;
 
-    @Schema(description = "项目ID")
-    @NotNull
-    private Long projectId;
 
     @Schema(description = "菜单图标")
     private String icon;

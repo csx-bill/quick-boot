@@ -45,4 +45,9 @@ public class SysProjectsServiceImpl extends ServiceImpl<SysProjectsMapper, SysPr
         sysProjectsUsersMapper.insert(sysProjectsUsers);
         return Boolean.TRUE;
     }
+
+    @Override
+    public SysProjectsVO projectByUserIdAndProjectId(Long projectId, Long userId) {
+        return baseMapper.selectProjectByUserIdAndProjectId(projectId,userId);
+    }
 }

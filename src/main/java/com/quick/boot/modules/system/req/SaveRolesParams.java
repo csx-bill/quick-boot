@@ -14,8 +14,4 @@ public class SaveRolesParams {
 
     @Schema(description = "角色描述")
     private String roleDescription;
-
-    @Schema(description = "项目ID")
-    @NotNull
-    private Long projectId;
 }

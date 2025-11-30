@@ -18,8 +18,5 @@ public class SavePagesParams {
     @Schema(description = "页面JSON")
     private String schema;
 
-    @Schema(description = "项目ID")
-    @NotNull
-    private Long projectId;
 
 }

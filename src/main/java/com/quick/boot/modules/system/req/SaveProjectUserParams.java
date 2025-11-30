@@ -9,10 +9,6 @@ import lombok.Data;
 @Data
 public class SaveProjectUserParams {
 
-    @Schema(description = "项目ID")
-    @NotNull
-    private Long projectId;
-
     @Schema(description = "用户ID")
     @NotNull
     private Long userId;

@@ -11,6 +11,7 @@ import java.util.List;
 public interface SysRolesService extends IService<SysRoles> {
     Boolean updateRoleMenus(UpdateRoleMenusParams params);
     GetRoleMenusVO getRoleMenus(Long roleId);
-    List<SysRoles> getUserRoles();
+    List<String> getUserRoles();
+    List<String> getRolesPermissions();
 
 }

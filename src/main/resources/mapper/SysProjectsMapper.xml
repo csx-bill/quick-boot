@@ -23,4 +23,23 @@
         </where>
         ORDER BY p.create_time DESC
     </select>
+
+    <select id="selectProjectByUserIdAndProjectId" resultType="com.quick.boot.modules.system.vo.SysProjectsVO">
+        SELECT
+        p.id,
+        p.project_name,
+        p.project_description,
+        p.logo,
+        up.user_type,
+        p.create_time
+        FROM
+        sys_projects p
+        JOIN sys_projects_users up ON p.id = up.project_id
+        <where>
+            p.del_flag = '0'
+            AND up.project_id = #{projectId}
+            AND up.user_id = #{userId}
+        </where>
+        ORDER BY p.create_time DESC
+    </select>
 </mapper>

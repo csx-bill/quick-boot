@@ -9,8 +9,4 @@ public class RolesPageParams {
 
     @Schema(description = "角色名称")
     private String roleName;
-
-    @Schema(description = "项目ID")
-    @NotNull
-    private Long projectId;
 }

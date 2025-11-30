@@ -1,6 +1,8 @@
 package com.quick.boot.modules.system.controller;
 
+import cn.dev33.satoken.annotation.SaCheckRole;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.quick.boot.modules.common.constant.CommonConstants;
 import com.quick.boot.modules.common.vo.ApiPage;
 import com.quick.boot.modules.common.vo.R;
 import com.quick.boot.modules.system.entity.SysProjects;
@@ -54,6 +56,7 @@ public class SysProjectsController {
      */
     @PutMapping("/{id}")
     @Operation(summary = "通过id更新" , description = "通过id更新" )
+    @SaCheckRole(CommonConstants.PROJECT_ADMIN)
     public R<Boolean> updateById(@PathVariable("id") Long id,@RequestBody SaveProjectsParams params) {
         SysProjects sysProjects = new SysProjects();
         BeanUtils.copyProperties(params,sysProjects);
@@ -68,6 +71,7 @@ public class SysProjectsController {
      */
     @DeleteMapping("/{id}")
     @Operation(summary = "通过id删除" , description = "通过id删除" )
+    @SaCheckRole(CommonConstants.PROJECT_ADMIN)
     public R<Boolean> removeById(@PathVariable("id") Long id) {
         return R.ok(sysProjectsService.removeById(id));
     }

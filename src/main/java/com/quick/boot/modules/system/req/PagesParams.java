@@ -6,9 +6,6 @@ import lombok.Data;
 
 @Data
 public class PagesParams {
-    @Schema(description = "项目ID")
-    @NotNull
-    private Long projectId;
 
     @Schema(description = "页面名称")
     private String pageName;

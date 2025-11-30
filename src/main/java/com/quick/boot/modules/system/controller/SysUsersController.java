@@ -1,8 +1,9 @@
 package com.quick.boot.modules.system.controller;
 
-import cn.dev33.satoken.stp.SaTokenInfo;
-import cn.dev33.satoken.stp.StpUtil;
+import cn.dev33.satoken.annotation.SaCheckRole;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.quick.boot.modules.common.constant.CommonConstants;
+import com.quick.boot.modules.common.project.ProjectContextHolder;
 import com.quick.boot.modules.common.vo.ApiPage;
 import com.quick.boot.modules.common.vo.R;
 import com.quick.boot.modules.common.vo.UserInfo;
@@ -25,7 +26,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 @RestController
 @AllArgsConstructor
@@ -42,17 +42,7 @@ public class SysUsersController {
      */
     @GetMapping("/info")
     public R<UserInfo> info() {
-        SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
-        SysUsers sysUser = sysUsersService.lambdaQuery().eq(SysUsers::getId, tokenInfo.loginId).one();
-        if(Objects.isNull(sysUser)){
-            R.failed();
-        }
-        UserInfo userInfo = new UserInfo();
-        userInfo.setUserId(sysUser.getId());
-        userInfo.setUsername(sysUser.getUsername());
-        userInfo.setAvatar(sysUser.getAvatar());
-        userInfo.setAccessToken(tokenInfo.getTokenValue());
-        return R.ok(userInfo);
+        return R.ok(sysUsersService.findUserInfo());
     }
 
 
@@ -63,6 +53,7 @@ public class SysUsersController {
      */
     @GetMapping("/list")
     @Operation(summary = "列表查询" , description = "列表查询" )
+    @SaCheckRole(CommonConstants.PROJECT_ADMIN)
     public R<List<SysUsersVO>> list(@ParameterObject @Valid UsersListParams params) {
         return R.ok(sysUsersService.usersList(params));
     }
@@ -74,6 +65,7 @@ public class SysUsersController {
      */
     @GetMapping("/not-in-project")
     @Operation(summary = "查询未加入当前项目的用户列表" , description = "查询未加入当前项目的用户列表" )
+    @SaCheckRole(CommonConstants.PROJECT_ADMIN)
     public R<List<SysUsers>> notInProject(@RequestParam("projectId")Long projectId) {
         return R.ok(sysUsersService.findNotInProjectUsers(projectId));
     }
@@ -86,7 +78,9 @@ public class SysUsersController {
      */
     @GetMapping("/page")
     @Operation(summary = "分页查询" , description = "分页查询" )
+    @SaCheckRole(CommonConstants.PROJECT_ADMIN)
     public R<IPage<ProjectsUsersVO>> projectsUsersPage(@ParameterObject ApiPage page, @ParameterObject ProjectsUsersPageParams params) {
+        params.setProjectId(ProjectContextHolder.getProjectId());
         return R.ok(sysProjectsUsersService.projectsUsersPage(page,params));
     }
 
@@ -97,6 +91,7 @@ public class SysUsersController {
      */
     @PostMapping
     @Operation(summary = "新增" , description = "新增" )
+    @SaCheckRole(CommonConstants.PROJECT_ADMIN)
     public R<Boolean> saveProjectUser(@RequestBody SaveProjectUserParams params) {
         return R.ok(sysProjectsUsersService.saveProjectUser(params));
     }
@@ -109,6 +104,7 @@ public class SysUsersController {
      */
     @PutMapping("/{id}")
     @Operation(summary = "通过id更新" , description = "通过id更新" )
+    @SaCheckRole(CommonConstants.PROJECT_ADMIN)
     public R<Boolean> updateById(@PathVariable("id") Long id,@RequestBody UpdateProjectUserParams params) {
         return R.ok(sysProjectsUsersService.updateProjectUser(id,params));
     }
@@ -120,6 +116,7 @@ public class SysUsersController {
      */
     @DeleteMapping
     @Operation(summary = "批量删除" , description = "批量删除" )
+    @SaCheckRole(CommonConstants.PROJECT_ADMIN)
     public R<Boolean> removeBatchByIds(@RequestParam("ids") String ids) {
         return R.ok(sysProjectsUsersService.removeBatchByIds(Arrays.asList(ids.split(","))));
     }
@@ -131,6 +128,7 @@ public class SysUsersController {
      */
     @DeleteMapping("/{id}")
     @Operation(summary = "删除项目用户" , description = "删除项目用户" )
+    @SaCheckRole(CommonConstants.PROJECT_ADMIN)
     public R<Boolean> removeById(@PathVariable("id") Long id) {
         return R.ok(sysProjectsUsersService.removeById(id));
     }
@@ -142,6 +140,7 @@ public class SysUsersController {
      */
     @GetMapping("/{id}" )
     @Operation(summary = "通过id查询" , description = "通过id查询" )
+    @SaCheckRole(CommonConstants.PROJECT_ADMIN)
     public R<ProjectsUsersDetailsVO> getProjectUser(@PathVariable("id") Long id) {
         return R.ok(sysProjectsUsersService.getProjectUser(id));
     }

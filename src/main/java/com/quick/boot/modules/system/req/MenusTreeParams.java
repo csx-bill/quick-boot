@@ -12,7 +12,4 @@ public class MenusTreeParams {
     private String name;
     @Schema(description = "上级菜单ID")
     private Long parentId;
-    @Schema(description = "项目ID")
-    @NotNull
-    private Long projectId;
 }

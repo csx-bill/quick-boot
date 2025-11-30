@@ -2,6 +2,7 @@ package com.quick.boot.modules.system.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -28,4 +29,7 @@ public class SysRoleMenu extends BaseEntity implements Serializable {
      * 菜单ID
      */
     private Long menuId;
+
+    @Schema(description = "项目ID")
+    private Long projectId;
 }

@@ -1,8 +1,12 @@
 package com.quick.boot.modules.system.service.impl;
 
+import cn.dev33.satoken.stp.SaTokenInfo;
+import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.quick.boot.modules.common.vo.R;
+import com.quick.boot.modules.common.vo.UserInfo;
 import com.quick.boot.modules.system.entity.SysUsers;
 import com.quick.boot.modules.system.mapper.SysProjectsUsersMapper;
 import com.quick.boot.modules.system.mapper.SysUsersMapper;
@@ -43,6 +47,18 @@ public class SysUsersServiceImpl extends ServiceImpl<SysUsersMapper, SysUsers> i
     @Override
     public List<SysUsers> findNotInProjectUsers(Long projectId) {
         return sysProjectsUsersMapper.findNotInProjectUsers(projectId);
+    }
+
+    @Override
+    public UserInfo findUserInfo() {
+        SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
+        SysUsers sysUser = baseMapper.selectById(StpUtil.getLoginIdAsLong());
+        UserInfo userInfo = new UserInfo();
+        userInfo.setUserId(sysUser.getId());
+        userInfo.setUsername(sysUser.getUsername());
+        userInfo.setAvatar(sysUser.getAvatar());
+        userInfo.setAccessToken(tokenInfo.getTokenValue());
+        return userInfo;
     }
 
 }

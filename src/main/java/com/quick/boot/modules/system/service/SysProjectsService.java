@@ -11,4 +11,5 @@ import com.quick.boot.modules.system.vo.SysProjectsVO;
 public interface SysProjectsService extends IService<SysProjects> {
     IPage<SysProjectsVO> projectsPage(Page page, ProjectsPageParams params);
     Boolean saveProjects(SaveProjectsParams params);
+    SysProjectsVO projectByUserIdAndProjectId(Long projectId,Long userId);
 }

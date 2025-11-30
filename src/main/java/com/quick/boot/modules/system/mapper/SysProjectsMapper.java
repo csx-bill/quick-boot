@@ -12,4 +12,6 @@ public interface SysProjectsMapper extends BaseMapper<SysProjects> {
 
     IPage<SysProjectsVO> projectsPage(Page page, @Param("query") ProjectsPageParams params);
 
+    SysProjectsVO selectProjectByUserIdAndProjectId(@Param("projectId") Long projectId,@Param("userId") Long userId);
+
 }

@@ -6,8 +6,7 @@ import lombok.Data;
 
 @Data
 public class ProjectsUsersPageParams {
-    @Schema(description = "项目ID")
-    @NotNull
+    @Schema(description = "项目ID",hidden = true)
     private Long projectId;
 
     @Schema(description = "用户名")

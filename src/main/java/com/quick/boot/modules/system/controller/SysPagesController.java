@@ -1,8 +1,11 @@
 package com.quick.boot.modules.system.controller;
 
+import cn.dev33.satoken.annotation.SaCheckRole;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.quick.boot.modules.common.constant.CommonConstants;
+import com.quick.boot.modules.common.project.ProjectContextHolder;
 import com.quick.boot.modules.common.vo.ApiPage;
 import com.quick.boot.modules.common.vo.R;
 import com.quick.boot.modules.system.entity.SysPages;
@@ -26,6 +29,7 @@ import java.util.List;
 @AllArgsConstructor
 @RequestMapping("/pages")
 @Tag(description = "pages" , name = "页面管理" )
+@SaCheckRole(CommonConstants.PROJECT_ADMIN)
 public class SysPagesController {
     private final SysPagesService sysPagesService;
 
@@ -39,7 +43,7 @@ public class SysPagesController {
     @Operation(summary = "分页查询" , description = "分页查询" )
     public R<IPage<SysPages>> page(@ParameterObject ApiPage page, @ParameterObject @Valid PagesParams params) {
         LambdaQueryWrapper<SysPages> wrapper = Wrappers.lambdaQuery();
-        wrapper.eq(SysPages::getProjectId,params.getProjectId());
+        wrapper.eq(SysPages::getProjectId,ProjectContextHolder.getProjectId());
         wrapper.like(StringUtils.hasText(params.getPageName()), SysPages::getPageName,params.getPageName());
         return R.ok(sysPagesService.page(page,wrapper));
     }
@@ -53,7 +57,7 @@ public class SysPagesController {
     @Operation(summary = "列表查询" , description = "列表查询" )
     public R<List<SysPages>> list(@ParameterObject PagesParams params) {
         LambdaQueryWrapper<SysPages> wrapper = Wrappers.lambdaQuery();
-        wrapper.eq(SysPages::getProjectId,params.getProjectId());
+        wrapper.eq(SysPages::getProjectId,ProjectContextHolder.getProjectId());
         wrapper.like(StringUtils.hasText(params.getPageName()), SysPages::getPageName,params.getPageName());
         return R.ok(sysPagesService.list(wrapper));
     }
@@ -68,6 +72,7 @@ public class SysPagesController {
     public R<Boolean> saveProjects(@RequestBody SavePagesParams params) {
         SysPages sysPages = new SysPages();
         BeanUtils.copyProperties(params,sysPages);
+        sysPages.setProjectId(ProjectContextHolder.getProjectId());
         return R.ok(sysPagesService.save(sysPages));
     }
 

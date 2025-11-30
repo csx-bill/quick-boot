@@ -27,6 +27,19 @@ public interface CommonConstants {
 	 */
 	Long MENU_TREE_ROOT_ID = -1L;
 
+	/**
+	 * 项目ID
+	 */
+	String X_PROJECT_ID = "X-Project-Id";
 
+	/**
+	 * 项目管理员
+	 */
+	String PROJECT_ADMIN = "admin";
+
+	/**
+	 * 项目普通用户
+	 */
+	String PROJECT_USER = "user";
 
 }
