@@ -30,3 +30,9 @@ sa-token:
   token-style: random-64
   # 是否输出操作日志
   is-log: true
+
+# 文件管理
+files:
+  local:
+    enable: true
+    base-path: D:\\var

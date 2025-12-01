@@ -1,12 +1,10 @@
 package com.quick.boot.modules.common.security;
 
 import cn.dev33.satoken.stp.StpInterface;
-import com.quick.boot.modules.system.entity.SysRoles;
 import com.quick.boot.modules.system.service.SysRolesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 自定义用户权限实现类
