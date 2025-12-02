@@ -34,6 +34,7 @@ public class SysProjectsServiceImpl extends ServiceImpl<SysProjectsMapper, SysPr
     @Transactional(rollbackFor = Exception.class)
     public Boolean saveProjects(SaveProjectsParams params) {
         SysProjects sysProjects = new SysProjects();
+        sysProjects.setLogo(params.getLogo());
         sysProjects.setProjectName(params.getProjectName());
         sysProjects.setProjectDescription(params.getProjectDescription());
         save(sysProjects);
