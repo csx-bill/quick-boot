@@ -11,7 +11,6 @@ spring:
     password: 123456
     url: jdbc:mysql://127.0.0.1:3306/quick-boot?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=GMT%2B8&allowMultiQueries=true&nullCatalogMeansCurrent=true
 
-
 ############## Sa-Token 配置 (文档: https://sa-token.cc) ##############
 sa-token:
   # token 名称（同时也是 cookie 名称）
@@ -28,6 +27,28 @@ sa-token:
   token-style: random-64
   # 是否输出操作日志
   is-log: true
+
+magic-api:
+  web: /magic/web
+  prefix: /api
+  editor-config: classpath:./magic-editor-config.js
+  resource:
+    type: database # 配置存储在数据库中
+    tableName: magic_api_file # 数据库中的表名
+    readonly: false # 是否是只读模式
+  backup: #备份相关配置
+    enable: true #是否启用
+    max-history: -1 #备份保留天数，-1为永久保留
+    table-name: magic_api_backup #使用数据库存储备份时的表名
+  response-code:
+    success: 0 #执行成功的code值
+    invalid: 1 #参数验证未通过的code值
+    exception: 2 #执行出现异常的code值
+  page:
+    size: perPage # 页大小的参数名称
+    page: page # 页码的参数名称
+    default-page: 1 # 未传页码时的默认首页
+    default-size: 10 # 未传页大小时的默认页大小
 
 # 文件管理
 files:
