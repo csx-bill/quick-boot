@@ -38,7 +38,7 @@ public class LocalFilesStorageServiceImpl implements FilesStorageService {
         Long projectId = ProjectContextHolder.getProjectId();
         String dir = properties.getLocal().getBasePath() + File.separator + bucketName;
         // 写入文件
-        Path filePath = Paths.get(dir, projectId.toString(),fileName);
+        Path filePath = Paths.get(dir, projectId.toString(), fileName);
         // 确保项目目录存在
         Files.createDirectories(filePath.getParent());
 

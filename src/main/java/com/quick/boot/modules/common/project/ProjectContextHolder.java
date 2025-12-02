@@ -29,7 +29,7 @@ public class ProjectContextHolder {
      * @return 项目ID，如果未设置则返回null
      */
     public Long getProjectId() {
-        return THREAD_LOCAL_PROJECT.get();
+        return THREAD_LOCAL_PROJECT.get() == null? 0L : THREAD_LOCAL_PROJECT.get();
     }
 
     /**
