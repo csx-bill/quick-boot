@@ -1,8 +1,7 @@
 package com.quick.boot.modules.common.security;
 
 import cn.dev33.satoken.stp.StpInterface;
-import com.quick.boot.modules.system.service.SysRolesService;
-import org.springframework.beans.factory.annotation.Autowired;
+import cn.dev33.satoken.stp.StpUtil;
 import org.springframework.stereotype.Component;
 import java.util.List;
 
@@ -12,18 +11,16 @@ import java.util.List;
 @Component
 public class StpInterfaceImpl implements StpInterface {
 
-    @Autowired
-    private SysRolesService sysRolesService;
-
     /**
      * 返回账号所拥有项目的权限码集合
      * @param loginId
      * @param loginType
      * @return
      */
+    @SuppressWarnings("unchecked")
     @Override
     public List<String> getPermissionList(Object loginId, String loginType) {
-        return sysRolesService.getRolesPermissions();
+        return (List<String>) StpUtil.getTerminalInfo().getExtra("perms");
     }
 
     /**
@@ -32,8 +29,9 @@ public class StpInterfaceImpl implements StpInterface {
      * @param loginType
      * @return
      */
+    @SuppressWarnings("unchecked")
     @Override
     public List<String> getRoleList(Object loginId, String loginType) {
-        return sysRolesService.getUserRoles();
+        return (List<String>) StpUtil.getTerminalInfo().getExtra("roles");
     }
 }

@@ -24,7 +24,6 @@ import org.springframework.util.StringUtils;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -83,8 +82,17 @@ public class SysRolesServiceImpl extends ServiceImpl<SysRolesMapper, SysRoles> i
      */
     @Override
     public List<String> getUserRoles() {
+        return getUserRoles(StpUtil.getLoginIdAsLong());
+    }
+
+    /**
+     * 当前用户的项目角色
+     * @return
+     */
+    @Override
+    public List<String> getUserRoles(Long userId) {
         Long projectId = ProjectContextHolder.getProjectId();
-        long userId = StpUtil.getLoginIdAsLong();
+
         SysProjectsVO sysProjectsVO = sysProjectsMapper.selectProjectByUserIdAndProjectId(projectId, userId);
         // 返回管理员角色编码
         if(sysProjectsVO.getUserType().equals(CommonConstants.PROJECT_ADMIN)){
@@ -100,8 +108,16 @@ public class SysRolesServiceImpl extends ServiceImpl<SysRolesMapper, SysRoles> i
      */
     @Override
     public List<String> getRolesPermissions() {
+        return getRolesPermissions(StpUtil.getLoginIdAsLong());
+    }
+
+    /**
+     * 当前用户的项目角色权限码集合
+     * @return
+     */
+    @Override
+    public List<String> getRolesPermissions(Long userId) {
         Long projectId = ProjectContextHolder.getProjectId();
-        long userId = StpUtil.getLoginIdAsLong();
 
         // 获取项目用户信息
         SysProjectsVO projectInfo = sysProjectsMapper.selectProjectByUserIdAndProjectId(projectId, userId);

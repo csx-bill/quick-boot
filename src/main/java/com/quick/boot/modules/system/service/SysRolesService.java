@@ -13,5 +13,6 @@ public interface SysRolesService extends IService<SysRoles> {
     GetRoleMenusVO getRoleMenus(Long roleId);
     List<String> getUserRoles();
     List<String> getRolesPermissions();
-
+    List<String> getUserRoles(Long userId);
+    List<String> getRolesPermissions(Long userId);
 }
