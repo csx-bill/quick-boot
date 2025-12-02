@@ -19,7 +19,8 @@ public class SaTokenConfigure implements WebMvcConfigurer {
                     StpUtil.checkLogin();
                 }))
                 .addPathPatterns("/**")
-                .excludePathPatterns("/auth/login");
+                .excludePathPatterns("/error")
+                .excludePathPatterns("/api/auth/login");
     }
 }
 

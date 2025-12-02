@@ -1,6 +1,9 @@
 package com.quick.boot.modules.common.exception;
 
 import cn.dev33.satoken.exception.NotLoginException;
+import cn.dev33.satoken.exception.NotPermissionException;
+import cn.dev33.satoken.exception.NotRoleException;
+import cn.dev33.satoken.exception.NotSafeException;
 import com.quick.boot.modules.common.vo.R;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -26,15 +29,21 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * 登录过期
-     * @param e
-     * @return
+     * 401场景
      */
     @ExceptionHandler(NotLoginException.class)
     @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
-    public R notLoginException(NotLoginException e) {
-        log.error("登录过期异常信息 ex={}", e.getMessage(), e);
-        return R.failed(HttpStatus.UNAUTHORIZED.value(),e.getLocalizedMessage());
+    public void exception401(NotLoginException e) {
+
+    }
+
+    /**
+     * 403场景
+     */
+    @ExceptionHandler({NotSafeException.class, NotRoleException.class, NotPermissionException.class})
+    @ResponseStatus(value = HttpStatus.FORBIDDEN)
+    public void exception403(NotLoginException e) {
+
     }
 
     /**
