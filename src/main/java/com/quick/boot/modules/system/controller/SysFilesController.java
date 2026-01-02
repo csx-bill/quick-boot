@@ -24,7 +24,7 @@ import java.util.Arrays;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/files")
+@RequestMapping("/files")
 @Tag(description = "files" , name = "文件管理" )
 public class SysFilesController {
 
